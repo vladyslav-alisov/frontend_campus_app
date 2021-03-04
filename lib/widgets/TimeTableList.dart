@@ -10,7 +10,6 @@ class TimaTableList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-
       itemCount: listLength,
       padding: EdgeInsets.only(bottom: 12,top: 12,left: 8,right: 8),
       separatorBuilder: (BuildContext context, int index) => Divider(height: 10,color: Colors.white,),

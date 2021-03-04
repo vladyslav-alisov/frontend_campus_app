@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MyConstants {
+
+  static const str_profile = "Profile";
+  static const str_studentCardBalance = "Student Card Balance:";
+
   static const List<String> assetPaths = [
     'assets/images/Announcements.jpg',
-    'assets/images/Student Card.jpg',
     'assets/images/Document Request.jpg',
+    'assets/images/Student Card.jpg',
     'assets/images/TimeTable.jpg',
     'assets/images/Transportation.jpg',
     'assets/images/Events.jpg',
@@ -23,8 +27,8 @@ class MyConstants {
   ];
   static const List<String> funcTitles = [
     "Announcements",
-    "Student Card",
     "Document Request",
+    "Student Card",
     "Time Table",
     "Transportation",
     "Events",
@@ -48,8 +52,8 @@ class MyConstants {
 
   static const List<Color> funcColors = [
     Color(0xFFFC7068),
-    Color(0xFF5198C1),
     Color(0xFFFDC22E),
+    Color(0xFF5198C1),
     Color(0xFF8562A5),
     Color(0xFF04D6A7),
     Color(0xFF4DAB57),

@@ -1,18 +1,23 @@
 import 'package:campus_app/models/Course%20dummy%20data.dart';
+import 'package:campus_app/providers/timetable.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/TimeTableList.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 //todo add share button to appbar
 class TimeTable extends StatelessWidget {
+
+
   static const String routeName = "/timeTable_screen";
 
-  @override
   Widget build(BuildContext context) {
+    var timeTableProvider = Provider.of<TimeTableProvider>(context,listen: false);
     return DefaultTabController(
+      initialIndex: timeTableProvider.today()-1,
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
+          centerTitle: false,
           bottom: TabBar(
             labelStyle: Theme.of(context).textTheme.headline1,
             isScrollable: true,
@@ -28,7 +33,7 @@ class TimeTable extends StatelessWidget {
             ),
           ),
           title: Text(
-            MyConstants.funcTitles[0],
+            MyConstants.funcTitles[3],
             style: Theme.of(context).textTheme.headline1,
           ),
         ),

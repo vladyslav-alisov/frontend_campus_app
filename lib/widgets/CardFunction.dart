@@ -10,7 +10,6 @@ cardFunction({
   return GestureDetector(
     onTap: () {
       Navigator.pushNamed(context, path);
-      print('Helllo');
     },
     child: Card(
       shape: RoundedRectangleBorder(

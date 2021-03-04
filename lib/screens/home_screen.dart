@@ -1,3 +1,4 @@
+import 'package:campus_app/screens/profile_screen.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CardFunction.dart';
 import 'package:campus_app/widgets/CustomClipper.dart';
@@ -5,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class HomePage extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   static const routeName = "/home_screen";
 
   @override
   Widget build(BuildContext context) {
-
     final devSize = MediaQuery.of(context).size;
 
     return Container(
@@ -37,6 +37,40 @@ class HomePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: MyConstants.appBarColors,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 38,
+                      right: 17,
+                    ),
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: Text(
+                              "Vladyslav Alisov",
+                              style: Theme.of(context).textTheme.headline1,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: Container(
+                              width: 88,
+                              height: 88,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: NetworkImage('https://googleflutter.com/sample_image.jpg'), fit: BoxFit.fill),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
