@@ -1,18 +1,25 @@
-import 'package:campus_app/models/course.dart';
+import 'package:campus_app/models/TimeTable.dart';
 import 'package:flutter/material.dart';
 
-class TimaTableList extends StatelessWidget {
-  final int listLength;
-  final List<Course> courses;
+class TimeTableCards extends StatelessWidget {
+  final List<CourseData> courses;
 
-  TimaTableList({this.listLength,this.courses});
+  TimeTableCards({this.courses});
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: listLength,
-      padding: EdgeInsets.only(bottom: 12,top: 12,left: 8,right: 8),
-      separatorBuilder: (BuildContext context, int index) => Divider(height: 10,color: Colors.white,),
+      itemCount: courses.length,
+      padding: EdgeInsets.only(
+        bottom: 12,
+        top: 12,
+        left: 8,
+        right: 8,
+      ),
+      separatorBuilder: (BuildContext context, int index) => Divider(
+        height: 10,
+        color: Colors.white,
+      ),
       itemBuilder: (context, index) => AspectRatio(
         aspectRatio: 398 / 160,
         child: Container(
@@ -22,7 +29,12 @@ class TimaTableList extends StatelessWidget {
           ),
           child: Card(
             child: Padding(
-              padding: const EdgeInsets.only(top: 16, left: 19, bottom: 19, right: 19),
+              padding: const EdgeInsets.only(
+                top: 16,
+                left: 19,
+                bottom: 19,
+                right: 19,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -46,7 +58,7 @@ class TimaTableList extends StatelessWidget {
                   Flexible(
                     fit: FlexFit.tight,
                     child: Text(
-                      courses[index].courseTime ?? "",
+                      courses[index].time ?? "",
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
@@ -54,7 +66,7 @@ class TimaTableList extends StatelessWidget {
                   Flexible(
                     fit: FlexFit.tight,
                     child: Text(
-                      courses[index].coursePlace ?? "",
+                      courses[index].location ?? "",
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
@@ -62,7 +74,7 @@ class TimaTableList extends StatelessWidget {
                   Flexible(
                     fit: FlexFit.tight,
                     child: Text(
-                      courses[index].courseTeacher ?? "",
+                      courses[index].lecturer ?? "",
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
