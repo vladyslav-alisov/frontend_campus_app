@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:campus_app/models/AuthData.dart';
-import 'package:campus_app/models/EventList.dart';
+import 'package:campus_app/models/events/EventList.dart';
+import 'package:campus_app/models/events/EventToSend.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';
 import 'package:campus_app/utils/MyConstants.dart';
@@ -16,20 +20,20 @@ class EventsProvider with ChangeNotifier {
   List<Event> hostEventList = [];
   var setup = GraphQLSetup();
 
-  //Events funcitons
+  //Event LISTS funcitons
   Future<void> events() async {
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.noCache,
+      fetchPolicy: FetchPolicy.networkOnly,
       document: gql(ConstQuery.events),
+      variables: {ConstQueryKeys.userID: authData.login.userID},
     );
-
     QueryResult result = await setup.client.value.query(options);
     if (result.hasException) {
+      print(result.exception);
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
-
     if (result.data != null) {
-      eventList = EventList.fromJson(result.data).events.events;
+      eventList = Events.fromJson(result.data).events;
     }
     notifyListeners();
   }
@@ -39,16 +43,14 @@ class EventsProvider with ChangeNotifier {
         QueryOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstQuery.myEvents), variables: {
       ConstQueryKeys.userID: authData.login.userID,
     });
-
     QueryResult result = await setup.client.value.query(options);
-
-    print(result.data);
     if (result.hasException) {
+      print(result.exception);
       myEventList = [];
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
-      myEventList = MyEventList.fromJson(result.data).myEvents.events;
+      myEventList = MyEvents.fromJson(result.data).myEvents;
     }
     notifyListeners();
   }
@@ -58,15 +60,14 @@ class EventsProvider with ChangeNotifier {
         QueryOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstQuery.hostEvents), variables: {
       ConstQueryKeys.userID: authData.login.userID,
     });
-
     QueryResult result = await setup.client.value.query(options);
-
     if (result.hasException) {
+      print(result.exception);
       hostEventList = [];
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
-      hostEventList = HostEventList.fromJson(result.data).hostEvents.events;
+      hostEventList = HostEvents.fromJson(result.data).hostEvents;
     }
     notifyListeners();
   }
@@ -77,34 +78,29 @@ class EventsProvider with ChangeNotifier {
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.userID: authData.login.userID,
     });
-
     QueryResult result = await setup.client.value.mutate(options);
-
     if (result.hasException) {
+      print(result.exception);
       throw "Could not cancel event! Please try again later.";
     } else
       myEventList.removeWhere((element) => element.eventID == eventID);
-
     notifyListeners();
   }
 
   Future<void> deleteEvent(String eventID) async {
-    print(hostEventList);
-    print(eventID);
-    print(authData.login.userID);
     MutationOptions options =
-    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteEvent), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteEvent), variables: {
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.userID: authData.login.userID,
     });
-
     QueryResult result = await setup.client.value.mutate(options);
-
-    print(result.exception);
     if (result.hasException) {
+      print(result.exception);
       throw "Could not delete event! Please try again.";
-    } else {hostEventList.removeWhere((element) => element.eventID == eventID);}
-
+    } else {
+      hostEventList.removeWhere((element) => element.eventID == eventID);
+      eventList.removeWhere((element) => element.eventID == eventID);
+    }
     notifyListeners();
   }
 
@@ -114,55 +110,48 @@ class EventsProvider with ChangeNotifier {
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.userID: authData.login.userID,
     });
-
     QueryResult result = await setup.client.value.mutate(options);
-
     if (result.hasException) {
       print(result.exception);
       throw "Could not join event! Please try again later.";
     } else {
-      print("Event added");
       myEventList.add(eventList.firstWhere((element) => element.eventID == eventID));
     }
     notifyListeners();
   }
 
-  Future<void> createEvent(
-   { String eventID,
-    String title,
-    String description,
-    String atendee,
-    String price,
-    String date,
-    String time,
-    String location,
-    String imageUrl,}
-  ) async {
-    MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.createEvent), variables: {
-      ConstQueryKeys.userID: authData.login.userID,
-      "eventInput": {
-        "title": title,
-        "description": description,
-        "atendee": atendee,
-        "price": price,
-        "date": date,
-        "time": time,
-        "location": location,
-        "imageUrl": imageUrl,
-      }
-    });
-
+  Future<void> createEvent(EventToSend event) async {
+    //todo: check if fetch polict cache it adds event in my events after creation
+    MutationOptions options = MutationOptions(
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
+        document: gql(ConstMutation.createEvent),
+        variables: {ConstQueryKeys.userID: authData.login.userID, ConstQueryKeys.eventInput: await event.toJson()});
     QueryResult result = await setup.client.value.mutate(options);
-
-    print(result.data);
-    print(result.exception);
     if (result.hasException) {
-      //print(result.exception);
+      print(result.exception);
       throw "Could not create an event! Please try again later.";
     } else {
-      print("Event successfully created");
-      eventList.add(Event.fromJson(result.data));
+      eventList.add(Event.fromJson(result.data["action"]));
+    }
+    notifyListeners();
+  }
+
+  Future<void> editEvent({String eventID, EventToSend event}) async {
+    MutationOptions options =
+        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.editEvent), variables: {
+      ConstQueryKeys.userID: authData.login.userID,
+      ConstQueryKeys.eventID: eventID,
+      ConstQueryKeys.eventInput: await event.toJson(),
+    });
+    QueryResult result = await setup.client.value.mutate(options);
+    if (result.hasException) {
+      print(result.exception);
+      throw "Could not update an event! Please try again later.";
+    } else {
+      eventList[hostEventList.indexWhere((element) => element.eventID == eventID)] =
+          Event.fromJson(result.data["action"]);
+      hostEventList[hostEventList.indexWhere((element) => element.eventID == eventID)] =
+          Event.fromJson(result.data["action"]);
     }
     notifyListeners();
   }

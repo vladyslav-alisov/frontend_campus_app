@@ -32,7 +32,7 @@ class Login {
   String surname;
   String imageUrl;
   String typeOfUser;
-  bool sco;
+  String socialClub;
 
   Login({
     this.sTypename,
@@ -42,7 +42,7 @@ class Login {
     this.surname,
     this.imageUrl,
     this.typeOfUser,
-    this.sco,
+    this.socialClub,
   });
 
   Login.fromJson(Map<String, dynamic> json) {
@@ -53,7 +53,7 @@ class Login {
     surname = json['surname'];
     imageUrl = json['imageUrl'];
     typeOfUser = json['typeOfUser'];
-    sco = json["sco"];
+    socialClub = json["socialClub"];
   }
 
   Map<String, dynamic> toJson() {
@@ -65,12 +65,12 @@ class Login {
     data['surname'] = this.surname;
     data['imageUrl'] = this.imageUrl;
     data['typeOfUser'] = this.typeOfUser;
-    data['sco'] = this.sco;
+    data['socialClub'] = this.socialClub;
     return data;
   }
 
   @override
   String toString() {
-    return '{"sTypename": ${this.sTypename},"email": ${this.email},"userID": ${this.userID},"name": ${this.name},"surname": ${this.surname},"imageUrl": ${this.imageUrl},"typeOfUser": ${this.typeOfUser}, "sco": ${this.sco}';
+    return '{"sTypename": ${this.sTypename},"email": ${this.email},"userID": ${this.userID},"name": ${this.name},"surname": ${this.surname},"imageUrl": ${this.imageUrl},"typeOfUser": ${this.typeOfUser}, "socialClub": ${this.socialClub}';
   }
 }

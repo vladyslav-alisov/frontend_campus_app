@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/TimeTable.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
@@ -13,7 +15,15 @@ class TimeTableProvider with ChangeNotifier {
   var setup = GraphQLSetup();
 
   AuthData authData;
-  TimeTableProvider(this.authData);
+  TimeTableProvider(
+    this.authData,
+    this.timeTable,
+    this.mondayCourses,
+    this.tuesdayCourses,
+    this.wednesdayCourses,
+    this.thursdayCourses,
+    this.fridayCourses,
+  );
 
   TimeTable timeTable;
   List<CourseData> mondayCourses = [];
@@ -52,35 +62,30 @@ class TimeTableProvider with ChangeNotifier {
     }
   }
 
-  void resetVariables(){
+  void resetVariables() {
     timeTable = null;
-   mondayCourses = [];
-   tuesdayCourses = [];
-   wednesdayCourses = [];
-   thursdayCourses = [];
-   fridayCourses = [];
+    mondayCourses = [];
+    tuesdayCourses = [];
+    wednesdayCourses = [];
+    thursdayCourses = [];
+    fridayCourses = [];
   }
 
   Future<void> timetable() async {
     QueryOptions options = QueryOptions(
       fetchPolicy: FetchPolicy.networkOnly,
       document: gql(ConstQuery.timetable),
-      variables: {
-        ConstQueryKeys.userID: authData.login.userID,
-        ConstQueryKeys.typeOfUser: authData.login.typeOfUser
-      },
+      variables: {ConstQueryKeys.userID: authData.login.userID, ConstQueryKeys.typeOfUser: authData.login.typeOfUser},
     );
-
     QueryResult result = await setup.client.value.query(options);
-
     if (result.hasException) {
+      print(result.exception);
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
-      resetVariables();
       timeTable = TimeTable.fromJson(result.data);
       if (timeTable != null) {
-        separateCourses(timeTable.timetable.courseData);
+        separateCourses(timeTable.timetable);
       }
     }
     return result;

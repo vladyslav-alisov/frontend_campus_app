@@ -1,7 +1,9 @@
-import 'package:campus_app/models/EventList.dart';
+import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EventsListView extends StatelessWidget {
   const EventsListView({this.event, this.callback});
@@ -37,11 +39,25 @@ class EventsListView extends StatelessWidget {
                   children: <Widget>[
                     AspectRatio(
                       aspectRatio: 2,
-                      child: Image.asset(
-                        ConstAssetsPath.img_defaultEvent,
-                        //  event.imageUrl,
-                        fit: BoxFit.cover,
-                      ),
+                      child: event.imageUrl.contains("cloudinary")
+                          ? Card(
+                              child: FadeInImage(
+                                fit: BoxFit.fill,
+                                imageErrorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    child: Center(
+                                      child: Text("Could not load an image"),
+                                    ),
+                                  );
+                                },
+                                placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                                image: NetworkImage(event.imageUrl),
+                              ),
+                            )
+                          : Image.asset(
+                              ConstAssetsPath.img_placeHolder,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     Container(
                       color: Colors.white,
@@ -57,49 +73,55 @@ class EventsListView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
-                                      event.title,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 22,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        event?.title ?? "",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 22,
+                                        ),
                                       ),
                                     ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.calendar_today_sharp,
-                                          size: 12,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                        SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          event.date,
-                                          style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
-                                        ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
-                                        Icon(
-                                          Icons.location_on_sharp,
-                                          size: 12,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            event.location,
-                                            overflow: TextOverflow.ellipsis,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.calendar_today_sharp,
+                                            size: 12,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            event?.date ?? "",
                                             style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
                                           ),
-                                        ),
-                                      ],
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Icon(
+                                            Icons.location_on_sharp,
+                                            size: 12,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              event?.location ?? "",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 4),
+                                      padding: const EdgeInsets.all(8),
                                       child: Row(
                                         children: <Widget>[
                                           Icon(
@@ -111,7 +133,22 @@ class EventsListView extends StatelessWidget {
                                             width: 3,
                                           ),
                                           Text(
-                                            event.time,
+                                            event?.time ?? "",
+                                            style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
+                                          ),
+                                          SizedBox(
+                                            width: 7,
+                                          ),
+                                          Icon(
+                                            FontAwesomeIcons.flag,
+                                            size: 12,
+                                            color: Theme.of(context).primaryColor,
+                                          ),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            event?.organizer ?? "",
                                             style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
                                           ),
                                         ],
@@ -123,7 +160,7 @@ class EventsListView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 16, top: 8),
+                            padding: const EdgeInsets.only(right: 16, top: 16),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -137,7 +174,7 @@ class EventsListView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  event.price,
+                                  event?.price ?? "",
                                   style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
                                 ),
                               ],

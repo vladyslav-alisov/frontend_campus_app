@@ -1,5 +1,7 @@
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
+import 'package:campus_app/screen_controllers/common_controller.dart';
+import 'package:campus_app/screens/event_screens/event_edit_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusMyEventsView.dart';
@@ -21,85 +23,17 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
     });
   }
 
-  Future<void> future(Future future, String successMsg, BuildContext context) {
-    future.then((_) {
-      setIsLoading(false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          action: SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            label: AppLocalizations.of(context).translate(str_hideMessage),
-            textColor: Colors.white,
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-          content: Text(successMsg),
-        ),
-      );
-    }).catchError(
-      (e) {
-        setIsLoading(false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            action: SnackBarAction(
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              label: AppLocalizations.of(context).translate(str_hideMessage),
-              textColor: Colors.white,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-            content: Text(e.toString()),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     _isLoading = true;
     var authData = Provider.of<AuthProvider>(context, listen: false).authData.login;
-    if (authData.sco) {
-      Provider.of<EventsProvider>(context, listen: false).hostEvents().catchError((e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            action: SnackBarAction(
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              label: AppLocalizations.of(context).translate(str_hideMessage),
-              textColor: Colors.white,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-            content: Text(e.toString()),
-          ),
-        );
-      });
+    if (authData.socialClub != str_false) {
+      CommonController.simpleFuture(Provider.of<EventsProvider>(context, listen: false).hostEvents(), context);
     }
-    Provider.of<EventsProvider>(context, listen: false).myEvents().then((_) {
+    CommonController.simpleFuture(Provider.of<EventsProvider>(context, listen: false).myEvents(), context).then((_) {
       setState(() {
         _isLoading = false;
       });
-    }).catchError((e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          action: SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            label: AppLocalizations.of(context).translate(str_hideMessage),
-            textColor: Colors.white,
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-          content: Text(e.toString()),
-        ),
-      );
     });
     super.initState();
   }
@@ -109,7 +43,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
     var eventProvider = Provider.of<EventsProvider>(context);
     var authData = Provider.of<AuthProvider>(context, listen: false).authData.login;
     if (!_isLoading) {
-      return !authData.sco
+      return authData.socialClub == str_false
           ? Scaffold(
               appBar: AppBar(
                 centerTitle: false,
@@ -138,17 +72,17 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                           context: context,
                           builder: (_) => new AlertDialog(
                             title: new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
-                            content:
-                            new Text(AppLocalizations.of(context).translate(str_warningBeforeEventDelete)),
+                            content: new Text(AppLocalizations.of(context).translate(str_warningBeforeEventDelete)),
                             actions: <Widget>[
                               TextButton(
                                 child: Text(AppLocalizations.of(context).translate(str_yes)),
                                 onPressed: () async {
-                                  await future(
-                                      eventProvider.cancelEvent(eventProvider.myEventList[index].eventID),
+                                  await CommonController.future(
+                                      eventProvider.cancelEvent(eventProvider.myEventList[index].eventID).then((_) {
+                                        Navigator.pop(context);
+                                      }),
                                       "Event successfully canceled",
                                       context);
-                                  Navigator.of(context).pop();
                                 },
                               ),
                               TextButton(
@@ -187,11 +121,13 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     tabs: [
                       Text(
                         AppLocalizations.of(context).translate(str_myEvents),
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 20),
                       ),
                       Text(
                         AppLocalizations.of(context).translate(str_hosting),
                         style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -223,13 +159,17 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                                 builder: (_) => new AlertDialog(
                                   title: new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
                                   content:
-                                  new Text(AppLocalizations.of(context).translate(str_warningBeforeEventDelete)),
+                                      new Text(AppLocalizations.of(context).translate(str_warningBeforeEventDelete)),
                                   actions: <Widget>[
                                     TextButton(
                                       child: Text(AppLocalizations.of(context).translate(str_yes)),
                                       onPressed: () async {
-                                        await future(
-                                            eventProvider.cancelEvent(eventProvider.myEventList[index].eventID),
+                                        await CommonController.future(
+                                            eventProvider
+                                                .cancelEvent(eventProvider.myEventList[index].eventID)
+                                                .then((_) {
+                                              Navigator.pop(context);
+                                            }),
                                             "Event successfully canceled",
                                             context);
                                         Navigator.of(context).pop();
@@ -258,53 +198,68 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                           );
                         }),
                     ListView.builder(
-                        itemCount: eventProvider.hostEventList.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (BuildContext context, int index) {
-                          return CampusMyEventCard(
-                            index: index,
-                            eventList: eventProvider.hostEventList,
-                            functionButtonOne: () {},
-                            functionButtonTwo: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => new AlertDialog(
-                                  title: new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
-                                  content:
-                                      new Text(AppLocalizations.of(context).translate(str_warningBeforeEventDelete)),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text(AppLocalizations.of(context).translate(str_yes)),
-                                      onPressed: () async {
-                                        await future(
-                                            eventProvider.deleteEvent(eventProvider.hostEventList[index].eventID),
-                                            "Event successfully deleted",
-                                            context);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text(AppLocalizations.of(context).translate(str_cancel)),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                      itemCount: eventProvider.hostEventList.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        return CampusMyEventCard(
+                          index: index,
+                          eventList: eventProvider.hostEventList,
+                          functionButtonOne: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventEditScreen(
+                                  event: eventProvider.hostEventList[index],
                                 ),
-                              );
-                            },
-                            iconButtonOne: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            ),
-                            iconButtonTwo: Icon(
-                              Icons.cancel_outlined,
-                              color: Colors.white,
-                            ),
-                            titleButtonOne: AppLocalizations.of(context).translate(str_edit),
-                            titleButtonTwo: AppLocalizations.of(context).translate(str_delete),
-                          );
-                        }),
+                              ),
+                            );
+                          },
+                          functionButtonTwo: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => new AlertDialog(
+                                title: new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
+                                content: new Text(AppLocalizations.of(context).translate(str_warningBeforeEventDelete)),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text(
+                                      AppLocalizations.of(context).translate(str_yes),
+                                    ),
+                                    onPressed: () async {
+                                      await CommonController.future(
+                                          eventProvider
+                                              .deleteEvent(eventProvider.hostEventList[index].eventID)
+                                              .then((_) {
+                                            Navigator.pop(context);
+                                          }),
+                                          "Event successfully deleted",
+                                          context);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text(AppLocalizations.of(context).translate(str_cancel)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          iconButtonOne: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
+                          iconButtonTwo: Icon(
+                            Icons.cancel_outlined,
+                            color: Colors.white,
+                          ),
+                          titleButtonOne: str_edit,
+                          titleButtonTwo: str_delete,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -316,32 +271,5 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
         ),
       );
     }
-  }
-
-/*  "Event was successfully removed."*/
-  /*eventProvider
-                        .cancelEvent(eventProvider.myEventList[index].eventID)*/
-  _showMaterialDialog(Future<void> futureFunc, String warningMsg) async {
-    showDialog(
-      context: context,
-      builder: (_) => new AlertDialog(
-        title: new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
-        content: new Text(warningMsg),
-        actions: <Widget>[
-          TextButton(
-            child: Text(AppLocalizations.of(context).translate(str_yes)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text(AppLocalizations.of(context).translate(str_cancel)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
   }
 }

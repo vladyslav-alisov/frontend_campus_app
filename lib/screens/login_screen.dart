@@ -160,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   textColor: Colors.white,
                                                 ),
                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-                                                content: Text(e),
+                                                content: Text(e.toString()),
                                               ),
                                             );
                                           },

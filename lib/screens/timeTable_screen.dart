@@ -1,4 +1,5 @@
 import 'package:campus_app/providers/timetable_provider.dart';
+import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusTimeTableCard.dart';
@@ -16,36 +17,13 @@ class TimeTable extends StatefulWidget {
 class _TimeTableState extends State<TimeTable> {
   bool _isLoading = false;
 
-  int today() {
-    var today = DateTime.now().weekday;
-    if (today == 6 || today == 7) {
-      today = 1;
-    }
-    return today;
-  }
-
   @override
   void initState() {
     _isLoading = true;
-    Provider.of<TimeTableProvider>(context,listen: false).timetable().then((_) {
+    CommonController.simpleFuture(Provider.of<TimeTableProvider>(context,listen: false).timetable(), context).then((_){
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
-    }).catchError((e){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          action: SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            label: AppLocalizations.of(context).translate(str_hideMessage),
-            textColor: Colors.white,
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-          content: Text(e),
-        ),
-      );
     });
     super.initState();
   }
@@ -66,7 +44,7 @@ class _TimeTableState extends State<TimeTable> {
   Widget build(BuildContext context) {
     var timeTable = Provider.of<TimeTableProvider>(context, listen: false);
     return DefaultTabController(
-      initialIndex: today() - 1,
+      initialIndex: CommonController.today() - 1,
       length: 5,
       child: Scaffold(
         appBar: AppBar(

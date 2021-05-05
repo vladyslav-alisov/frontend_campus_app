@@ -1,4 +1,4 @@
-import 'package:campus_app/models/EventList.dart';
+import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +36,26 @@ class CampusMyEventCard extends StatelessWidget {
                 children: [
                   Flexible(
                     fit: FlexFit.tight,
-
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(25),
-                      child: Image.asset(
-                        ConstAssetsPath.img_defaultEvent,
+                      child: eventList[index].imageUrl.contains("cloudinary")
+                          ? Card(
+                        child: FadeInImage(
+                          fit: BoxFit.fill,
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              child: Center(
+                                child: Text("Could not load an image"),
+                              ),
+                            );
+                          },
+                          placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                          image: NetworkImage(eventList[index].imageUrl),
+                        ),
+                      )
+                          : Image.asset(
+                        ConstAssetsPath.img_placeHolder,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -58,6 +73,8 @@ class CampusMyEventCard extends StatelessWidget {
                           ),
                           Text(
                             eventList[index].title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 15),
                           ),
                           SizedBox(

@@ -42,7 +42,7 @@ final ThemeData appTheme = ThemeData(
     ),
     bodyText2: TextStyle(
       color: Color(0xFF696969),
-      fontSize: MinTextSize,
+      fontSize: 15,
     ),
   ),
   primaryColor: mainColor,

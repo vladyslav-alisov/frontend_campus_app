@@ -1,23 +1,31 @@
-
-
 import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider with ChangeNotifier {
   AuthData authData;
-
+  bool isAuth = false;
   var setup = GraphQLSetup();
 
-  void exitApp(){
+  Future<void> exitApp() async {
     authData = null;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
     notifyListeners();
   }
-  Future<void> auth(String email, String password) async {
 
+
+  Future<void> pushStorageData(String email, String password) async {
+    await SharedPreferences.getInstance().then((response) {
+        response.setString(ConstQueryKeys.email, email);
+        response.setString(ConstQueryKeys.password, password);
+    });
+  }
+
+  Future<void> auth(String email, String password) async {
     QueryOptions options = QueryOptions(
       fetchPolicy: FetchPolicy.networkOnly,
       document: gql(ConstQuery.login),
@@ -26,17 +34,32 @@ class AuthProvider with ChangeNotifier {
         ConstQueryKeys.password: password,
       },
     );
-    QueryResult result = await setup.client.value.query(options).timeout(Duration(seconds: 20));
+    QueryResult result = await setup.client.value.query(options).timeout(Duration(seconds: 30));
     if (result.hasException) {
+      print(result.exception);
         throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     else{
       if (result.data != null) {
+        await pushStorageData(email, password);
         authData = AuthData.fromJson(result.data);
       }
     }
     notifyListeners();
   }
 
-
+  Future<bool> checkUsersData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString(ConstQueryKeys.email);
+    final password = prefs.getString(ConstQueryKeys.password);
+    if(email!=null && password!=null){
+      await auth(email,password).then((_) {
+        isAuth = true;
+      }).catchError((e){
+        isAuth = false;
+      });
+    }
+    else isAuth = false;
+    return isAuth;
+  }
 }

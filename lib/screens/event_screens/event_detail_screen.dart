@@ -1,7 +1,8 @@
-import 'package:campus_app/models/EventList.dart';
 import 'package:campus_app/providers/event_provider.dart';
+import 'package:campus_app/providers/profile_provider.dart';
+import 'package:campus_app/screen_controllers/common_controller.dart';
+import 'package:campus_app/screens/event_screens/event_edit_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final userData = Provider.of<UserProvider>(context, listen: false).authData;
     final eventProvider = Provider.of<EventsProvider>(context);
     final eventList = Provider.of<EventsProvider>(context, listen: false).eventList;
     final EventScreen args = ModalRoute.of(context).settings.arguments as EventScreen;
-    print(eventList[args.index].eventID);
     _isJoined = eventProvider.myEventList.any((element) => element.title == eventList[args.index].title);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
@@ -43,9 +46,27 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               color: Color(0xffEFEFEF),
               child: Column(
                 children: [
-                  Image.asset(
-                    ConstAssetsPath.img_loginImage,
-                    fit: BoxFit.cover,
+                  AspectRatio(
+                    aspectRatio: 2,
+                    child: eventList[args.index].imageUrl.contains("cloudinary")
+                        ? Card(
+                            child: FadeInImage(
+                              fit: BoxFit.fill,
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  child: Center(
+                                    child: Text("Could not load an image"),
+                                  ),
+                                );
+                              },
+                              placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                              image: NetworkImage(eventList[args.index].imageUrl),
+                            ),
+                          )
+                        : Image.asset(
+                            ConstAssetsPath.img_placeHolder,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -56,9 +77,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                eventList[args.index].title.toUpperCase(),
-                                style: Theme.of(context).textTheme.headline5,
+                              Flexible(
+                                child: Text(
+                                  eventList[args.index].title.toUpperCase(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.headline5,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ],
                           ),
@@ -66,98 +92,65 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on_sharp,
-                                        size: Theme.of(context).textTheme.bodyText2.fontSize,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(eventList[args.index].location,
-                                          style: Theme.of(context).textTheme.bodyText2),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_today_sharp,
-                                        size: Theme.of(context).textTheme.bodyText2.fontSize,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(eventList[args.index].date, style: Theme.of(context).textTheme.bodyText2),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.access_time_sharp,
-                                        size: Theme.of(context).textTheme.bodyText2.fontSize,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(eventList[args.index].time, style: Theme.of(context).textTheme.bodyText2),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            Flexible(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconText(
+                                        icon: FontAwesomeIcons.flag,
+                                        text: eventList[args.index].organizer,
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconText(
+                                        icon: Icons.calendar_today_sharp,
+                                        text: eventList[args.index].date,
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconText(
+                                        icon: Icons.access_time_sharp,
+                                        text: eventList[args.index].time,
+                                      )),
+                                ],
+                              ),
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(FontAwesomeIcons.ticketAlt,
-                                          size: Theme.of(context).textTheme.bodyText2.fontSize),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(eventList[args.index].price, style: Theme.of(context).textTheme.bodyText2),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(FontAwesomeIcons.flag, size: Theme.of(context).textTheme.bodyText2.fontSize),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text("Event by ${eventList[args.index].organizer}",
-                                          style: Theme.of(context).textTheme.bodyText2),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            //Spacer(),
+                            Flexible(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconText(
+                                        icon: FontAwesomeIcons.ticketAlt,
+                                        text: eventList[args.index].price,
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconText(
+                                        icon: Icons.location_on_sharp,
+                                        text: "Event by ${eventList[args.index].location}",
+                                      )),
+                                ],
+                              ),
                             )
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Details"),
+                              Text(
+                                "Details",
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ],
                           ),
                         ),
@@ -171,31 +164,67 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             style: Theme.of(context).textTheme.bodyText2,
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            _isLoading
-                                ? CircularProgressIndicator()
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: !_isJoined
-                                        ? ElevatedButton(
-                                      onPressed: () {
-                                        setIsLoading(true);
-                                        future(eventProvider.joinEvent(eventList[args.index].eventID), "Event was successfully added",context);
-                                      },
-                                      child: Text("Join"),
-                                    )
-                                        : ElevatedButton(
-                                      onPressed: () {
-                                        setIsLoading(true);
-                                        future(eventProvider.cancelEvent(eventList[args.index].eventID), "Event successfully removed from your events", context);
-                                      },
-                                      child: Text("Cancel"),
-                                    )
-                                  ),
-                          ],
-                        ),
+                        userData.login.socialClub == eventList[args.index].organizer
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor)),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => EventEditScreen(
+                                                event: eventProvider.eventList[args.index],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text("Edit"),
+                                      )),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  _isLoading
+                                      ? CircularProgressIndicator()
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: !_isJoined
+                                              ? ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty.all(Theme.of(context).primaryColor)),
+                                                  onPressed: (){
+                                                    setIsLoading(true);
+                                                    CommonController.future(
+                                                        eventProvider.joinEvent(eventList[args.index].eventID),
+                                                        "Event was successfully added",
+                                                        context);
+                                                    setIsLoading(false);
+                                                  },
+                                                  child: Text("Join"),
+                                                )
+                                              : ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty.all(Theme.of(context).primaryColor)),
+                                                  onPressed: () {
+                                                    setIsLoading(true);
+                                                    CommonController.future(
+                                                        eventProvider.cancelEvent(eventList[args.index].eventID),
+                                                        "Event successfully removed from your events",
+                                                        context);
+                                                    setIsLoading(false);
+                                                  },
+                                                  child: Text("Cancel"),
+                                                )),
+                                ],
+                              ),
                       ],
                     ),
                   ),
@@ -208,48 +237,32 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     );
   }
 
-
   void setIsLoading(bool state) {
     setState(() {
       _isLoading = state;
     });
   }
+}
 
-  Future<void> future(Future future, String successMsg, BuildContext context) {
-    future.then((_) {
-      setIsLoading(false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          action: SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            label: AppLocalizations.of(context).translate(str_hideMessage),
-            textColor: Colors.white,
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-          content: Text(successMsg),
+class IconText extends StatelessWidget {
+  IconText({this.icon, this.text});
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: Icon(icon, size: Theme.of(context).textTheme.bodyText2.fontSize),
         ),
-      );
-    }).catchError(
-      (e) {
-        setIsLoading(false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            action: SnackBarAction(
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              label: AppLocalizations.of(context).translate(str_hideMessage),
-              textColor: Colors.white,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-            content: Text(e.toString()),
-          ),
-        );
-      },
+        SizedBox(
+          width: 5,
+        ),
+        Expanded(flex: 10,child: Text(text, style: Theme.of(context).textTheme.bodyText2,overflow: TextOverflow.ellipsis,maxLines: 2,softWrap: false,)),
+      ],
     );
   }
 }

@@ -1,19 +1,51 @@
 import 'package:flutter/material.dart';
 
 class ConstMutation {
+  static const String createMenu = '''
+  mutation createMenu(\$menuInput: MenuInputData,\$userID: ID!){
+  action: createMenu(menuInput: \$menuInput, userID:\$userID){
+        dayID
+        redMeal
+        whiteMeal
+        vegMeal
+        soup
+        salad
+        dessert
+      }
+  }
+  ''';
   static const String deleteEvent = '''
-  mutation cancelEvent(\$eventID: ID!, \$userID: ID!){
-  action: cancelEvent(eventID: \$eventID, userID: \$userID )
+  mutation deleteEvent(\$eventID: ID!, \$userID: ID!){
+  action: deleteEvent(eventID: \$eventID, userID: \$userID )
   }
   ''';
 
   static const String createEvent = '''
   mutation createEvent(\$eventInput: EventInputData!, \$userID: ID!){
-  action: createEvent(eventInput: \$eventInput, userID: \$userID ){
+  action: createEvent(eventInput: \$eventInput, userID: \$userID, ){
         eventID
         title
         description
-        atendee
+        attendee
+        price
+        organizer
+        date
+        time
+        location
+        imageUrl
+        createdAt
+        creator
+    }
+  }
+  ''';
+
+  static const String editEvent = '''
+  mutation editEvent(\$eventInput: EventInputData!, \$userID: ID!, \$eventID: ID!){
+  action: editEvent(eventInput: \$eventInput, userID: \$userID , eventID: \$eventID){
+        eventID
+        title
+        description
+        attendee
         price
         organizer
         date
@@ -47,15 +79,27 @@ class ConstMutation {
 }
 
 class ConstQuery {
+  static const String listOfAttendees = '''
+  query listOfAttendees(\$eventID: ID!, \$userID: ID!){
+    listOfAttendees(eventID: \$eventID, userID: \$userID){
+        count
+        userID
+        eventID
+        name
+        surname
+        phone
+        joinedAt
+       }
+    }
+  ''';
   static const String hostEvents = '''
   query hostEvents(\$userID: ID!){
       hostEvents(userID: \$userID){
-      events{
         eventID
         title
         description
         price
-        atendee
+        attendee
         organizer
         date
         time
@@ -63,19 +107,17 @@ class ConstQuery {
         imageUrl
         createdAt
         creator
-      }
     }
 }
   ''';
   static const String myEvents = '''
   query myEvents(\$userID: ID!){
       myEvents(userID: \$userID){
-      events{
         eventID
         title
         description
         price
-        atendee
+        attendee
         organizer
         date
         time
@@ -83,7 +125,6 @@ class ConstQuery {
         imageUrl
         createdAt
         creator
-      }
     }
 }
   ''';
@@ -96,7 +137,7 @@ class ConstQuery {
       surname
       imageUrl
       typeOfUser
-      sco
+      socialClub
   }
 }
   ''';
@@ -119,27 +160,24 @@ class ConstQuery {
   static const String timetable = '''
   query timetable(\$userID: ID!,\$typeOfUser: String!){
    timetable(userID: \$userID, typeOfUser:\$typeOfUser){
-      courseData{
         day
         courseCode
         courseName
         time
         location
         lecturer
-      }
   }
 }
   ''';
 
   static const String events = '''
-  query events{
-    events{
-      events{
+  query events(\$userID: ID!){
+    events(userID: \$userID){
         eventID
         title
         description
         price
-        atendee
+        attendee
         organizer
         date
         time
@@ -147,7 +185,6 @@ class ConstQuery {
         imageUrl
         createdAt
         creator
-      }
     }
 }
   ''';
@@ -155,6 +192,7 @@ class ConstQuery {
 
 //for calling data we need key strings
 class ConstQueryKeys {
+  static const String eventInput = "eventInput";
   static const String eventID = "eventID";
   static const String imageUrl = "imageUrl";
   static const String typeOfUser = "typeOfUser";
@@ -170,6 +208,21 @@ class ConstQueryKeys {
   static const String address = "address";
   static const String phone = "phone";
   static const String balance = "balance";
+  static const String title="title";
+  static const String description="description";
+  static const String attendee="attendee";
+  static const String price="price";
+  static const String date="date";
+  static const String time="time";
+  static const String location="location";
+  static const String dayID = "dayID";
+  static const String redMeal = "redMeal";
+  static const String whiteMeal = "whiteMeal";
+  static const String vegMeal = "vegMeal";
+  static const String soup = "soup";
+  static const String salad = "salad";
+  static const String dessert = "dessert";
+  static const String menuInput = "menuInput";
 }
 
 class ConstAssetsPath {
@@ -199,7 +252,7 @@ class MyConstants {
     "/home_screen",
     "/event_screen",
     "/socialClub_screen",
-    "/timeTable_screen",
+    "/menu_screen",
   ];
   static const List<String> funcTitles = [
     "Announcements",
@@ -276,5 +329,6 @@ const String str_yes= "Yes";
 const String str_no= "No";
 const String str_details = "Details";
 
-//default values for vars
+//default values for GraphQL
 const str_noImage = "No Image";
+const str_false = "false";

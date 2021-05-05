@@ -1,12 +1,18 @@
 import 'package:campus_app/providers/profile_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
+import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screens/login_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+enum UserType{
+  Cook,
+  Lecturer,
+  Student
+}
 class ProfileScreen extends StatefulWidget {
   static const routeName = "/profile_screen";
 
@@ -20,25 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     _isLoading = true;
-    Provider.of<UserProvider>(context, listen: false).profile().then((_) {
+    CommonController.simpleFuture(Provider.of<UserProvider>(context,listen: false).profile(), context).then((_){
       setState(() {
         _isLoading = false;
       });
-    }).catchError((e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          action: SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            label: AppLocalizations.of(context).translate(str_hideMessage),
-            textColor: Colors.white,
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-          content: Text(e.toString()),
-        ),
-      );
     });
     super.initState();
   }
@@ -56,10 +47,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     var auth = Provider.of<AuthProvider>(context,listen: false);
     final devSize = MediaQuery.of(context).size;
     var userData = Provider.of<UserProvider>(context, listen: false).user;
     var authData = Provider.of<AuthProvider>(context, listen: false).authData;
+
     return Scaffold(
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(
@@ -90,7 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           MaterialButton(
                             onPressed: () async {
-
                               await Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false).then((value) => auth.exitApp());
                             },
                             child: Text(
@@ -232,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  Padding(
+                  authData.login.typeOfUser!= describeEnum(UserType.Student)? Container():Padding(
                     padding: const EdgeInsets.only(
                       bottom: 25,
                       left: 14,
@@ -290,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

@@ -25,13 +25,9 @@ class UserProvider with ChangeNotifier {
         ConstQueryKeys.typeOfUser: authData.login.typeOfUser,
       },
     );
-
     QueryResult result = await setup.client.value.query(options);
-
-
-    print(result.exception);
-    print(result.data);
     if (result.hasException) {
+      print(result.exception);
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {

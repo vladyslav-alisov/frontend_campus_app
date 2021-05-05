@@ -54,7 +54,7 @@ class Profile {
     email = json['email'];
     address = json['address'];
     phone = json['phone'];
-    balance = json['balance'].toDouble();
+    balance = json['balance']?.toDouble() ?? 0;
   }
 
   Map<String, dynamic> toJson() {

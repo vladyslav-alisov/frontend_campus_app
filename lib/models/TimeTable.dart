@@ -1,38 +1,15 @@
 class TimeTable {
   String sTypename;
-  Timetable timetable;
+  List<CourseData> timetable;
 
   TimeTable({this.sTypename, this.timetable});
 
   TimeTable.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
-    timetable = json['timetable'] != null
-        ? new Timetable.fromJson(json['timetable'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['__typename'] = this.sTypename;
-    if (this.timetable != null) {
-      data['timetable'] = this.timetable.toJson();
-    }
-    return data;
-  }
-}
-
-class Timetable {
-  String sTypename;
-  List<CourseData> courseData;
-
-  Timetable({this.sTypename, this.courseData});
-
-  Timetable.fromJson(Map<String, dynamic> json) {
-    sTypename = json['__typename'];
-    if (json['courseData'] != null) {
-      courseData = [];
-      json['courseData'].forEach((v) {
-        courseData.add(new CourseData.fromJson(v));
+    if (json['timetable'] != null) {
+      timetable = [];
+      json['timetable'].forEach((v) {
+        timetable.add(new CourseData.fromJson(v));
       });
     }
   }
@@ -40,8 +17,8 @@ class Timetable {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['__typename'] = this.sTypename;
-    if (this.courseData != null) {
-      data['courseData'] = this.courseData.map((v) => v.toJson()).toList();
+    if (this.timetable != null) {
+      data['timetable'] = this.timetable.map((v) => v.toJson()).toList();
     }
     return data;
   }
