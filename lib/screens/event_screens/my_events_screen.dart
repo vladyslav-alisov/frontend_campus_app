@@ -28,9 +28,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
     _isLoading = true;
     var authData = Provider.of<AuthProvider>(context, listen: false).authData.login;
     if (authData.socialClub != str_false) {
-      CommonController.simpleFuture(Provider.of<EventsProvider>(context, listen: false).hostEvents(), context);
+      CommonController.queryFuture(Provider.of<EventsProvider>(context, listen: false).hostEvents(), context);
     }
-    CommonController.simpleFuture(Provider.of<EventsProvider>(context, listen: false).myEvents(), context).then((_) {
+    CommonController.queryFuture(Provider.of<EventsProvider>(context, listen: false).myEvents(), context).then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -77,7 +77,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                               TextButton(
                                 child: Text(AppLocalizations.of(context).translate(str_yes)),
                                 onPressed: () async {
-                                  await CommonController.future(
+                                  await CommonController.mutationFuture(
                                       eventProvider.cancelEvent(eventProvider.myEventList[index].eventID).then((_) {
                                         Navigator.pop(context);
                                       }),
@@ -164,7 +164,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                                     TextButton(
                                       child: Text(AppLocalizations.of(context).translate(str_yes)),
                                       onPressed: () async {
-                                        await CommonController.future(
+                                        await CommonController.mutationFuture(
                                             eventProvider
                                                 .cancelEvent(eventProvider.myEventList[index].eventID)
                                                 .then((_) {
@@ -226,7 +226,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                                       AppLocalizations.of(context).translate(str_yes),
                                     ),
                                     onPressed: () async {
-                                      await CommonController.future(
+                                      await CommonController.mutationFuture(
                                           eventProvider
                                               .deleteEvent(eventProvider.hostEventList[index].eventID)
                                               .then((_) {

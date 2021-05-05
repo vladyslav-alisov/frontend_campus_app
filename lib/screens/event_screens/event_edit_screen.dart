@@ -261,14 +261,14 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                         if (_formKey.currentState.validate()) {
                           screenController.setIsLoading(true);
                           if (widget.existingEvent != null) {
-                            await CommonController.future(
+                            await CommonController.mutationFuture(
                                     eventProvider.editEvent(eventID: widget.existingEvent.eventID, event: screenController.sendEvent(context)).then((_) {
                                       Navigator.pop(context);
                                     }),
                                     "Event has been successfully updated",
                                     context);
                           } else {
-                            await CommonController.future(
+                            await CommonController.mutationFuture(
                                 eventProvider.createEvent(screenController.sendEvent(context)).then((_) {
                                   Navigator.pop(context);
                                 }),

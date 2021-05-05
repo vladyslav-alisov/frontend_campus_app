@@ -79,6 +79,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, MenuProvider>(
           update: (context, authData, previousMenu) => MenuProvider(
             authData.authData,
+            previousMenu ==null ? null : previousMenu.menus,
+            previousMenu ==null ? [] : previousMenu.menuList,
           ),
         )
       ],
@@ -109,14 +111,14 @@ class MyApp extends StatelessWidget {
             routes: {
               HomeScreen.routeName: (context) => HomeScreen(),
               ProfileScreen.routeName: (context) => ProfileScreen(),
-              TimeTable.routeName: (context) => TimeTable(),
+              TimeTableScreen.routeName: (context) => TimeTableScreen(),
               SocialClubScreen.routeName: (context) => SocialClubScreen(),
               EventScreen.routeName: (context) => EventScreen(),
               LoginScreen.routeName: (context) => LoginScreen(),
               EventDetailScreen.routeName: (context) => EventDetailScreen(),
               MyEventsScreen.routeName: (context) => MyEventsScreen(),
               EventEditScreen.routeName: (context) => EventEditScreen(),
-              MenuScreen.routeName: (context) => MenuScreen(),
+              MenuEditScreen.routeName: (context) => MenuEditScreen(),
             },
           );
         }),

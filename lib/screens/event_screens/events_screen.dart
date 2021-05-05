@@ -29,7 +29,7 @@ class _EventScreenState extends State<EventScreen> with TickerProviderStateMixin
   @override
   void initState() {
     _isLoading = true;
-    CommonController.simpleFuture(
+    CommonController.queryFuture(
         Provider.of<EventsProvider>(context, listen: false).events().then((_) {
           setState(() {
             _isLoading = false;

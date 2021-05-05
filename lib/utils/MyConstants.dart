@@ -1,3 +1,5 @@
+import 'package:campus_app/screens/menu_screen.dart';
+import 'package:campus_app/screens/timeTable_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConstMutation {
@@ -5,7 +7,9 @@ class ConstMutation {
   mutation createMenu(\$menuInput: MenuInputData,\$userID: ID!){
   action: createMenu(menuInput: \$menuInput, userID:\$userID){
         dayID
+        menuID
         redMeal
+        day
         whiteMeal
         vegMeal
         soup
@@ -79,6 +83,21 @@ class ConstMutation {
 }
 
 class ConstQuery {
+  static const String menu = '''
+  query menu(){
+          menu(){
+              menuID
+              dayID
+              day
+              redMeal
+              whiteMeal
+              vegMeal
+              soup
+              salad
+              dessert
+        }
+  }
+  ''';
   static const String listOfAttendees = '''
   query listOfAttendees(\$eventID: ID!, \$userID: ID!){
     listOfAttendees(eventID: \$eventID, userID: \$userID){
@@ -234,6 +253,35 @@ class ConstAssetsPath {
 }
 
 class MyConstants {
+  static const List<String> assetStuffPaths = [
+    'assets/images/Announcements.jpg',
+    'assets/images/DinnerHall.jpg',
+    'assets/images/Events.jpg',
+    'assets/images/Transportation.jpg',
+  ];
+
+  static const List<String> routesStuff = [
+    TimeTableScreen.routeName,
+    MenuEditScreen.routeName,
+    TimeTableScreen.routeName,
+    TimeTableScreen.routeName,
+  ];
+
+  static const List<String> funcStuffTitles = [
+    "Announcements",
+    "Dinner Hall",
+    "Events",
+    "Transportation",
+  ];
+
+  static const List<Color> funcColorsStuff = [
+    Color(0xFFFC7068),
+    Color(0xFFFDD530),
+    Color(0xFF4DAB57),
+    Color(0xFF04D6A7),
+
+  ];
+
   static const List<String> assetPaths = [
     'assets/images/Announcements.jpg',
     'assets/images/Document Request.jpg',

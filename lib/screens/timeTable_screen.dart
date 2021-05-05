@@ -7,20 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 //todo add share button to appbar to send your courses schedule
-class TimeTable extends StatefulWidget {
+class TimeTableScreen extends StatefulWidget {
   static const String routeName = "/timeTable_screen";
 
   @override
-  _TimeTableState createState() => _TimeTableState();
+  _TimeTableScreenState createState() => _TimeTableScreenState();
 }
 
-class _TimeTableState extends State<TimeTable> {
+class _TimeTableScreenState extends State<TimeTableScreen> {
   bool _isLoading = false;
 
   @override
   void initState() {
     _isLoading = true;
-    CommonController.simpleFuture(Provider.of<TimeTableProvider>(context,listen: false).timetable(), context).then((_){
+    CommonController.queryFuture(Provider.of<TimeTableProvider>(context,listen: false).timetable(), context).then((_){
       setState(() {
         _isLoading = false;
       });

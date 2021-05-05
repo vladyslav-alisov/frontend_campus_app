@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     _isLoading = true;
-    CommonController.simpleFuture(Provider.of<UserProvider>(context,listen: false).profile(), context).then((_){
+    CommonController.queryFuture(Provider.of<UserProvider>(context,listen: false).profile(), context).then((_){
       setState(() {
         _isLoading = false;
       });

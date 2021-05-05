@@ -3,10 +3,13 @@ import 'package:campus_app/screens/profile_screen.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusCardFunction.dart';
 import 'package:campus_app/widgets/CampusClipper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+
+enum UserType { Student , Cook}
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "/home_screen";
@@ -71,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Flexible(
                                   fit: FlexFit.tight,
                                   child: userData.login.imageUrl != str_noImage
-                                  //todo make circular avatar and reduce code size
+                                      //todo make circular avatar and reduce code size
                                       ? Container(
                                           width: 88,
                                           height: 88,
@@ -108,31 +111,57 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Container(
-                  height: devSize.height * 0.685,
-                  width: devSize.width,
-                  child: GridView.builder(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      bottom: 20,
-                      top: 10,
-                    ),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 14.0,
-                      mainAxisSpacing: 17.0,
-                    ),
-                    itemCount: MyConstants.funcTitles.length,
-                    itemBuilder: (context, index) => cardFunction(
-                      context: context,
-                      imagePath: MyConstants.assetPaths[index],
-                      label: MyConstants.funcTitles[index],
-                      color: MyConstants.funcColors[index],
-                      path: MyConstants.routes[index],
-                    ),
-                  ),
-                )
+                userData.login.typeOfUser == describeEnum(UserType.Cook)
+                    ? Container(
+                        height: devSize.height * 0.685,
+                        width: devSize.width,
+                        child: GridView.builder(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                            bottom: 20,
+                            top: 10,
+                          ),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 14.0,
+                            mainAxisSpacing: 17.0,
+                          ),
+                          itemCount: MyConstants.funcStuffTitles.length,
+                          itemBuilder: (context, index) => cardFunction(
+                            context: context,
+                            imagePath: MyConstants.assetStuffPaths[index],
+                            label: MyConstants.funcStuffTitles[index],
+                            color: MyConstants.funcColorsStuff[index],
+                            path: MyConstants.routesStuff[index],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: devSize.height * 0.685,
+                        width: devSize.width,
+                        child: GridView.builder(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                            bottom: 20,
+                            top: 10,
+                          ),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 14.0,
+                            mainAxisSpacing: 17.0,
+                          ),
+                          itemCount: MyConstants.funcTitles.length,
+                          itemBuilder: (context, index) => cardFunction(
+                            context: context,
+                            imagePath: MyConstants.assetPaths[index],
+                            label: MyConstants.funcTitles[index],
+                            color: MyConstants.funcColors[index],
+                            path: MyConstants.routes[index],
+                          ),
+                        ),
+                      )
               ],
             ),
           );

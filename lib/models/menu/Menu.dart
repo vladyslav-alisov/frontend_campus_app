@@ -1,15 +1,15 @@
-class MenuList {
+class Menus {
   String sTypename;
-  List<Menu> menu;
+  List<Menu> menus;
 
-  MenuList({this.sTypename, this.menu});
+  Menus({this.sTypename, this.menus});
 
-  MenuList.fromJson(Map<String, dynamic> json) {
+  Menus.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
     if (json['menu'] != null) {
-      menu = [];
+      menus = [];
       json['menu'].forEach((v) {
-        menu.add(new Menu.fromJson(v));
+        menus.add(new Menu.fromJson(v));
       });
     }
   }
@@ -17,15 +17,15 @@ class MenuList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['__typename'] = this.sTypename;
-    if (this.menu != null) {
-      data['menu'] = this.menu.map((v) => v.toJson()).toList();
+    if (this.menus != null) {
+      data['menu'] = this.menus.map((v) => v.toJson()).toList();
     }
     return data;
   }
 
   @override
   String toString() {
-    return '{"sTypename": ${this.sTypename}, "menu": ${this.menu}}';
+    return '{"sTypename": ${this.sTypename}, "menu": ${this.menus}}';
   }
 
 }
@@ -45,7 +45,7 @@ class Menu {
   Menu({
         this.sTypename,
         this.menuID ="",
-        this.dayID ="",
+        this.dayID="",
         this.day ="",
         this.redMeal ="",
         this.whiteMeal ="",

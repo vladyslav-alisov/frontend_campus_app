@@ -201,7 +201,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                           MaterialStateProperty.all(Theme.of(context).primaryColor)),
                                                   onPressed: (){
                                                     setIsLoading(true);
-                                                    CommonController.future(
+                                                    CommonController.mutationFuture(
                                                         eventProvider.joinEvent(eventList[args.index].eventID),
                                                         "Event was successfully added",
                                                         context);
@@ -215,7 +215,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                           MaterialStateProperty.all(Theme.of(context).primaryColor)),
                                                   onPressed: () {
                                                     setIsLoading(true);
-                                                    CommonController.future(
+                                                    CommonController.mutationFuture(
                                                         eventProvider.cancelEvent(eventList[args.index].eventID),
                                                         "Event successfully removed from your events",
                                                         context);
