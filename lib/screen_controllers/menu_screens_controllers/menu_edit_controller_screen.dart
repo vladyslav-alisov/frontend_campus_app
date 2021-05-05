@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 enum Days { Monday, Tuesday, Wednesday, Thursday, Friday }
 
-class MenuScreenController with ChangeNotifier {
+class MenuEditScreenController with ChangeNotifier {
   final List<String> days = [
     describeEnum(Days.Monday),
     describeEnum(Days.Tuesday),

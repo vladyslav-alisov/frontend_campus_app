@@ -12,7 +12,8 @@ import 'package:campus_app/screens/event_screens/events_screen.dart';
 import 'package:campus_app/screens/event_screens/my_events_screen.dart';
 import 'package:campus_app/screens/home_screen.dart';
 import 'package:campus_app/screens/login_screen.dart';
-import 'package:campus_app/screens/menu_screen.dart';
+import 'package:campus_app/screens/menu_screens/menu_edit_screen.dart';
+import 'package:campus_app/screens/menu_screens/menu_screen.dart';
 import 'package:campus_app/screens/profile_screen.dart';
 import 'package:campus_app/screens/socialClub_screen.dart';
 import 'package:campus_app/screens/timeTable_screen.dart';
@@ -119,6 +120,7 @@ class MyApp extends StatelessWidget {
               MyEventsScreen.routeName: (context) => MyEventsScreen(),
               EventEditScreen.routeName: (context) => EventEditScreen(),
               MenuEditScreen.routeName: (context) => MenuEditScreen(),
+              MenuScreen.routeName: (context) => MenuScreen(),
             },
           );
         }),

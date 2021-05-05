@@ -18,7 +18,6 @@ class MenuProvider with ChangeNotifier{
   List<Menu> menuList = [];
 
   Future<void> createMenu(MenuToSend menu) async {
-    print(menu);
     MutationOptions options = MutationOptions(
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstMutation.createMenu),
@@ -48,7 +47,9 @@ class MenuProvider with ChangeNotifier{
       menus = Menus.fromJson(result.data);
       menuList = List.from(menus.menus);
     }
+    notifyListeners();
     return menuList;
+
   }
 
 }

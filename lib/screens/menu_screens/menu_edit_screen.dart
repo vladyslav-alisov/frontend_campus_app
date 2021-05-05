@@ -5,18 +5,17 @@ import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/CampusTextInputField.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 enum Days { Monday, Tuesday, Wednesday, Thursday, Friday }
 
 class MenuEditScreen extends StatelessWidget {
-  static const String routeName = "/menu_screen";
+  static const String routeName = "/menu_edit_screen";
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MenuScreenController(),
+      create: (context) => MenuEditScreenController(),
       child: MenuScreenEditScaffold(),
     );
   }
@@ -36,7 +35,7 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
     CommonController.queryFuture(
             Provider.of<MenuProvider>(context, listen: false)
                 .menu()
-                .then((value) => Provider.of<MenuScreenController>(context, listen: false).initVariables(value)),
+                .then((value) => Provider.of<MenuEditScreenController>(context, listen: false).initVariables(value)),
             context)
         .then((value) {
       setState(() {
@@ -49,7 +48,7 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
   @override
   Widget build(BuildContext context) {
     var menuProvider = Provider.of<MenuProvider>(context);
-    var screenController = Provider.of<MenuScreenController>(context);
+    var screenController = Provider.of<MenuEditScreenController>(context);
 
     return _isLoading
         ? Scaffold(

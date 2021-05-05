@@ -1,4 +1,6 @@
-import 'package:campus_app/screens/menu_screen.dart';
+import 'package:campus_app/screens/event_screens/events_screen.dart';
+import 'package:campus_app/screens/menu_screens/menu_edit_screen.dart';
+import 'package:campus_app/screens/menu_screens/menu_screen.dart';
 import 'package:campus_app/screens/timeTable_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -262,7 +264,7 @@ class MyConstants {
 
   static const List<String> routesStuff = [
     TimeTableScreen.routeName,
-    MenuEditScreen.routeName,
+    MenuScreen.routeName,
     TimeTableScreen.routeName,
     TimeTableScreen.routeName,
   ];
@@ -298,9 +300,9 @@ class MyConstants {
     "/timeTable_screen",
     "/timeTable_screen",
     "/home_screen",
-    "/event_screen",
+    EventScreen.routeName,
     "/socialClub_screen",
-    "/menu_screen",
+    MenuScreen.routeName,
   ];
   static const List<String> funcTitles = [
     "Announcements",
