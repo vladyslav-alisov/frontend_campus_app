@@ -1,6 +1,6 @@
 import 'package:campus_app/providers/menu_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/screen_controllers/menu_screens_controllers/menu_edit_controller_screen.dart';
+import 'package:campus_app/screen_controllers/menu_screens_controllers/menu_edit_screen_controller.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
@@ -27,8 +27,10 @@ class MenuScreenEditScaffold extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreenEditScaffold> {
+
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+
   @override
   void initState() {
     _isLoading = true;
@@ -61,7 +63,7 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
               preferredSize: Size.fromHeight(
                 AppBar().preferredSize.height + 20,
               ),
-              child: CapmusAppBar(
+              child: CampusAppBar(
                 title: MyConstants.funcTitles[5],
               ),
             ),
@@ -73,6 +75,7 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -113,7 +116,10 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
                             ),
                           ),
                         ),
-                        Text("Soup"),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Text("Soup",style: Theme.of(context).textTheme.headline3,),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CampusTextInputField(
@@ -123,7 +129,7 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
                             //rightIcon: IconButton(icon: Icon(FontAwesomeIcons.food)),
                           ),
                         ),
-                        Text("Meals"),
+                        Text("Meals",style: Theme.of(context).textTheme.headline3),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CampusTextInputField(
@@ -150,7 +156,7 @@ class _MenuScreenState extends State<MenuScreenEditScaffold> {
                             validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                           ),
                         ),
-                        Text("Desert-Salad"),
+                        Text("Desert-Salad",style: Theme.of(context).textTheme.headline3),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CampusTextInputField(

@@ -1,11 +1,11 @@
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 
-class CapmusAppBar extends StatelessWidget {
+class CampusAppBar extends StatelessWidget {
   final String title;
   final Widget actionWidget;
 
-  CapmusAppBar({@required this.title,this.actionWidget});
+  CampusAppBar({@required this.title,this.actionWidget});
 
   @override
   Widget build(BuildContext context) {

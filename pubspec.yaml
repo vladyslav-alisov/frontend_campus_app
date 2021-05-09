@@ -3,7 +3,7 @@ description: Mobile application for university
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 0.0.1+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -23,14 +23,20 @@ dependencies:
   intl: ^0.17.0
   font_awesome_flutter: ^9.0.0
   image_picker: ^0.7.4
+  connectivity: ^3.0.3
+  flutter_email_sender: ^5.0.0
+  carousel_slider: ^3.0.0
+
 
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.8.0"
 
 flutter_icons:
   android: true
   ios: true
   image_path: "assets/icons/IconCampusApp.png"
+  adaptive_icon_background: "#E1F3FF"
 
 
   flutter_test:

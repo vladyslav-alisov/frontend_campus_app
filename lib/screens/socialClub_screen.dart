@@ -34,7 +34,7 @@ class _SocialClubScreenState extends State<SocialClubScreen> {
         preferredSize: Size.fromHeight(
           devSize.height * 0.1,
         ),
-        child: CapmusAppBar(
+        child: CampusAppBar(
           title: MyConstants.funcTitles[6],
         ),
       ),

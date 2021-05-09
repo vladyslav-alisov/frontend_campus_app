@@ -128,7 +128,7 @@ class Event {
     eventID = json['eventID'];
     title = json['title'];
     description = json['description'];
-    attendee = json['atendee'];
+    attendee = json['attendee'];
     price=json['price'];
     organizer = json['organizer'];
     date = json['date'];
@@ -145,7 +145,7 @@ class Event {
     data['eventID'] = this.eventID;
     data['title'] = this.title;
     data['description'] = this.description;
-    data['atendee'] = this.attendee;
+    data['attendee'] = this.attendee;
     data['price'] = this.price;
     data['organizer'] = this.organizer;
     data['date'] = this.date;
@@ -159,6 +159,6 @@ class Event {
 
   @override
   String toString() {
-    return '{ "sTypename": ${this.sTypename}, "eventID": ${this.eventID}, "title": ${this.title}, "description": ${this.description}, "atendee": ${this.attendee}, "price": ${this.price}, "organizer": ${this.organizer}, "date": ${this.date}, "time": ${this.time}, "location": ${this.location}, "imageUrl": ${this.imageUrl}, "createdAt": ${this.createdAt}, "creator": ${this.creator}}';
+    return '{ "sTypename": ${this.sTypename}, "eventID": ${this.eventID}, "title": ${this.title}, "description": ${this.description}, "attendee": ${this.attendee}, "price": ${this.price}, "organizer": ${this.organizer}, "date": ${this.date}, "time": ${this.time}, "location": ${this.location}, "imageUrl": ${this.imageUrl}, "createdAt": ${this.createdAt}, "creator": ${this.creator}}';
   }
 }

@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.flutter.campus_app">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="campus_app"
+        android:label="Campus App"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
        >

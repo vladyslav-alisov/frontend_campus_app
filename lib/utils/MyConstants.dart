@@ -1,7 +1,10 @@
+import 'package:campus_app/screens/announcements_screens/announcements_screen.dart';
+import 'package:campus_app/screens/document_request_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
 import 'package:campus_app/screens/menu_screens/menu_edit_screen.dart';
 import 'package:campus_app/screens/menu_screens/menu_screen.dart';
 import 'package:campus_app/screens/timeTable_screen.dart';
+import 'package:campus_app/screens/transportation_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConstMutation {
@@ -65,8 +68,8 @@ class ConstMutation {
   ''';
 
   static const String joinEvent = '''
-  mutation joinEvent(\$eventID: ID!, \$userID: ID!){
-  action: joinEvent(eventID: \$eventID, userID: \$userID ){
+  mutation joinEvent(\$eventID: ID!, \$userID: ID!,\$typeOfUser: String!){
+  action: joinEvent(eventID: \$eventID, userID: \$userID, typeOfUser: \$typeOfUser){
       userID
       eventID
       name
@@ -79,7 +82,7 @@ class ConstMutation {
 
   static const String cancelEvent = '''
   mutation cancelEvent(\$eventID: ID!, \$userID: ID!){
-  action: cancelEvent(eventID: \$eventID, userID: \$userID )
+  action: cancelEvent(eventID: \$eventID, userID: \$userID)
   }
   ''';
 }
@@ -101,8 +104,8 @@ class ConstQuery {
   }
   ''';
   static const String listOfAttendees = '''
-  query listOfAttendees(\$eventID: ID!, \$userID: ID!){
-    listOfAttendees(eventID: \$eventID, userID: \$userID){
+  query listOfAttendees(\$eventID: ID!){
+    listOfAttendees(eventID: \$eventID){
         count
         userID
         eventID
@@ -192,8 +195,8 @@ class ConstQuery {
   ''';
 
   static const String events = '''
-  query events(\$userID: ID!){
-    events(userID: \$userID){
+  query events(\$userID: ID!,\$typeOfUser: String!){
+    events(userID: \$userID, typeOfUser: \$typeOfUser){
         eventID
         title
         description
@@ -229,13 +232,13 @@ class ConstQueryKeys {
   static const String address = "address";
   static const String phone = "phone";
   static const String balance = "balance";
-  static const String title="title";
-  static const String description="description";
-  static const String attendee="attendee";
-  static const String price="price";
-  static const String date="date";
-  static const String time="time";
-  static const String location="location";
+  static const String title = "title";
+  static const String description = "description";
+  static const String attendee = "attendee";
+  static const String price = "price";
+  static const String date = "date";
+  static const String time = "time";
+  static const String location = "location";
   static const String dayID = "dayID";
   static const String redMeal = "redMeal";
   static const String whiteMeal = "whiteMeal";
@@ -258,29 +261,30 @@ class MyConstants {
   static const List<String> assetStuffPaths = [
     'assets/images/Announcements.jpg',
     'assets/images/DinnerHall.jpg',
-    'assets/images/Events.jpg',
     'assets/images/Transportation.jpg',
+    'assets/images/Events.jpg',
+
   ];
 
   static const List<String> routesStuff = [
-    TimeTableScreen.routeName,
+    AnnouncementsScreen.routeName,
     MenuScreen.routeName,
-    TimeTableScreen.routeName,
-    TimeTableScreen.routeName,
+    TransportationScreen.routeName,
+    EventScreen.routeName,
   ];
 
   static const List<String> funcStuffTitles = [
     "Announcements",
     "Dinner Hall",
-    "Events",
     "Transportation",
+    "Events",
   ];
 
   static const List<Color> funcColorsStuff = [
     Color(0xFFFC7068),
     Color(0xFFFDD530),
-    Color(0xFF4DAB57),
     Color(0xFF04D6A7),
+    Color(0xFF4DAB57),
 
   ];
 
@@ -295,11 +299,11 @@ class MyConstants {
     'assets/images/DinnerHall.jpg',
   ];
   static const List<String> routes = [
+    AnnouncementsScreen.routeName,
+    DocumentRequestScreen.routeName,
     "/timeTable_screen",
-    "/home_screen",
-    "/timeTable_screen",
-    "/timeTable_screen",
-    "/home_screen",
+    TimeTableScreen.routeName,
+    TransportationScreen.routeName,
     EventScreen.routeName,
     "/socialClub_screen",
     MenuScreen.routeName,
@@ -315,12 +319,17 @@ class MyConstants {
     "Dinner Hall",
   ];
 
+  static const TextStyle style = TextStyle(
+    fontSize: 15,
+        color: Colors.grey
+  );
   static const List<Text> days = [
-    Text("Monday"),
-    Text("Tuesday"),
-    Text("Wednesday"),
-    Text("Tuesday"),
-    Text("Friday"),
+
+    Text("Monday",style: style,),
+    Text("Tuesday",style: style,),
+    Text("Wednesday",style: style,),
+    Text("Tuesday",style: style,),
+    Text("Friday",style: style,),
   ];
 
   static const List<Color> appBarColors = [
@@ -357,7 +366,7 @@ const str_studentCardBalance = "Student Card Balance:";
 const str_profile = "Profile";
 
 //events_screens
-const String myEvents = "My Events";
+const String str_events = "Events";
 const String str_join = "Join";
 const String str_search = "Search";
 const String str_price = "Price";
@@ -373,12 +382,29 @@ const String str_warningBeforeCancelEvent = "Are you sure you want to cancel eve
 const String str_logout = "Logout";
 const String str_edit = "Edit";
 const String str_createEvent = "Create Event";
+const String str_editEvent = "Edit Event";
 const String str_delete = "Delete";
 const String str_warningBeforeEventDelete = "Are you sure you want to delete event?";
-const String str_yes= "Yes";
-const String str_no= "No";
+const String str_yes = "Yes";
+const String str_no = "No";
 const String str_details = "Details";
+const String str_eventDetails = "Event Details";
+const String str_confirm = "Confirm";
 
 //default values for GraphQL
 const str_noImage = "No Image";
 const str_false = "false";
+
+//todo: add transcipt body
+//for document request
+const String str_studentAffairEmail = 'studentaffairs@antalya.edu.tr';
+const String str_requestTranscriptBody = '';
+const String str_requestTranscriptSubject = '';
+const String str_requests = "Requests";
+const String str_send = "Send";
+
+//for transportation
+const String str_routesOfTheServices = "Routes of the services";
+
+//for announcements
+const String str_announcements = "Announcements";

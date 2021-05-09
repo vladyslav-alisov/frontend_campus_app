@@ -3,6 +3,7 @@ import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusTimeTableCard.dart';
+import 'package:campus_app/widgets/timetable_widgets/CampusTimeTableListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   @override
   void initState() {
     _isLoading = true;
-    CommonController.queryFuture(Provider.of<TimeTableProvider>(context,listen: false).timetable(), context).then((_){
+    CommonController.queryFuture(Provider.of<TimeTableProvider>(context, listen: false).timetable(), context).then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -32,9 +33,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<TimeTableProvider>(context, listen: false)
-        .timetable()
-        .then((_) {
+    await Provider.of<TimeTableProvider>(context, listen: false).timetable().then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -49,12 +48,26 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          bottom: TabBar(
-            labelStyle: Theme.of(context).textTheme.headline1,
-            isScrollable: true,
-            labelPadding: EdgeInsets.all(15),
-            automaticIndicatorColorAdjustment: true,
-            tabs: MyConstants.days,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: Column(
+              children: [
+                Container(
+                  color: Theme.of(context).primaryColor,
+                  height: 10,
+                ),
+                Container(
+                  color: Colors.white,
+                  child: TabBar(
+                    labelStyle: Theme.of(context).textTheme.headline1,
+                    isScrollable: true,
+                    labelPadding: EdgeInsets.all(15),
+                    automaticIndicatorColorAdjustment: true,
+                    tabs: MyConstants.days,
+                  ),
+                ),
+              ],
+            ),
           ),
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -63,6 +76,15 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               ),
             ),
           ),
+
+          /*  bottom: PreferredSize(
+            preferredSize: Size.fromHeight(10),
+            child: Container(
+              color: Theme.of(context).primaryColor,
+              height: 10,
+            ),
+          ),*/
+
           title: Text(
             MyConstants.funcTitles[3],
             style: Theme.of(context).textTheme.headline1,
@@ -77,35 +99,30 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
             : TabBarView(
                 children: [
                   RefreshIndicator(
-                    onRefresh: () => _refreshCourses(context),
-                    child: TimeTableCards(
-                      courses: timeTable.mondayCourses,
-                    ),
-                  ),
+                      onRefresh: () => _refreshCourses(context),
+                      child: CampusTimeTableListTile(
+                        timeTable.mondayCourses,
+                      )),
                   RefreshIndicator(
-                    onRefresh: () => _refreshCourses(context),
-                    child: TimeTableCards(
-                      courses: timeTable.tuesdayCourses,
-                    ),
-                  ),
+                      onRefresh: () => _refreshCourses(context),
+                      child: CampusTimeTableListTile(
+                        timeTable.tuesdayCourses,
+                      )),
                   RefreshIndicator(
-                    onRefresh: () => _refreshCourses(context),
-                    child: TimeTableCards(
-                      courses: timeTable.wednesdayCourses,
-                    ),
-                  ),
+                      onRefresh: () => _refreshCourses(context),
+                      child: CampusTimeTableListTile(
+                        timeTable.wednesdayCourses,
+                      )),
                   RefreshIndicator(
-                    onRefresh: () => _refreshCourses(context),
-                    child: TimeTableCards(
-                      courses: timeTable.thursdayCourses,
-                    ),
-                  ),
+                      onRefresh: () => _refreshCourses(context),
+                      child: CampusTimeTableListTile(
+                        timeTable.thursdayCourses,
+                      )),
                   RefreshIndicator(
-                    onRefresh: () => _refreshCourses(context),
-                    child: TimeTableCards(
-                      courses: timeTable.fridayCourses,
-                    ),
-                  ),
+                      onRefresh: () => _refreshCourses(context),
+                      child: CampusTimeTableListTile(
+                        timeTable.fridayCourses,
+                      )),
                 ],
               ),
       ),

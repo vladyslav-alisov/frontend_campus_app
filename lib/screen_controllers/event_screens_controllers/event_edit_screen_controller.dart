@@ -23,6 +23,7 @@ class EventEditScreenController with ChangeNotifier {
 
   DateTime selectedDate;
   TimeOfDay selectedTime;
+  bool isFree = false;
   File image;
   String condition;
   bool isLoading = false;
@@ -35,17 +36,21 @@ class EventEditScreenController with ChangeNotifier {
     attendeeController = TextEditingController();
     selectedDate = DateTime.now();
     selectedTime = TimeOfDay.now();
+    isFree = false;
 
     if (event != null) {
       condition = describeEnum(Options.Update);
       eventTitleController.text = event.title;
       locationController.text = event.location;
-      event.attendee != describeEnum(Attendees.All) ||
-              event.attendee != describeEnum(Attendees.Stuff) ||
+      event.attendee != describeEnum(Attendees.All) &&
+              event.attendee != describeEnum(Attendees.Stuff) &&
               event.attendee != describeEnum(Attendees.Students)
           ? attendeeController.text = describeEnum(Attendees.All)
           : attendeeController.text = event.attendee;
-      priceController.text = event.price;
+
+      priceController.text = event.price.toLowerCase() != "free" ?  event.price : "Free";
+      priceController.text == "Free" ? isFree = true : isFree = false;
+
       descriptionController.text = event.description;
       selectedDate = dateFormat.parse(event.date);
       selectedTime = TimeOfDay(hour: int.parse(event.time.split(":")[0]), minute: int.parse(event.time.split(":")[1]));
@@ -55,7 +60,21 @@ class EventEditScreenController with ChangeNotifier {
     }
   }
 
+  void showUploadImage(BuildContext context){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+        content: Text("Please upload image"),
+      ),
+    );
+  }
 
+  void changeIsFree(){
+    isFree = !isFree;
+    isFree ? priceController.text = "Free": priceController.clear();
+    notifyListeners();
+  }
 
   EventToSend sendEvent(BuildContext context) {
     EventToSend event = new EventToSend(
@@ -67,6 +86,7 @@ class EventEditScreenController with ChangeNotifier {
         description: descriptionController.text,
         imageUrl: image,
         attendee: attendeeController.text);
+
     return event;
   }
 
@@ -87,7 +107,6 @@ class EventEditScreenController with ChangeNotifier {
 
   Future<void> openTimePicker(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
-      initialEntryMode: TimePickerEntryMode.input,
       initialTime: selectedTime,
       context: context,
     );
@@ -117,9 +136,9 @@ class EventEditScreenController with ChangeNotifier {
     var pickedFile;
     if (choice) {
       pickedFile =
-          await picker.getImage(source: ImageSource.camera, maxWidth: 200, maxHeight: 400).catchError((e) => print(e));
+          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
     } else if (!choice) {
-      pickedFile = await picker.getImage(source: ImageSource.gallery, maxWidth: 200, maxHeight: 400).catchError((e) {
+      pickedFile = await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) {
         print(e);
       });
     }
@@ -127,7 +146,6 @@ class EventEditScreenController with ChangeNotifier {
     if (pickedFile != null) {
       image = File(pickedFile.path);
     }
-
     notifyListeners();
   }
 

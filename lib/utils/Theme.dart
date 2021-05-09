@@ -14,6 +14,15 @@ const String FontNameDefault = 'ArialRounded';
 
 final ThemeData appTheme = ThemeData(
 
+  appBarTheme: AppBarTheme(
+    centerTitle: false,
+    textTheme: TextTheme(
+      headline1: TextStyle(
+        fontSize: 30
+      )
+    )
+  ),
+
   textButtonTheme: TextButtonThemeData(style: ButtonStyle()),
   textTheme: TextTheme(
     headline1: TextStyle(

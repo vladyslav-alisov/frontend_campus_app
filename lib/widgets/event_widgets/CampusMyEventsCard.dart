@@ -91,7 +91,6 @@ class CampusMyEventCard extends StatelessWidget {
                   ),
                   Flexible(
                     fit: FlexFit.tight,
-
                     child: Column(
                       children: [
                         FittedBox(

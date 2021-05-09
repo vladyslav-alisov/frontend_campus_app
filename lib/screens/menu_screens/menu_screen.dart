@@ -63,7 +63,7 @@ class _MenuScreenScaffoldState extends State<MenuScreenScaffold> {
               preferredSize: Size.fromHeight(
                 AppBar().preferredSize.height + 20,
               ),
-              child: CapmusAppBar(
+              child: CampusAppBar(
                 actionWidget: userType == describeEnum(UserType.Cook)?IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () => Navigator.pushNamed(context, MenuEditScreen.routeName),
@@ -86,7 +86,6 @@ class _MenuScreenScaffoldState extends State<MenuScreenScaffold> {
                     Container(
                       height: devSize.height * 0.2,
                       child: ListView(
-
                         children: [
                           ContainerFood(
                             devSize: devSize,
@@ -142,7 +141,7 @@ class ContainerFood extends StatelessWidget {
         width: devSize.width * 0.5,
         child: Column(
           children: [
-            AspectRatio(aspectRatio: 2, child: Image.asset(ConstAssetsPath.img_defaultEvent,fit: BoxFit.cover,)),
+            AspectRatio(aspectRatio: 2, child: Image.asset(ConstAssetsPath.img_placeHolder,fit: BoxFit.cover,)),
             Text(meal ?? ""),
           ],
         ),

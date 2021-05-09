@@ -14,7 +14,7 @@ class EventsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+      padding: const EdgeInsets.all(8),
       child: InkWell(
         splashColor: Colors.transparent,
         onTap: () {
@@ -185,26 +185,6 @@ class EventsListView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(32.0),
-                      ),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.favorite_border,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
               ],
             ),
           ),

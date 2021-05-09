@@ -8,8 +8,9 @@ import 'package:campus_app/screens/event_screens/my_events_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
-import 'package:campus_app/widgets/CampusEventsListView.dart';
+import 'package:campus_app/widgets/event_widgets/CampusEventsListView.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class EventScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class EventScreen extends StatefulWidget {
   _EventScreenState createState() => _EventScreenState();
 }
 
-class _EventScreenState extends State<EventScreen> with TickerProviderStateMixin {
+class _EventScreenState extends State<EventScreen>{
   bool _isLoading = false;
   TextEditingController _searchController = TextEditingController();
   List<Event> _searchResult = [];
@@ -50,7 +51,7 @@ class _EventScreenState extends State<EventScreen> with TickerProviderStateMixin
         preferredSize: Size.fromHeight(
           AppBar().preferredSize.height + 20,
         ),
-        child: CapmusAppBar(
+        child: CampusAppBar(
           title: MyConstants.funcTitles[5],
         ),
       ),
@@ -58,51 +59,109 @@ class _EventScreenState extends State<EventScreen> with TickerProviderStateMixin
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Stack(
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: titleRow(context),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _eventsList?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return EventsListView(
-                            callback: () {
-                              Navigator.pushNamed(context, EventDetailScreen.routeName,
-                                  arguments: EventScreen(index: index));
-                            },
-                            event: _eventsList[index],
-                          );
-                        },
+          : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: titleRow(context),
                       ),
-                    ),
-                  ],
-                ),
-                socialClubName != str_false
-                    ? Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: FloatingActionButton(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            foregroundColor: Colors.black,
-                            onPressed: () {
-                              Navigator.pushNamed(context, EventEditScreen.routeName);
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                            (context, index){
+                              return Card(
+                                child: GestureDetector(
+                                   onTap: () {
+                                     Navigator.pushNamed(context, EventDetailScreen.routeName,
+                                         arguments: EventScreen(index: index));
+                                   },
+                                  child: ListTile(
+                                    dense: true,
+                                    title: Column(
+                                      children: [
+                                        Text(_eventsList[index].title,overflow: TextOverflow.ellipsis,style: Theme.of(context).textTheme.headline5,),
+                                        Divider(color: Colors.black,)
+                                      ],
+                                    ),
+                                    subtitle: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Flexible(
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.event,color: Colors.grey),
+                                                  SizedBox(width: 5,),
+                                                  Text(_eventsList[index].date)
+                                                ],
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.access_time,color: Colors.grey),
+                                                  SizedBox(width: 5,),
+                                                  Text(_eventsList[index].time)
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    isThreeLine: true,
+                                    trailing: Icon(FontAwesomeIcons.arrowAltCircleRight),
+                                    leading: _eventsList[index].imageUrl.contains("cloudinary")
+                                        ? FadeInImage(
+                                      fit: BoxFit.cover,
+                                      imageErrorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          child: Center(
+                                            child: Text("Could not load an image"),
+                                          ),
+                                        );
+                                      },
+                                      placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                                      image: NetworkImage(_eventsList[index].imageUrl),
+                                    )
+                                        : Image.asset(
+                                      ConstAssetsPath.img_placeHolder,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              );
                             },
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ),
-                          ),
+                          childCount: _eventsList.length,
                         ),
                       )
-                    : Container(),
-              ],
-            ),
+                    ],
+                  ),
+                  socialClubName != str_false
+                      ? Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: FloatingActionButton(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.black,
+                              onPressed: () {
+                                Navigator.pushNamed(context, EventEditScreen.routeName);
+                              },
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+          ),
     );
   }
 
@@ -116,7 +175,7 @@ class _EventScreenState extends State<EventScreen> with TickerProviderStateMixin
             style: Theme.of(context).textTheme.headline3,
           ),
         ),
-        Expanded(
+        Flexible(
           child: OutlinedButton(
             style: ButtonStyle(
               shape: MaterialStateProperty.all(

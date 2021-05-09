@@ -1,11 +1,17 @@
+import 'package:campus_app/providers/announcements_provider.dart';
+import 'package:campus_app/providers/document_request_provider.dart';
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/providers/home_provider.dart';
 import 'package:campus_app/providers/menu_provider.dart';
 import 'package:campus_app/providers/profile_provider.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/providers/timetable_provider.dart';
+import 'package:campus_app/providers/transportation_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/event_screens_controllers/event_edit_screen_controller.dart';
+import 'package:campus_app/screens/announcements_screens/announcements_screen.dart';
+import 'package:campus_app/screens/document_request_screen.dart';
+import 'package:campus_app/screens/event_screens/event_attendees_screen.dart';
 import 'package:campus_app/screens/event_screens/event_edit_screen.dart';
 import 'package:campus_app/screens/event_screens/event_detail_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
@@ -17,6 +23,7 @@ import 'package:campus_app/screens/menu_screens/menu_screen.dart';
 import 'package:campus_app/screens/profile_screen.dart';
 import 'package:campus_app/screens/socialClub_screen.dart';
 import 'package:campus_app/screens/timeTable_screen.dart';
+import 'package:campus_app/screens/transportation_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/Theme.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';
@@ -75,55 +82,71 @@ class MyApp extends StatelessWidget {
             previousEvents == null ? [] : previousEvents.eventList,
             previousEvents == null ? [] : previousEvents.myEventList,
             previousEvents == null ? [] : previousEvents.hostEventList,
+            previousEvents == null ? [] : previousEvents.attendeeList,
           ),
         ),
         ChangeNotifierProxyProvider<AuthProvider, MenuProvider>(
           update: (context, authData, previousMenu) => MenuProvider(
             authData.authData,
-            previousMenu ==null ? null : previousMenu.menus,
-            previousMenu ==null ? [] : previousMenu.menuList,
+            previousMenu == null ? null : previousMenu.menus,
+            previousMenu == null ? [] : previousMenu.menuList,
           ),
-        )
+        ),
+        ChangeNotifierProxyProvider<UserProvider,DocumentRequestProvider>(
+          update: (context,userData,previousData) => DocumentRequestProvider(userData.user),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>TransportationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>AnnouncementsProvider(),
+        ),
       ],
       child: GraphQLProvider(
         client: client,
-        child: Consumer<AuthProvider>(builder: (context, auth, _) {
-          return MaterialApp(
-            builder: (context, child) {
-              return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child);
-            },
-            supportedLocales: [
-              Locale('en', ''),
-              Locale('ru', ''),
-            ],
-            localizationsDelegates: [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            title: "Campus App",
-            theme: appTheme,
-            home: auth.isAuth
-                ? HomeScreen()
-                : FutureBuilder(
-                    future: auth.checkUsersData(),
-                    builder: (context, snapshot) =>
-                        snapshot.connectionState == ConnectionState.waiting ? SplashScreen() : LoginScreen()),
-            routes: {
-              HomeScreen.routeName: (context) => HomeScreen(),
-              ProfileScreen.routeName: (context) => ProfileScreen(),
-              TimeTableScreen.routeName: (context) => TimeTableScreen(),
-              SocialClubScreen.routeName: (context) => SocialClubScreen(),
-              EventScreen.routeName: (context) => EventScreen(),
-              LoginScreen.routeName: (context) => LoginScreen(),
-              EventDetailScreen.routeName: (context) => EventDetailScreen(),
-              MyEventsScreen.routeName: (context) => MyEventsScreen(),
-              EventEditScreen.routeName: (context) => EventEditScreen(),
-              MenuEditScreen.routeName: (context) => MenuEditScreen(),
-              MenuScreen.routeName: (context) => MenuScreen(),
-            },
-          );
-        }),
+        child: Consumer<AuthProvider>(
+          builder: (context, auth, _) {
+            return MaterialApp(
+              builder: (context, child) {
+                return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child);
+              },
+              supportedLocales: [
+                Locale('en', ''),
+                Locale('ru', ''),
+              ],
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              title: "Campus App",
+              theme: appTheme,
+              home: auth.isAuth
+                  ? HomeScreen()
+                  : FutureBuilder(
+                      future: auth.checkUsersData(),
+                      builder: (context, snapshot) =>
+                          snapshot.connectionState == ConnectionState.waiting ? SplashScreen() : LoginScreen()),
+              routes: {
+                HomeScreen.routeName: (context) => HomeScreen(),
+                ProfileScreen.routeName: (context) => ProfileScreen(),
+                TimeTableScreen.routeName: (context) => TimeTableScreen(),
+                SocialClubScreen.routeName: (context) => SocialClubScreen(),
+                EventScreen.routeName: (context) => EventScreen(),
+                LoginScreen.routeName: (context) => LoginScreen(),
+                EventDetailScreen.routeName: (context) => EventDetailScreen(),
+                MyEventsScreen.routeName: (context) => MyEventsScreen(),
+                EventEditScreen.routeName: (context) => EventEditScreen(),
+                EventAttendeesScreen.routeName: (context) => EventAttendeesScreen(),
+                MenuEditScreen.routeName: (context) => MenuEditScreen(),
+                MenuScreen.routeName: (context) => MenuScreen(),
+                DocumentRequestScreen.routeName: (context) => DocumentRequestScreen(),
+                AnnouncementsScreen.routeName:(context) => AnnouncementsScreen(),
+                TransportationScreen.routeName:(context) => TransportationScreen(),
+              },
+            );
+          },
+        ),
       ),
     );
   }

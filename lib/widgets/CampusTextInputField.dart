@@ -11,10 +11,11 @@ class CampusTextInputField extends StatefulWidget {
     this.leftIcon,
     this.rightIcon,
     this.textInputType,
-    this.maxLines, this.onChangeString,
+    this.maxLines, this.onChangeString, this.isDisable=true,
   });
 
   final String validatorErrorMsg;
+  final bool isDisable;
   final int maxLines;
   String onChangeString;
   final TextEditingController controller;
@@ -49,6 +50,8 @@ class _CampusTextInputFieldState extends State<CampusTextInputField> {
       focusNode: widget.focus,
       maxLines: widget.maxLines ?? 1,
       decoration: InputDecoration(
+         enabled: widget.isDisable,
+        labelText: widget.hintText,
         suffixIcon: widget.rightIcon,
         prefixIcon: widget.leftIcon,
         hintText: widget.hintText,

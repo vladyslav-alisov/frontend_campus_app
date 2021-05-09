@@ -72,6 +72,7 @@ class TimeTableProvider with ChangeNotifier {
   }
 
   Future<void> timetable() async {
+    resetVariables();
     QueryOptions options = QueryOptions(
       fetchPolicy: FetchPolicy.networkOnly,
       document: gql(ConstQuery.timetable),

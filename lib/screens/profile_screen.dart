@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               preferredSize: Size.fromHeight(
                 74,
               ),
-              child: CapmusAppBar(
+              child: CampusAppBar(
                 actionWidget: IconButton(
                   icon: Icon(Icons.exit_to_app),
                   onPressed: () {

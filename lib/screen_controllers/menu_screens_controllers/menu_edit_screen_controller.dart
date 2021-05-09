@@ -37,6 +37,9 @@ class MenuEditScreenController with ChangeNotifier {
 
     if (menuList != [] && menuList.isNotEmpty) {
       int initIndex = menuList.indexWhere((element) => int.parse(element.dayID) == CommonController.today() - 1);
+      if(initIndex==-1){
+        initIndex = 0;
+      }
       redMealController.text = menuList[initIndex].redMeal;
       whiteMealController.text = menuList[initIndex].whiteMeal;
       vegMealController.text = menuList[initIndex].vegMeal;
