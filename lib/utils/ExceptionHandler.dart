@@ -7,6 +7,6 @@ class ExceptionHandle {
     if (exception.toString().contains("Failed host lookup")) {
       return "Connection problem. Please try again later.";
     }
-    return exception.toString();
+    return "Oups! Something went wrong!";//exception.toString();
   }
 }

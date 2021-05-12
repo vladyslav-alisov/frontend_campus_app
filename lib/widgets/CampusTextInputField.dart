@@ -52,10 +52,12 @@ class _CampusTextInputFieldState extends State<CampusTextInputField> {
       decoration: InputDecoration(
          enabled: widget.isDisable,
         labelText: widget.hintText,
+
         suffixIcon: widget.rightIcon,
         prefixIcon: widget.leftIcon,
         hintText: widget.hintText,
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: Theme.of(context).hintColor),
+        labelStyle: TextStyle(color: Theme.of(context).hintColor),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
           borderSide: BorderSide(

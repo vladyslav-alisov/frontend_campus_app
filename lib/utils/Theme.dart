@@ -9,20 +9,13 @@ const mainColor = Color(0xFF102255);
 const greyColor = Color(0xff696969);
 const headColor = Color(0xFF464646);
 const bodyColor = Color(0xFF696969);
+const hintColor = Color(0xffD3D3D3);
 
 const String FontNameDefault = 'ArialRounded';
 
 final ThemeData appTheme = ThemeData(
-
-  appBarTheme: AppBarTheme(
-    centerTitle: false,
-    textTheme: TextTheme(
-      headline1: TextStyle(
-        fontSize: 30
-      )
-    )
-  ),
-
+  hintColor: hintColor,
+  appBarTheme: AppBarTheme(centerTitle: false, textTheme: TextTheme(headline1: TextStyle(fontSize: 30))),
   textButtonTheme: TextButtonThemeData(style: ButtonStyle()),
   textTheme: TextTheme(
     headline1: TextStyle(
@@ -34,7 +27,7 @@ final ThemeData appTheme = ThemeData(
       fontSize: BodyTextSize,
     ),
     headline3: TextStyle(
-      color: mainColor,
+      color: greyColor,
       fontSize: MediumTextSize,
     ),
     headline4: TextStyle(

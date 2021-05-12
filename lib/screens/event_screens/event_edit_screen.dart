@@ -70,6 +70,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     child: CampusTextInputField(
                       controller: screenController.eventTitleController,
                       hintText: "Event Name",
+                      rightIcon: IconButton(icon: Icon(Icons.drive_file_rename_outline)),
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                     ),
                   ),
@@ -78,55 +79,58 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15.0),
+                        GestureDetector(
+                          onTap: () => screenController.openTimePicker(context),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15.0),
+                              ),
+                              border: Border.all(
+                                color: Color(0xffE1E1E1),
+                              ),
                             ),
-                            border: Border.all(
-                              color: Color(0xffE1E1E1),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                FittedBox(
-                                  child: TextButton(
-                                    onPressed: () => screenController.openTimePicker(context),
-                                    child: Text("Select Time", style: Theme.of(context).textTheme.headline2),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  FittedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.access_time,color: Colors.grey,),
+                                    ),
                                   ),
-                                ),
-                                FittedBox(child: Text(screenController.selectedTime.format(context))),
-                              ],
+                                  FittedBox(child: Text(screenController.selectedTime.format(context),style:TextStyle(color: Colors.black),)),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15.0),
+                        GestureDetector(
+                          onTap: () => screenController.openDatePicker(context),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15.0),
+                              ),
+                              border: Border.all(
+                                color: Color(0xffE1E1E1),
+                              ),
                             ),
-                            border: Border.all(
-                              color: Color(0xffE1E1E1),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                FittedBox(
-                                  child: TextButton(
-                                    onPressed: () => screenController.openDatePicker(context),
-                                    child: Text(
-                                      "Select Date",
-                                      style: Theme.of(context).textTheme.headline2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  FittedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.calendar_today_rounded,color: Colors.grey,),
                                     ),
                                   ),
-                                ),
-                                FittedBox(
-                                    child: Text(screenController.dateFormat.format(screenController.selectedDate))),
-                              ],
+                                  FittedBox(
+                                      child: Text(screenController.dateFormat.format(screenController.selectedDate),style:TextStyle(color: Colors.black),)),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -159,7 +163,13 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Select Attendee: "),
+                            Row(
+                              children: [
+                                Text("Select Attendee",style: TextStyle(color: Colors.black),),
+                                SizedBox(width: 5,),
+                                Icon(Icons.people,color: Colors.grey,),
+                              ],
+                            ),
                             DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 items: <String>[
@@ -181,6 +191,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                 },
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -195,6 +206,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                             isDisable: !screenController.isFree,
                             controller: screenController.priceController,
                             hintText: "Price",
+                            rightIcon: IconButton(icon: Icon(Icons.monetization_on),),
                             textInputType: TextInputType.numberWithOptions(decimal: true),
                           ),
                         ),
@@ -219,6 +231,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     child: CampusTextInputField(
                       controller: screenController.descriptionController,
                       hintText: "Enter your description",
+                      rightIcon: IconButton(icon: Icon(Icons.description),),
                       maxLines: 8,
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                     ),

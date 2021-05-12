@@ -16,8 +16,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
-    emailController.text = "vlad@std.antalya.edu.tr";
-    passwordController.text = "vladyslav";
+    emailController.text = "";
+    passwordController.text = "";
     super.initState();
   }
 

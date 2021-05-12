@@ -172,7 +172,7 @@ class _EventScreenState extends State<EventScreen>{
         Expanded(
           child: Text(
             AppLocalizations.of(context).translate(str_upcomingEvents),
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headline3.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         Flexible(
@@ -189,7 +189,7 @@ class _EventScreenState extends State<EventScreen>{
             },
             child: Text(
               AppLocalizations.of(context).translate(str_myEvents),
-              style: Theme.of(context).textTheme.headline2,
+              style: Theme.of(context).textTheme.headline4.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
           ),
