@@ -54,7 +54,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
         ),
         child: CampusAppBar(
           title: AppLocalizations.of(context)
-              .translate(screenController.condition == "Update" ? str_editEvent : str_createEvent),
+              .translate(screenController.condition == str_update ? str_editEvent : str_createEvent),
         ),
       ),
       body: Form(
@@ -69,7 +69,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     padding: const EdgeInsets.all(8.0),
                     child: CampusTextInputField(
                       controller: screenController.eventTitleController,
-                      hintText: "Event Name",
+                      hintText: AppLocalizations.of(context).translate(str_eventName),
                       rightIcon: IconButton(icon: Icon(Icons.drive_file_rename_outline)),
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                     ),
@@ -97,10 +97,17 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                   FittedBox(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.access_time,color: Colors.grey,),
+                                      child: Icon(
+                                        Icons.access_time,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
-                                  FittedBox(child: Text(screenController.selectedTime.format(context),style:TextStyle(color: Colors.black),)),
+                                  FittedBox(
+                                      child: Text(
+                                    screenController.selectedTime.format(context),
+                                    style: TextStyle(color: Colors.black),
+                                  )),
                                 ],
                               ),
                             ),
@@ -124,11 +131,17 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                   FittedBox(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.calendar_today_rounded,color: Colors.grey,),
+                                      child: Icon(
+                                        Icons.calendar_today_rounded,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                   FittedBox(
-                                      child: Text(screenController.dateFormat.format(screenController.selectedDate),style:TextStyle(color: Colors.black),)),
+                                      child: Text(
+                                    screenController.dateFormat.format(screenController.selectedDate),
+                                    style: TextStyle(color: Colors.black),
+                                  )),
                                 ],
                               ),
                             ),
@@ -141,7 +154,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     padding: const EdgeInsets.all(8.0),
                     child: CampusTextInputField(
                       controller: screenController.locationController,
-                      hintText: "Location",
+                      hintText: AppLocalizations.of(context).translate(str_location),
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                       rightIcon: IconButton(icon: Icon(Icons.location_on_sharp)),
                       textInputType: TextInputType.streetAddress,
@@ -159,17 +172,10 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Text("Select Attendee",style: TextStyle(color: Colors.black),),
-                                SizedBox(width: 5,),
-                                Icon(Icons.people,color: Colors.grey,),
-                              ],
-                            ),
                             DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 items: <String>[
@@ -191,7 +197,17 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                 },
                               ),
                             ),
-
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(
+                                  Icons.people,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -201,28 +217,35 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        Expanded(
+                        Flexible(
+                          flex: 2,
                           child: CampusTextInputField(
                             isDisable: !screenController.isFree,
                             controller: screenController.priceController,
-                            hintText: "Price",
-                            rightIcon: IconButton(icon: Icon(Icons.monetization_on),),
+                            hintText: AppLocalizations.of(context).translate(str_price),
+                            rightIcon: IconButton(
+                              icon: Icon(Icons.monetization_on),
+                            ),
                             textInputType: TextInputType.numberWithOptions(decimal: true),
                           ),
                         ),
-                        Spacer(),
-                        Expanded(
-                            child: Row(
-                          children: [
-                            Text("Is free?"),
-                            Checkbox(
+                        Spacer(flex: 1),
+                        Flexible(
+                          flex: 3,
+                          child: Row(
+                            children: [
+                          Flexible(fit: FlexFit.loose,child: Text(AppLocalizations.of(context).translate(str_isFree),maxLines: 1,overflow: TextOverflow.ellipsis,),),
+                          Flexible(
+                            child: Checkbox(
                               value: screenController.isFree,
                               onChanged: (value) {
                                 screenController.changeIsFree();
                               },
                             ),
-                          ],
-                        )),
+                          ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -230,8 +253,10 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     padding: const EdgeInsets.all(8.0),
                     child: CampusTextInputField(
                       controller: screenController.descriptionController,
-                      hintText: "Enter your description",
-                      rightIcon: IconButton(icon: Icon(Icons.description),),
+                      hintText: AppLocalizations.of(context).translate(str_enterDescription),
+                      rightIcon: IconButton(
+                        icon: Icon(Icons.description),
+                      ),
                       maxLines: 8,
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                     ),
@@ -250,7 +275,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                           children: [
                             Flexible(
                                 child: Text(
-                              "Choose an image:",
+                              "${AppLocalizations.of(context).translate(str_chooseAnImage)}:",
                               style: TextStyle(fontSize: 20, color: Colors.grey),
                             )),
                             Flexible(
@@ -296,7 +321,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                           .then((_) {
                                         Navigator.pop(context);
                                       }),
-                                      "Event has been successfully updated",
+                                      AppLocalizations.of(context).translate(str_eventUpdatedSuccess),
                                       context);
                                 } else {
                                   if (screenController.image == null) {
@@ -306,7 +331,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                             eventProvider.createEvent(screenController.sendEvent(context)).then((_) {
                                               Navigator.pop(context);
                                             }),
-                                            "Event has been successfully created",
+                                            AppLocalizations.of(context).translate(str_eventCreatedSuccess),
                                             context)
                                         .catchError((e) => print(e));
                                   }

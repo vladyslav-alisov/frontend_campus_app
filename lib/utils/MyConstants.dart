@@ -1,13 +1,30 @@
 import 'package:campus_app/screens/announcements_screens/announcements_screen.dart';
+import 'package:campus_app/screens/dinner_hall_screens/dinner_hall.dart';
 import 'package:campus_app/screens/document_request_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
-import 'package:campus_app/screens/menu_screens/menu_edit_screen.dart';
-import 'package:campus_app/screens/menu_screens/menu_screen.dart';
-import 'package:campus_app/screens/timeTable_screen.dart';
+import 'package:campus_app/screens/social_club_screens/social_club_screen.dart';
+import 'package:campus_app/screens/student_card_screen.dart';
+import 'package:campus_app/screens/time_table_screen.dart';
 import 'package:campus_app/screens/transportation_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConstMutation {
+  static const String quitSocialClub = '''
+  mutation quitSocialClub(\$scID: ID!, \$userID: ID!){
+  action: quitSocialClub(scID: \$scID, userID: \$userID )
+  }
+  ''';
+  static const String sendRequestJoinSocialClub = '''
+  mutation sendRequestJoinSocialClub(\$userID: ID!, \$scID: ID!){
+  action: sendRequestJoinSocialClub( userID: \$userID,scID: \$scID )
+  }
+  ''';
+
+  static const String uploadPost = '''
+  mutation uploadPost(\$postInput: PostInputData,\$scID: ID!, \$scoID: ID!){
+  action: uploadPost(postInput: \$postInput, scID:\$scID, scoID:\$scoID)
+  }
+  ''';
   static const String createMenu = '''
   mutation createMenu(\$menuInput: MenuInputData,\$userID: ID!){
   action: createMenu(menuInput: \$menuInput, userID:\$userID){
@@ -88,6 +105,80 @@ class ConstMutation {
 }
 
 class ConstQuery {
+  static const String gallery = '''
+  query gallery(\$scID: ID!){
+      gallery(scID: \$scID){
+       postID
+       imageUrl
+       description
+       createdAt
+    }
+}
+  ''';
+
+  static const String socialClubMembers = '''
+  query socialClubMembers(\$scID: ID!){
+      socialClubMembers(scID: \$scID){
+       userID
+       name
+       surname
+       imageUrl
+    }
+}
+  ''';
+  static const String socialClubRequests = '''
+  query socialClubRequests(\$userID: ID!){
+      socialClubRequests(userID: \$userID){
+        userID
+        name
+        surname
+        gender
+        title
+        department
+        email
+        address
+        phone
+        imageUrl
+        balance
+        semester
+    }
+}
+  ''';
+  static const String mySocialClubs = '''
+  query mySocialClubs(\$userID: ID!){
+      mySocialClubs(userID: \$userID){
+        scID
+        scoID
+        title
+        description
+        imageUrl
+        members
+    }
+}
+  ''';
+
+  static const String socialClubs = '''
+      query socialClubs(){
+       socialClubs(){
+        scID
+        scoID
+        title
+        description
+        imageUrl
+        members
+    }
+  }
+  ''';
+  static const String meals = '''
+  query meals(){
+          meals(){
+             mealID
+             mealType
+             mealName
+             mealImageUrl
+        }
+  }
+  ''';
   static const String menu = '''
   query menu(){
           menu(){
@@ -95,11 +186,17 @@ class ConstQuery {
               dayID
               day
               redMeal
+              redMealImageUrl
               whiteMeal
+              whiteMealImageUrl
               vegMeal
+              vegMealImageUrl
               soup
+              soupImageUrl
               salad
+              saladImageUrl
               dessert
+              dessertImageUrl
         }
   }
   ''';
@@ -112,6 +209,7 @@ class ConstQuery {
         name
         surname
         phone
+        imageUrl
         joinedAt
        }
     }
@@ -216,6 +314,8 @@ class ConstQuery {
 
 //for calling data we need key strings
 class ConstQueryKeys {
+  static const String scoID = "scoID";
+  static const String scID = "scID";
   static const String eventInput = "eventInput";
   static const String eventID = "eventID";
   static const String imageUrl = "imageUrl";
@@ -247,6 +347,8 @@ class ConstQueryKeys {
   static const String salad = "salad";
   static const String dessert = "dessert";
   static const String menuInput = "menuInput";
+  static const String postInput = "postInput";
+  static const String image = "image";
 }
 
 class ConstAssetsPath {
@@ -263,12 +365,11 @@ class MyConstants {
     'assets/images/DinnerHall.jpg',
     'assets/images/Transportation.jpg',
     'assets/images/Events.jpg',
-
   ];
 
   static const List<String> routesStuff = [
     AnnouncementsScreen.routeName,
-    MenuScreen.routeName,
+    DinnerHallScreen.routeName,
     TransportationScreen.routeName,
     EventScreen.routeName,
   ];
@@ -285,7 +386,6 @@ class MyConstants {
     Color(0xFFFDD530),
     Color(0xFF04D6A7),
     Color(0xFF4DAB57),
-
   ];
 
   static const List<String> assetPaths = [
@@ -301,35 +401,12 @@ class MyConstants {
   static const List<String> routes = [
     AnnouncementsScreen.routeName,
     DocumentRequestScreen.routeName,
-    "/timeTable_screen",
+    StudentCardScreen.routeName,
     TimeTableScreen.routeName,
     TransportationScreen.routeName,
     EventScreen.routeName,
-    "/socialClub_screen",
-    MenuScreen.routeName,
-  ];
-  static const List<String> funcTitles = [
-    "Announcements",
-    "Document Request",
-    "Student Card",
-    "Time Table",
-    "Transportation",
-    "Events",
-    "Social Clubs",
-    "Dinner Hall",
-  ];
-
-  static const TextStyle style = TextStyle(
-    fontSize: 15,
-        color: Colors.grey
-  );
-  static const List<Text> days = [
-
-    Text("Monday",style: style,),
-    Text("Tuesday",style: style,),
-    Text("Wednesday",style: style,),
-    Text("Tuesday",style: style,),
-    Text("Friday",style: style,),
+    SocialClubScreen.routeName,
+    DinnerHallScreen.routeName,
   ];
 
   static const List<Color> appBarColors = [
@@ -390,16 +467,20 @@ const String str_no = "No";
 const String str_details = "Details";
 const String str_eventDetails = "Event Details";
 const String str_confirm = "Confirm";
-
+const String str_listOfAttendees = "List of Attendees";
+const String str_eventAddedSuccess = "Event was successfully added";
+const String str_eventRemovedSuccess = "Event successfully removed from your events";
+const String str_update = "Update";
+const String str_eventName = "Event Name";
+const String str_location = "Location";
+const String str_isFree = "Is Free";
+const String str_enterDescription = "Enter description";
 //default values for GraphQL
 const str_noImage = "No Image";
 const str_false = "false";
 
-//todo: add transcipt body
 //for document request
-const String str_studentAffairEmail = 'studentaffairs@antalya.edu.tr';
-const String str_requestTranscriptBody = '';
-const String str_requestTranscriptSubject = '';
+const String str_studentAffairEmail = "vladyslav.alisov@gmail.com"; //'studentaffairs@antalya.edu.tr';
 const String str_requests = "Requests";
 const String str_send = "Send";
 
@@ -408,3 +489,42 @@ const String str_routesOfTheServices = "Routes of the services";
 
 //for announcements
 const String str_announcements = "Announcements";
+const String str_noDataFound = "No data found:(";
+const String str_myClubs = "My Clubs";
+const String str_allSocialClubs = "All Social Clubs";
+const String str_socialClubs = "Social Clubs";
+const String str_errorLoadImage = "Could not load an image";
+const String str_attendees = "Attendees";
+const String str_chooseAnImage = "Choose an image";
+const String str_eventUpdatedSuccess = "Event has been successfully updated";
+const String str_eventCreatedSuccess = "Event has been successfully created";
+const String str_eventDeletedSuccess = "Event successfully deleted";
+const String str_eventCanceledSuccess = "Event successfully canceled";
+const String str_requestOptions = "Request options";
+const String str_sendRequest = "Send request";
+const String str_purpose = "Purpose";
+const String str_examples = "Examples";
+const String str_uploadImageWarn = "Please upload image";
+const String str_monday = "Monday";
+const String str_tuesday = "Tuesday";
+const String str_wednesday = "Wednesday";
+const String str_thursday = "Thursday";
+const String str_friday = "Friday";
+const String str_documentRequest = "Document Request";
+const String str_studentCard = "Student Card";
+const String str_timeTable = "Time Table";
+const String str_transportation = "Transportation";
+const String str_dinnerHall = "Dinner Hall";
+const String str_menu = "Menu";
+const String str_camera = "Camera";
+const String str_photoLibrary = "Photo Library";
+const String str_authError = "Your username and/or password do not match.";
+const String str_connectionError = "Connection problem. Please try again later.";
+const String str_somethingWentWrong = "Oups! Something went wrong!";
+const String str_dateOfTheEvent = "Date of the event";
+const String str_time = "Time";
+const String str_select = "Select";
+
+const String str_mySocialClubs = "My Social Clubs";
+const String str_manageMySocialClub = "Manage My Social Club";
+const String str_socialClubDetails = "Social Club Details";

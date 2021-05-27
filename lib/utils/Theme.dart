@@ -14,6 +14,9 @@ const hintColor = Color(0xffD3D3D3);
 const String FontNameDefault = 'ArialRounded';
 
 final ThemeData appTheme = ThemeData(
+  tabBarTheme: TabBarTheme(
+    labelStyle: TextStyle(fontSize: 15, color: Colors.grey),
+  ),
   hintColor: hintColor,
   appBarTheme: AppBarTheme(centerTitle: false, textTheme: TextTheme(headline1: TextStyle(fontSize: 30))),
   textButtonTheme: TextButtonThemeData(style: ButtonStyle()),
@@ -39,12 +42,15 @@ final ThemeData appTheme = ThemeData(
       fontSize: MediumTextSize,
     ),
     bodyText1: TextStyle(
-      color: bodyColor,
-      fontSize: MinTextSize,
+      color: Color(0xFF464646),
+      fontSize: 13,
+      fontWeight: FontWeight.w800
     ),
     bodyText2: TextStyle(
       color: Color(0xFF696969),
-      fontSize: 15,
+      fontSize: 13,
+        fontWeight: FontWeight.w100
+
     ),
   ),
   primaryColor: mainColor,

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 enum Days { Monday, Tuesday, Wednesday, Thursday, Friday }
 
 class MenuEditScreenController with ChangeNotifier {
+
   final List<String> days = [
     describeEnum(Days.Monday),
     describeEnum(Days.Tuesday),
@@ -28,12 +29,14 @@ class MenuEditScreenController with ChangeNotifier {
   void initVariables(List<Menu> menuList) {
     dayController = TextEditingController();
     dayController.text = describeEnum(Days.values[CommonController.today() - 1]);
+    print(dayController.text);
     redMealController = TextEditingController();
     whiteMealController = TextEditingController();
     vegMealController = TextEditingController();
     soupController = TextEditingController();
     saladController = TextEditingController();
     desertController = TextEditingController();
+
 
     if (menuList != [] && menuList.isNotEmpty) {
       int initIndex = menuList.indexWhere((element) => int.parse(element.dayID) == CommonController.today() - 1);

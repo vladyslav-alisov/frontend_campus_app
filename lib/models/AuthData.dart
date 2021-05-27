@@ -1,3 +1,5 @@
+import 'package:campus_app/utils/MyConstants.dart';
+
 class AuthData {
   String sTypename;
   Login login;
@@ -51,7 +53,7 @@ class Login {
     userID = json['userID'];
     name = json['name'];
     surname = json['surname'];
-    imageUrl = json['imageUrl'];
+    imageUrl = json['imageUrl'] != null ? json['imageUrl'] : str_noImage;
     typeOfUser = json['typeOfUser'];
     socialClub = json["socialClub"];
   }

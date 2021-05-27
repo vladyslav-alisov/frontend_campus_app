@@ -22,19 +22,18 @@ class EventScreen extends StatefulWidget {
   _EventScreenState createState() => _EventScreenState();
 }
 
-class _EventScreenState extends State<EventScreen>{
+class _EventScreenState extends State<EventScreen> {
   bool _isLoading = false;
   TextEditingController _searchController = TextEditingController();
-  List<Event> _searchResult = [];
 
   @override
   void initState() {
     _isLoading = true;
     CommonController.queryFuture(
         Provider.of<EventsProvider>(context, listen: false).events().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
+          Provider.of<EventsProvider>(context, listen: false).myEvents().then((_) => setState(() {
+                _isLoading = false;
+              }));
         }),
         context);
 
@@ -45,123 +44,182 @@ class _EventScreenState extends State<EventScreen>{
   Widget build(BuildContext context) {
     var socialClubName = Provider.of<AuthProvider>(context, listen: false).authData.login.socialClub;
     var _eventsList = Provider.of<EventsProvider>(context).eventList;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
           AppBar().preferredSize.height + 20,
         ),
         child: CampusAppBar(
-          title: MyConstants.funcTitles[5],
+          title: AppLocalizations.of(context).translate(str_events),
         ),
       ),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-                children: [
-                  CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
+          : Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: titleRow(context),
                       ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                            (context, index){
-                              return Card(
-                                child: GestureDetector(
-                                   onTap: () {
-                                     Navigator.pushNamed(context, EventDetailScreen.routeName,
-                                         arguments: EventScreen(index: index));
-                                   },
-                                  child: ListTile(
-                                    dense: true,
-                                    title: Column(
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, EventDetailScreen.routeName,
+                                      arguments: EventScreen(index: index));
+                                },
+                                child: AspectRatio(
+                                  aspectRatio: 4,
+                                  child: Container(
+                                    decoration: BoxDecoration(boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 2,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 5), // changes position of shadow
+                                      ),
+                                    ], color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                                    child: Row(
                                       children: [
-                                        Text(_eventsList[index].title,overflow: TextOverflow.ellipsis,style: Theme.of(context).textTheme.headline5,),
-                                        Divider(color: Colors.black,)
-                                      ],
-                                    ),
-                                    subtitle: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Flexible(
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.event,color: Colors.grey),
-                                                  SizedBox(width: 5,),
-                                                  Text(_eventsList[index].date)
-                                                ],
-                                              ),
+                                        Flexible(
+                                          fit: FlexFit.tight,
+                                          flex: 3,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(8.0),
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: _eventsList[index].imageUrl == null
+                                                          ? Image.asset(
+                                                              ConstAssetsPath.img_placeHolder,
+                                                              fit: BoxFit.fill,
+                                                            )
+                                                          : NetworkImage(_eventsList[index].imageUrl),
+                                                      fit: BoxFit.cover,
+                                                      colorFilter: ColorFilter.mode(
+                                                          Colors.black.withOpacity(0.1), BlendMode.darken),
+                                                      onError: (exception, stackTrace) => Container(
+                                                        child: Center(
+                                                          child: Text(AppLocalizations.of(context)
+                                                              .translate(str_errorLoadImage)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        _eventsList[index].date,
+                                                        style: TextStyle(color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            Flexible(
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.access_time,color: Colors.grey),
-                                                  SizedBox(width: 5,),
-                                                  Text(_eventsList[index].time)
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    isThreeLine: true,
-                                    trailing: Icon(FontAwesomeIcons.arrowAltCircleRight),
-                                    leading: _eventsList[index].imageUrl.contains("cloudinary")
-                                        ? FadeInImage(
-                                      fit: BoxFit.cover,
-                                      imageErrorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          child: Center(
-                                            child: Text("Could not load an image"),
                                           ),
-                                        );
-                                      },
-                                      placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
-                                      image: NetworkImage(_eventsList[index].imageUrl),
-                                    )
-                                        : Image.asset(
-                                      ConstAssetsPath.img_placeHolder,
-                                      fit: BoxFit.cover,
+                                        ),
+                                        Flexible(
+                                          flex: 6,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            _eventsList[index].title.toUpperCase(),
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .headline5
+                                                                .copyWith(fontSize: 12, color: Colors.black),
+                                                          ),
+                                                          Text(
+                                                            _eventsList[index].location.toUpperCase(),
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .headline5
+                                                                .copyWith(fontSize: 10),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Text(
+                                                        _eventsList[index].time,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5
+                                                            .copyWith(fontSize: 10),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Icon(Icons.arrow_forward_ios_outlined),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-                          childCount: _eventsList.length,
-                        ),
-                      )
-                    ],
-                  ),
-                  socialClubName != str_false
-                      ? Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding: const EdgeInsets.all(32.0),
-                            child: FloatingActionButton(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              foregroundColor: Colors.black,
-                              onPressed: () {
-                                Navigator.pushNamed(context, EventEditScreen.routeName);
-                              },
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
                               ),
                             ),
+                          );
+                        },
+                        childCount: _eventsList.length,
+                      ),
+                    ),
+                  ],
+                ),
+                socialClubName != str_false
+                    ? Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: FloatingActionButton(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.black,
+                            onPressed: () {
+                              Navigator.pushNamed(context, EventEditScreen.routeName);
+                            },
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
                           ),
-                        )
-                      : Container(),
-                ],
-              ),
-          ),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
     );
   }
 
@@ -198,25 +256,9 @@ class _EventScreenState extends State<EventScreen>{
     );
   }
 
-  void onSearchButtonTap(String text) async {
-    List<Event> _eventsList = [];
-    _eventsList.forEach((Event data) {
-      if (data.location.toUpperCase().contains(text.toUpperCase()) ||
-          data.date.toUpperCase().contains(text.toUpperCase()) ||
-          data.description.toUpperCase().contains(text.toUpperCase()) ||
-          data.title.toUpperCase().contains(text.toUpperCase()) ||
-          data.organizer.toUpperCase().contains(text.toUpperCase())) {
-        _searchResult.add(data);
-      }
-
-      setState(() {});
-    });
-  }
-
   @override
   void dispose() {
     _searchController.clear();
-
     super.dispose();
   }
 }

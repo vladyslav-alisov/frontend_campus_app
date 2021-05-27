@@ -1,14 +1,9 @@
-import 'package:campus_app/models/events/EventList.dart';
-import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/providers/transportation_provider.dart';
-import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screen_controllers/event_screens_controllers/event_edit_screen_controller.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
-import 'package:campus_app/widgets/CampusTextInputField.dart';
 import 'package:campus_app/widgets/transportation_widgets/CampusTransportationListTile.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +28,7 @@ class _TransportationScreenScaffoldState extends State<TransportationScreenScaff
   bool _isLoading = true;
   @override
   void initState() {
+    //todo: add api for service's data
     _isLoading = true;
     /* CommonController.queryFuture(Provider.of<TransportationProvider>(context,listen: false).getServiceList(), context).then((_){
       setState(() {
@@ -53,7 +49,7 @@ class _TransportationScreenScaffoldState extends State<TransportationScreenScaff
         AppBar().preferredSize.height + 20,
       ),
       child: CampusAppBar(
-        title: MyConstants.funcTitles[4],
+        title: AppLocalizations.of(context).translate(str_transportation),
       ),
     ),
       body: _isLoading

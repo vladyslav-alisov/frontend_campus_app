@@ -18,13 +18,9 @@ class CampusRequestListTile extends StatelessWidget {
       child: ListTile(
         dense: true,
         title: Text(_requestTitle),
-        subtitle: Text(_requestDescription,),
+        subtitle: Text(_requestDescription),
         isThreeLine: true,
-        trailing: _button,
-        leading: Image.asset(
-          ConstAssetsPath.img_placeHolder,
-          fit: BoxFit.scaleDown,
-        ),
+        trailing: FittedBox(child: _button),
       ),
     );
   }

@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/menu/Menu.dart';
+import 'package:campus_app/models/menu/MenuOptions.dart';
 import 'package:campus_app/models/menu/MenuToSend.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';
@@ -9,15 +13,16 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MenuProvider with ChangeNotifier{
 
-  MenuProvider(this.authData,this.menus,this.menuList);
+  MenuProvider(this.authData,this.menus,this.menuList,this.mealOptions);
   AuthData authData;
 
   var setup = GraphQLSetup();
 
   Menus menus;
   List<Menu> menuList = [];
+  List<Meals> mealOptions = [];
 
-  Future<void> createMenu(MenuToSend menu) async {
+  /*Future<void> createMenu(MenuToSend menu) async {
     MutationOptions options = MutationOptions(
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstMutation.createMenu),
@@ -32,10 +37,10 @@ class MenuProvider with ChangeNotifier{
       menuList[menuList.indexWhere((element) => element.dayID == temp.dayID)] = temp;
     }
     notifyListeners();
-  }
+  }*/
   Future<List<Menu>> menu() async {
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       document: gql(ConstQuery.menu),
     );
     QueryResult result = await setup.client.value.query(options);
@@ -44,12 +49,30 @@ class MenuProvider with ChangeNotifier{
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
-      menus = Menus.fromJson(result.data);
-      menuList = List.from(menus.menus);
+       menus = Menus.fromJson(result.data);
+       menuList = List.from(menus.menus);
+       print(menus);
     }
     notifyListeners();
     return menuList;
+  }
 
+  Future<void> meals() async {
+    QueryOptions options = QueryOptions(
+      fetchPolicy: FetchPolicy.networkOnly,
+      document: gql(ConstQuery.meals),
+    );
+    QueryResult result = await setup.client.value.query(options);
+    if (result.hasException) {
+      print(result.exception);
+      throw ExceptionHandle.errorTranslate(exception: result.exception);
+    }
+    if (result.data != null) {
+      print(result.data);
+      mealOptions = MealOptions.fromJson(result.data).meals;
+      print(mealOptions);
+    }
+    notifyListeners();
   }
 
 }

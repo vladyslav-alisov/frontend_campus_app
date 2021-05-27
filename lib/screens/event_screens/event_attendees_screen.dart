@@ -1,8 +1,9 @@
-import 'package:campus_app/models/events/AttendeeData.dart';
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
+import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/widgets/general_widgets/CampusPersonListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,7 @@ class _EventAttendeesScreenState extends State<EventAttendeesScreen> {
             Provider.of<EventsProvider>(context, listen: false).listOfAttendees(widget.eventID), context)
         .then((value) {
       setState(() {
-        _isLoading = false;//false;
+        _isLoading = false; //false;
       });
     });
     super.initState();
@@ -32,7 +33,7 @@ class _EventAttendeesScreenState extends State<EventAttendeesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var eventsProvider = Provider.of<EventsProvider>(context,listen: false);
+    var eventsProvider = Provider.of<EventsProvider>(context, listen: false);
     return _isLoading
         ? Scaffold(
             body: Center(
@@ -40,20 +41,22 @@ class _EventAttendeesScreenState extends State<EventAttendeesScreen> {
             ),
           )
         : Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          AppBar().preferredSize.height + 20,
-        ),
-        child: CampusAppBar(
-          title: "List of Attendees",
-        ),
-      ),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(
+                AppBar().preferredSize.height + 20,
+              ),
+              child: CampusAppBar(
+                title: AppLocalizations.of(context).translate(str_listOfAttendees),
+              ),
+            ),
             body: ListView.builder(
               itemCount: eventsProvider.attendeeList.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: AttendeeListTile(surname: eventsProvider.attendeeList[index].surname,name: eventsProvider.attendeeList[index].name),
+                  child: CampusPersonListTile(
+                      surname: eventsProvider.attendeeList[index].surname,
+                      name: eventsProvider.attendeeList[index].name,imageUrl: eventsProvider.attendeeList[index].imageUrl),
                 );
               },
             ),
@@ -61,22 +64,4 @@ class _EventAttendeesScreenState extends State<EventAttendeesScreen> {
   }
 }
 
-class AttendeeListTile extends StatelessWidget {
-  AttendeeListTile({this.imageUrl, this.name, this.surname});
 
-  final String imageUrl;
-  final String name;
-  final String surname;
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.grey,
-
-        radius: 35,
-        child: Text("${name[0].toUpperCase()}${surname[0].toUpperCase()}",style: TextStyle(color: Colors.white),),
-      ),
-      title: Text("$name $surname"),
-    );
-  }
-}

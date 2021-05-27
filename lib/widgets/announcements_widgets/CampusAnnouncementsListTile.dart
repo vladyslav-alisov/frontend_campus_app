@@ -1,4 +1,5 @@
 import 'package:campus_app/models/events/EventList.dart';
+import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class CampusAnnouncementsListTile extends StatelessWidget {
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Container(
                     child: Center(
-                      child: Text("Could not load an image"),
+                      child: Text(AppLocalizations.of(context).translate(str_errorLoadImage)),
                     ),
                   );
                 },

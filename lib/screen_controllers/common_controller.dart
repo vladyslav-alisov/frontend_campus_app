@@ -27,13 +27,6 @@ class CommonController {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).primaryColor,
-          /*action: SnackBarAction(
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-            label: AppLocalizations.of(context).translate(str_hideMessage),
-            textColor: Colors.white,
-          ),*/
           content: Text(successMsg),
         ),
       );
@@ -43,13 +36,6 @@ class CommonController {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).primaryColor,
-            /*action: SnackBarAction(
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              label: AppLocalizations.of(context).translate(str_hideMessage),
-              textColor: Colors.white,
-            ),*/
             content: Text(e.toString()),
           ),
         );

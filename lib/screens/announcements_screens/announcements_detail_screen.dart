@@ -1,4 +1,5 @@
 import 'package:campus_app/models/events/EventList.dart';
+import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
                           colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
                           onError: (exception, stackTrace) => Container(
                             child: Center(
-                              child: Text("Could not load an image"),
+                              child: Text(AppLocalizations.of(context).translate(str_errorLoadImage)),
                             ),
                           ),
                         ),

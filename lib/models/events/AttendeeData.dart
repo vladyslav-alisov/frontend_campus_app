@@ -1,3 +1,5 @@
+import 'package:campus_app/utils/MyConstants.dart';
+
 class AttendeeList {
   String sTypename;
   List<AttendeeData> attendees;
@@ -38,6 +40,7 @@ class AttendeeData {
   String name="";
   String surname="";
   int phone=0;
+  String imageUrl;
   String joinedAt="";
 
   AttendeeData({
@@ -48,6 +51,7 @@ class AttendeeData {
    this.name,
    this.surname,
    this.phone,
+    this.imageUrl,
    this.joinedAt,
       });
 
@@ -59,6 +63,7 @@ class AttendeeData {
     name = json["name"];
     surname = json["surname"];
     phone = json["phone"];
+    imageUrl = json["imageUrl"]!= null ? json["imageUrl"] : str_noImage;
     joinedAt = json["joinedAt"];
   }
 

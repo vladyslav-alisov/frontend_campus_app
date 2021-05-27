@@ -12,7 +12,6 @@ class GraphQLSetup{
   GraphQLSetup._internal();
 
   static const String str_uriGraphQL = 'https://campusapplication.herokuapp.com/graphql';
-//  static const String str_uriGraphQL = "http://192.168.1.51:5000/graphql";
   static HttpLink link = HttpLink(str_uriGraphQL);
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(

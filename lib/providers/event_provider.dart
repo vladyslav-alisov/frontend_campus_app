@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/events/AttendeeData.dart';
 import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/models/events/EventToSend.dart';
-import 'package:campus_app/screen_controllers/event_screens_controllers/event_edit_screen_controller.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';
 import 'package:campus_app/utils/MyConstants.dart';
@@ -37,6 +33,7 @@ class EventsProvider with ChangeNotifier {
     }
     if (result.data != null) {
       eventList = Events.fromJson(result.data).events;
+    //  eventList.sort();
     }
     notifyListeners();
   }
@@ -53,6 +50,7 @@ class EventsProvider with ChangeNotifier {
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
+      print(myEventList);
       myEventList = MyEvents.fromJson(result.data).myEvents;
     }
     notifyListeners();
@@ -159,12 +157,8 @@ class EventsProvider with ChangeNotifier {
       print(result.exception);
       throw "Could not update an event! Please try again later.";
     } else {
-      print(result.data);
       eventList[eventList.indexWhere((element) => element.eventID == eventID)] = Event.fromJson(result.data["action"]);
       if (hostEventList.isNotEmpty) {
-        print(hostEventList);
-        print("comes here");
-        print(hostEventList.indexWhere((element) => element.eventID == eventID));
         hostEventList[hostEventList.indexWhere((element) => element.eventID == eventID)] =
             Event.fromJson(result.data["action"]);
       }

@@ -1,6 +1,7 @@
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CampusTextInputField extends StatefulWidget {
   CampusTextInputField({
@@ -52,7 +53,6 @@ class _CampusTextInputFieldState extends State<CampusTextInputField> {
       decoration: InputDecoration(
          enabled: widget.isDisable,
         labelText: widget.hintText,
-
         suffixIcon: widget.rightIcon,
         prefixIcon: widget.leftIcon,
         hintText: widget.hintText,

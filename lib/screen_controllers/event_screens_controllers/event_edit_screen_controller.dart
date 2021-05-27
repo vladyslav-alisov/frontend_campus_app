@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/models/events/EventToSend.dart';
+import 'package:campus_app/utils/Localization.dart';
+import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,8 +66,7 @@ class EventEditScreenController with ChangeNotifier {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).primaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
-        content: Text("Please upload image"),
+        content: Text(AppLocalizations.of(context).translate(str_uploadImageWarn)),
       ),
     );
   }
@@ -105,21 +106,9 @@ class EventEditScreenController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> openTimePicker(BuildContext context) async {
-    final TimeOfDay picked = await showTimePicker(
-      initialTime: selectedTime,
-      context: context,
-    );
-    if (selectedTime != picked && picked != null) {
-      selectedTime = picked;
-    }
-    notifyListeners();
-  }
-
   Future<void> openDatePicker(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
-      locale: Locale.fromSubtags(languageCode: "tr"),
       initialDate: selectedDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(
@@ -128,6 +117,18 @@ class EventEditScreenController with ChangeNotifier {
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> openTimePicker(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      initialTime: selectedTime,
+      context: context,
+    );
+    if (selectedTime != picked && picked != null) {
+      selectedTime = picked;
     }
     notifyListeners();
   }
@@ -159,14 +160,14 @@ class EventEditScreenController with ChangeNotifier {
               children: <Widget>[
                 new ListTile(
                     leading: new Icon(Icons.photo_library),
-                    title: new Text('Photo Library'),
+                    title: new Text(AppLocalizations.of(context).translate(str_photoLibrary)),
                     onTap: () {
                       getImage(false);
                       Navigator.of(context).pop();
                     }),
                 new ListTile(
                   leading: new Icon(Icons.photo_camera),
-                  title: new Text('Camera'),
+                  title: new Text(AppLocalizations.of(context).translate(str_camera)),
                   onTap: () {
                     getImage(true);
                     Navigator.of(context).pop();
