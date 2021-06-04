@@ -48,7 +48,7 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
                           image: widget.event.imageUrl == null
                               ? Image.asset(
                             ConstAssetsPath.img_placeHolder,
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                           )
                               : NetworkImage(widget.event.imageUrl),
                           fit: BoxFit.cover,

@@ -1,6 +1,5 @@
-import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/providers/event_provider.dart';
-import 'package:campus_app/providers/profile_provider.dart';
+import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screens/event_screens/event_edit_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
@@ -23,7 +22,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserProvider>(context, listen: false).authData;
+    final userData = Provider.of<AuthProvider>(context, listen: false).authData;
     final eventProvider = Provider.of<EventsProvider>(context);
     final eventList = Provider.of<EventsProvider>(context, listen: false).eventList;
     final EventScreen args = ModalRoute.of(context).settings.arguments as EventScreen;

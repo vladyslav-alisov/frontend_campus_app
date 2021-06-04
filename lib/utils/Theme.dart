@@ -10,16 +10,22 @@ const greyColor = Color(0xff696969);
 const headColor = Color(0xFF464646);
 const bodyColor = Color(0xFF696969);
 const hintColor = Color(0xffD3D3D3);
+const anotherGrey = Color(0XFFA9AEAF);
+const buttonAcceptColor = Color(0xFF64CDE2);
 
 const String FontNameDefault = 'ArialRounded';
 
 final ThemeData appTheme = ThemeData(
+  buttonColor: buttonAcceptColor,
+
   tabBarTheme: TabBarTheme(
-    labelStyle: TextStyle(fontSize: 15, color: Colors.grey),
+    labelStyle: TextStyle(
+      fontSize: 15,
+      color: Colors.grey,
+    ),
   ),
   hintColor: hintColor,
   appBarTheme: AppBarTheme(centerTitle: false, textTheme: TextTheme(headline1: TextStyle(fontSize: 30))),
-  textButtonTheme: TextButtonThemeData(style: ButtonStyle()),
   textTheme: TextTheme(
     headline1: TextStyle(
       color: Colors.white,
@@ -44,13 +50,12 @@ final ThemeData appTheme = ThemeData(
     bodyText1: TextStyle(
       color: Color(0xFF464646),
       fontSize: 13,
-      fontWeight: FontWeight.w800
+      fontWeight: FontWeight.w800,
     ),
     bodyText2: TextStyle(
       color: Color(0xFF696969),
       fontSize: 13,
-        fontWeight: FontWeight.w100
-
+      fontWeight: FontWeight.w100,
     ),
   ),
   primaryColor: mainColor,

@@ -62,15 +62,17 @@ class SocialClub {
   String description;
   String imageUrl;
   int members;
+  String status;
 
-  SocialClub(
-      {this.sTypename,
+  SocialClub
+      ({this.sTypename,
         this.scID,
         this.scoID,
         this.title,
         this.description,
         this.imageUrl,
-        this.members});
+        this.members,
+      this.status});
 
   SocialClub.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
@@ -80,6 +82,7 @@ class SocialClub {
     description = json['description'];
     imageUrl = json['imageUrl'];
     members = json['members'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -91,11 +94,12 @@ class SocialClub {
     data['description'] = this.description;
     data['imageUrl'] = this.imageUrl;
     data['members'] = this.members;
+    data['status'] = this.status;
     return data;
   }
   
   @override
   String toString() {
-    return '{"sTypename": ${this.sTypename},"scID": ${this.scID},"scoID": ${this.scoID},"title": ${this.title},"description": ${this.description},"imageUrl": ${this.imageUrl},"members": ${this.members}}';
+    return '{"sTypename": ${this.sTypename},"scID": ${this.scID},"scoID": ${this.scoID},"title": ${this.title},"description": ${this.description},"imageUrl": ${this.imageUrl},"members": ${this.members}, "status": ${this.status}';
   }
 }

@@ -1,4 +1,3 @@
-import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/User.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/cupertino.dart';

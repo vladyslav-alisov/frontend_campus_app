@@ -40,17 +40,6 @@ class _MyEventsScaffoldState extends State<MyEventsScaffold> {
     });
   }
 
- /* @override
-  void initState() {
-   *//* CommonController.queryFuture(
-        Provider.of<EventsProvider>(context, listen: false).myEvents().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
-        }),
-        context);*//*
-    super.initState();
-  }*/
   @override
   Widget build(BuildContext context) {
     var eventProvider = Provider.of<EventsProvider>(context);
@@ -358,7 +347,7 @@ class CampusMyEventsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return eventProvider.myEventList.length== 0 ? Center(child: Text("No events were found"),) : ListView.builder(
       itemCount: eventProvider.myEventList.length,
       scrollDirection: Axis.vertical,
       itemBuilder: (BuildContext context, int index) {

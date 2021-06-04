@@ -1,47 +1,69 @@
+import 'package:campus_app/models/menu/Food.dart';
+import 'package:campus_app/screen_controllers/dinner_hall_screen_controllers/menu_edit_screen_controller.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MealSelectScreen extends StatelessWidget {
-  MealSelectScreen(this.meals, this.mealType);
-  final List meals;
-  final String mealType;
+  MealSelectScreen(this.meals, this.mealName, this.mealIndex,this.dayIndex);
+  final List<Meal> meals;
+  final int mealIndex;
+  final String mealName;
+  final int dayIndex;
   @override
   Widget build(BuildContext context) {
+    var devSize = MediaQuery.of(context).size;
+    var screenController = Provider.of<MenuEditScreenController>(context, listen: false);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
           AppBar().preferredSize.height + 20,
         ),
         child: CampusAppBar(
-          title: AppLocalizations.of(context).translate(str_select),
+          title: AppLocalizations.of(context).translate(str_select) + " " + mealName,
         ),
       ),
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 2, crossAxisCount: 4),
-        itemBuilder: (context, index) => Container(
-          child: InkWell(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: meals[index].imageUrl == null
-                      ? Image.asset(
-                          ConstAssetsPath.img_placeHolder,
-                          fit: BoxFit.fill,
-                        )
-                      : NetworkImage(meals[index].imageUrl),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.darken),
-                  onError: (exception, stackTrace) => Container(
-                    child: Center(
-                      child: Text(AppLocalizations.of(context).translate(str_errorLoadImage)),
+        itemCount: meals.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1.3, crossAxisCount: 2),
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Flexible(
+                child: InkWell(
+                  onTap: () {
+                    screenController.updateTempMenuList(meals[index],mealIndex,dayIndex);
+                    Navigator.pop(context);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: FadeInImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(meals[index].mealImageUrl),
+                      placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        print(error);
+                        print(stackTrace);
+                        return Container(
+                          child: Center(
+                            child: FittedBox(
+                              child: Text("Something went wrong"),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
-              child: Text(meals[index].mealName),
-            ),
+              Text(
+                meals[index].mealName,
+                style: Theme.of(context).textTheme.headline2,
+              )
+            ],
           ),
         ),
       ),

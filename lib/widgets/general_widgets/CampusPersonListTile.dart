@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class CampusPersonListTile extends StatelessWidget {
-  CampusPersonListTile({this.imageUrl, this.name, this.surname});
+  CampusPersonListTile({this.imageUrl, this.name, this.surname,this.trailingIcon,this.callback});
 
   final String imageUrl;
   final String name;
   final String surname;
+  final Icon trailingIcon;
+  final Function callback;
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -49,6 +51,10 @@ class CampusPersonListTile extends StatelessWidget {
               ),
             ),
       title: Text("$name $surname"),
+      trailing: trailingIcon == null ? null : IconButton(
+        icon: trailingIcon,
+        onPressed: () => callback(),
+      ),
     );
   }
 }

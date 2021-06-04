@@ -10,7 +10,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-enum UserType { Student, Cook }
+enum UserType { Student, Cook, Lecturer }
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "/home_screen";
@@ -34,8 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
       AppLocalizations.of(context).translate(str_socialClubs),
       AppLocalizations.of(context).translate(str_dinnerHall),
     ];
+    print("build");
 
-    var userData = Provider.of<AuthProvider>(context, listen: false).authData;
+    var authData = Provider.of<AuthProvider>(context).authData;
     final devSize = MediaQuery.of(context).size;
     return isLoading
         ? Container(child: Center(child: CircularProgressIndicator()))
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Flexible(
                                   fit: FlexFit.tight,
                                   child: Text(
-                                    userData != null ? userData.login.name + " " + userData.login.surname : "",
+                                    authData != null ? authData.login.name + " " + authData.login.surname : "",
                                     style: Theme.of(context).textTheme.headline1,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 3,
@@ -85,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Flexible(
                                   fit: FlexFit.tight,
-                                  child: userData.login.imageUrl != str_noImage && userData?.login?.imageUrl != null
+                                  child: authData.login.imageUrl != str_noImage && authData?.login?.imageUrl != null
                                       ? Container(
                                           width: 80,
                                           height: 80,
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             radius: 25,
                                             child: ClipOval(
                                               child: Image.network(
-                                                userData.login.imageUrl,
+                                                authData.login.imageUrl,
                                                 fit: BoxFit.cover,
                                                 width: 80,
                                                 height: 80,
@@ -118,18 +119,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         )
                                       : Container(
-                                          width: 80,
-                                          height: 80,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: CircleAvatar(
-                                            child: ClipOval(
-                                              child: Image.asset(ConstAssetsPath.img_defaultAvatar, fit: BoxFit.fill),
+                                              width: 80,
+                                              height: 80,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: CircleAvatar(
+                                                child: ClipOval(
+                                                  child: Image.asset(ConstAssetsPath.img_defaultAvatar, fit: BoxFit.fill),
+                                                ),
+                                                radius: devSize == null ? 50 : devSize.width * 0.10,
+                                              ),
                                             ),
-                                            radius: devSize == null ? 50 : devSize.width * 0.10,
-                                          ),
-                                        ),
                                 ),
                               ],
                             ),
@@ -139,59 +140,91 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                userData.login.typeOfUser == describeEnum(UserType.Cook)
-                    ? Container(
-                        height: devSize.height * 0.685,
-                        width: devSize.width,
-                        child: GridView.builder(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            bottom: 20,
-                            top: 10,
-                          ),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 14.0,
-                            mainAxisSpacing: 17.0,
-                          ),
-                          itemCount: MyConstants.funcStuffTitles.length,
-                          itemBuilder: (context, index) => cardFunction(
-                            context: context,
-                            imagePath: MyConstants.assetStuffPaths[index],
-                            label: MyConstants.funcStuffTitles[index],
-                            color: MyConstants.funcColorsStuff[index],
-                            path: MyConstants.routesStuff[index],
-                          ),
-                        ),
-                      )
-                    : Container(
-                        height: devSize.height * 0.685,
-                        width: devSize.width,
-                        child: GridView.builder(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            bottom: 20,
-                            top: 10,
-                          ),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 14.0,
-                            mainAxisSpacing: 17.0,
-                          ),
-                          itemCount: MyConstants.assetPaths.length,
-                          itemBuilder: (context, index) => cardFunction(
-                            context: context,
-                            imagePath: MyConstants.assetPaths[index],
-                            label: lst[index],
-                            color: MyConstants.funcColors[index],
-                            path: MyConstants.routes[index],
-                          ),
-                        ),
-                      )
+                conditionalView(authData.login.typeOfUser, devSize, lst),
               ],
             ),
           );
+  }
+}
+
+Widget conditionalView(String type, Size devSize, List list) {
+  if (type == describeEnum(UserType.Cook)) {
+    return CampusHomeGridView(
+      devSize: devSize,
+      assets: MyConstants.assetStaffPaths,
+      colors: MyConstants.funcColorsStaff,
+      routes: MyConstants.routesStaff,
+      titles: MyConstants.funcStaffTitles,
+    );
+  }
+  if (type == describeEnum(UserType.Student)) {
+    return CampusHomeGridView(
+      devSize: devSize,
+      assets: MyConstants.assetPaths,
+      colors: MyConstants.funcColors,
+      routes: MyConstants.routes,
+      titles: list,
+    );
+  }
+  if (type == describeEnum(UserType.Lecturer)) {
+    return CampusHomeGridView(
+      devSize: devSize,
+      assets: MyConstants.assetProfPaths,
+      colors: MyConstants.funcColorsProf,
+      routes: MyConstants.routesProf,
+      titles: MyConstants.funcProfTitles,
+    );
+  } else
+    return CampusHomeGridView(
+      devSize: devSize,
+      assets: MyConstants.assetProfPaths,
+      colors: MyConstants.funcColorsProf,
+      routes: MyConstants.routesProf,
+      titles: MyConstants.funcProfTitles,
+    );
+}
+
+class CampusHomeGridView extends StatelessWidget {
+  CampusHomeGridView({
+    @required this.devSize,
+    this.assets,
+    this.colors,
+    this.routes,
+    this.titles,
+  });
+
+  final Size devSize;
+  List<String> titles;
+  List<String> assets;
+  List<Color> colors;
+  List<String> routes;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: devSize.height * 0.685,
+      width: devSize.width,
+      child: GridView.builder(
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: 20,
+          top: 10,
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 14.0,
+          mainAxisSpacing: 17.0,
+        ),
+        itemCount: titles.length,
+        itemBuilder: (context, index) => cardFunction(
+          context: context,
+          imagePath: assets[index],
+          label: titles[index],
+          color: colors[index],
+          path: routes[index],
+        ),
+      ),
+    );
   }
 }

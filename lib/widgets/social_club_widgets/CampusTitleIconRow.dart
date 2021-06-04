@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
-class TitleIconRow extends StatelessWidget {
-  TitleIconRow({this.titleIcon, this.title, this.trailingIcon, this.callback});
+class CampusTitleIconRow extends StatelessWidget {
+  CampusTitleIconRow(
+      {this.titleIcon, this.title, this.trailingIcon, this.secondTrailingIcon, this.callback, this.secondCallback});
 
   final IconData titleIcon;
   final IconData trailingIcon;
+  final IconData secondTrailingIcon;
   final String title;
   final Function callback;
+  final Function secondCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +27,34 @@ class TitleIconRow extends StatelessWidget {
               width: 5,
             ),
             Text(
-              title,
+              title ?? "",
               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13),
             ),
           ],
         ),
-        trailingIcon==null? Container() :IconButton(
-          icon: Icon(trailingIcon,size: 20,color: Colors.grey,),
-          onPressed: callback,
+        Row(
+          children: [
+            secondTrailingIcon == null
+                ? Container()
+                : IconButton(
+                    icon: Icon(
+                      secondTrailingIcon,
+                      size: 20,
+                      color: Colors.grey,
+                    ),
+                    onPressed: secondCallback,
+                  ),
+            trailingIcon == null
+                ? Container()
+                : IconButton(
+              icon: Icon(
+                trailingIcon,
+                size: 20,
+                color: Colors.grey,
+              ),
+              onPressed: callback,
+            ),
+          ],
         ),
       ],
     );

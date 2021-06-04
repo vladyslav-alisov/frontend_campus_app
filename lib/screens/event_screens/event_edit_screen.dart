@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 enum Options { Update, Create }
-enum Attendees { Students, Stuff, All }
+enum Attendees { Students, Staff, All }
 
 class EventEditScreen extends StatelessWidget {
   static const String routeName = "/event_edit_screen";
@@ -181,7 +181,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                                 items: <String>[
                                   describeEnum(Attendees.All),
                                   describeEnum(Attendees.Students),
-                                  describeEnum(Attendees.Stuff)
+                                  describeEnum(Attendees.Staff)
                                 ]
                                     .map((String value) {
                                       return DropdownMenuItem<String>(

@@ -141,6 +141,10 @@ class EventsProvider with ChangeNotifier {
     } else {
       print(result.data);
       eventList.add(Event.fromJson(result.data["action"]));
+      if (hostEventList.isNotEmpty) {
+        print("comes here");
+        hostEventList.add(Event.fromJson(result.data["action"]));
+      }
     }
     notifyListeners();
   }
@@ -157,8 +161,10 @@ class EventsProvider with ChangeNotifier {
       print(result.exception);
       throw "Could not update an event! Please try again later.";
     } else {
+      print(result.data);
       eventList[eventList.indexWhere((element) => element.eventID == eventID)] = Event.fromJson(result.data["action"]);
-      if (hostEventList.isNotEmpty) {
+      if (hostEventList.length!=0) {
+        //print(hostEventList[0]);
         hostEventList[hostEventList.indexWhere((element) => element.eventID == eventID)] =
             Event.fromJson(result.data["action"]);
       }

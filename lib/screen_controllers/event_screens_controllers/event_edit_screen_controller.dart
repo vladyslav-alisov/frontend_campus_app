@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 enum Options { Update, Create }
-enum Attendees { Students, Stuff, All }
+enum Attendees { Students, Staff, All }
 
 class EventEditScreenController with ChangeNotifier {
   final dateFormat = DateFormat("yyyy-MM-dd");
@@ -45,7 +45,7 @@ class EventEditScreenController with ChangeNotifier {
       eventTitleController.text = event.title;
       locationController.text = event.location;
       event.attendee != describeEnum(Attendees.All) &&
-              event.attendee != describeEnum(Attendees.Stuff) &&
+              event.attendee != describeEnum(Attendees.Staff) &&
               event.attendee != describeEnum(Attendees.Students)
           ? attendeeController.text = describeEnum(Attendees.All)
           : attendeeController.text = event.attendee;

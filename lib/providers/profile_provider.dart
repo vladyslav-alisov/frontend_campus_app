@@ -1,6 +1,6 @@
+import 'dart:io';
+import 'package:campus_app/providers/user_provider.dart';
 
-
-import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/User.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';
@@ -8,12 +8,12 @@ import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class UserProvider with ChangeNotifier {
+class ProfileProvider with ChangeNotifier {
 
   var setup = GraphQLSetup();
 
-  UserProvider(this.authData,this.user);
-  AuthData authData;
+  ProfileProvider(this.authData,this.user);
+  AuthProvider authData;
   User user;
 
   Future<void> profile() async {
@@ -21,8 +21,8 @@ class UserProvider with ChangeNotifier {
       fetchPolicy: FetchPolicy.networkOnly,
       document: gql(ConstQuery.profile),
       variables: {
-        ConstQueryKeys.userID: authData.login.userID,
-        ConstQueryKeys.typeOfUser: authData.login.typeOfUser,
+        ConstQueryKeys.userID: authData.authData.login.userID,
+        ConstQueryKeys.typeOfUser: authData.authData.login.typeOfUser,
       },
     );
     QueryResult result = await setup.client.value.query(options);
@@ -32,6 +32,7 @@ class UserProvider with ChangeNotifier {
     }
     if (result.data != null) {
       user = User.fromJson(result.data);
+      print(result.data);
     }
     notifyListeners();
   }

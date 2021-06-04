@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:campus_app/models/User.dart';
 import 'package:campus_app/providers/profile_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
@@ -7,8 +10,11 @@ import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
+//todo: fix avatar
 enum UserType { Cook, Lecturer, Student }
 
 class ProfileScreen extends StatefulWidget {
@@ -24,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     _isLoading = true;
-    CommonController.queryFuture(Provider.of<UserProvider>(context, listen: false).profile(), context).then((_) {
+    CommonController.queryFuture(Provider.of<ProfileProvider>(context, listen: false).profile(), context).then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -36,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<UserProvider>(context, listen: false).profile().then((_) {
+    await Provider.of<ProfileProvider>(context, listen: false).profile().then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -45,10 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var auth = Provider.of<AuthProvider>(context, listen: false);
-    final devSize = MediaQuery.of(context).size;
-    var userData = Provider.of<UserProvider>(context, listen: false).user;
-    var authData = Provider.of<AuthProvider>(context, listen: false).authData;
+    var userData = Provider.of<ProfileProvider>(context, listen: false).user;
+    var authData = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -81,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     MaterialButton(
                       onPressed: () async {
                         await Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false)
-                            .then((value) => auth.exitApp());
+                            .then((value) => authData.exitApp());
                       },
                       child: Text(
                         AppLocalizations.of(context).translate(str_logout),
@@ -119,35 +123,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10),
-                            width: 88,
-                            height: 88,
-                            child: authData.login.imageUrl != str_noImage && authData?.login?.imageUrl != null
-                                ? CircleAvatar(
-                                    child: Container(
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          authData.login.imageUrl,
-                                          height: 88,
-                                          width: 88,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Image.asset(ConstAssetsPath.img_defaultAvatar),
-                                        ),
-                                      ),
-                                    ),
-                                    radius: 25,
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                              ConstAssetsPath.img_defaultAvatar,
-                                            ))),
+                          Hero(
+                            tag: "profileAvatar",
+                            child: Container(
+                              margin: EdgeInsets.only(top: 10),
+                              width: 88,
+                              height: 88,
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CampusGallerySinglePhoto(),
                                   ),
+                                ),
+                                child: authData.authData.login.imageUrl != str_noImage &&
+                                        authData.authData.login.imageUrl != null
+                                    ? CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        child: Container(
+                                          child: ClipOval(
+                                            child: Image.network(
+                                              authData.authData.login.imageUrl,
+                                              height: 88,
+                                              width: 88,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) =>
+                                                  Image.asset(ConstAssetsPath.img_defaultAvatar),
+                                            ),
+                                          ),
+                                        ),
+                                        radius: 25,
+                                      )
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: AssetImage(
+                                                  ConstAssetsPath.img_defaultAvatar,
+                                                ))),
+                                      ),
+                              ),
+                            ),
                           ),
                           SizedBox(
                             height: 20,
@@ -206,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  authData.login.typeOfUser != describeEnum(UserType.Student)
+                  authData.authData.login.typeOfUser != describeEnum(UserType.Student)
                       ? Container()
                       : Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -269,5 +286,189 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
     );
+  }
+}
+
+class CampusGallerySinglePhoto extends StatefulWidget {
+  @override
+  _CampusGallerySinglePhotoState createState() => _CampusGallerySinglePhotoState();
+}
+
+class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
+  var picker = ImagePicker();
+  bool isLoading = false;
+  File avatarImage;
+
+  void setIsLoading() {
+    setState(() {
+      isLoading = !isLoading;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var userProvider = Provider.of<AuthProvider>(context);
+    return Dismissible(
+      direction: DismissDirection.vertical,
+      key: const Key('key'),
+      onDismissed: (_) => Navigator.of(context).pop(),
+      child: Scaffold(
+        body: isLoading
+            ? Container(
+                color: Colors.black,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ))
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  PhotoView.customChild(
+                    heroAttributes: PhotoViewHeroAttributes(tag: "profileAvatar"),
+                    backgroundDecoration: BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: FadeInImage(
+                      placeholder: AssetImage(ConstAssetsPath.img_defaultAvatar),
+                      image: NetworkImage(userProvider.authData.login.imageUrl),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.more_vert_sharp,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Wrap(
+                              children: [
+                                userProvider.authData.login.imageUrl == str_defaultImageUrl
+                                    ? Container()
+                                    : ListTile(
+                                        leading: new Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        title: new Text(
+                                          AppLocalizations.of(context).translate(str_delete),
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title:
+                                                    new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
+                                                content: new Text(AppLocalizations.of(context)
+                                                    .translate(str_warningBeforeEventDelete)),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text(AppLocalizations.of(context).translate(str_cancel)),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: Text(AppLocalizations.of(context).translate(str_confirm)),
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      setIsLoading();
+                                                      await userProvider.deleteAvatar();
+                                                      setIsLoading();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                ListTile(
+                                  leading: new Icon(Icons.photo_library),
+                                  title: new Text(AppLocalizations.of(context).translate(str_photoLibrary)),
+                                  onTap: () async {
+                                    await getAndUpdateImage(false);
+                                    Navigator.pop(context);
+                                    if (avatarImage != null) {
+                                      setIsLoading();
+                                      await userProvider.uploadAvatar(avatarImage);
+                                      setIsLoading();
+                                    }
+                                  },
+                                ),
+                                ListTile(
+                                  leading: new Icon(Icons.photo_camera),
+                                  title: new Text(AppLocalizations.of(context).translate(str_camera)),
+                                  onTap: () async {
+                                    await getAndUpdateImage(true);
+                                    Navigator.pop(context);
+                                    if (avatarImage != null) {
+                                      setIsLoading();
+                                      await userProvider.uploadAvatar(avatarImage);
+                                      setIsLoading();
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                ListTile(
+                                  leading: new Icon(Icons.cancel),
+                                  title: new Text(AppLocalizations.of(context).translate(str_cancel)),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                    alignment: Alignment.topLeft,
+                  )
+                ],
+              ),
+      ),
+    );
+  }
+
+  Future getAndUpdateImage(bool choice) async {
+    var pickedFile;
+    if (choice) {
+      pickedFile =
+          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
+      if (pickedFile == null) {
+        return;
+      }
+    } else if (!choice) {
+      pickedFile =
+          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
+      if (pickedFile == null) {
+        return;
+      }
+    }
+    if (pickedFile != null) {
+      avatarImage = File(pickedFile.path);
+    }
   }
 }

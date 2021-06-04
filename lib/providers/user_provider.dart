@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/utils/ExceptionHandler.dart';
 import 'package:campus_app/utils/MyConstants.dart';
@@ -9,6 +11,7 @@ class AuthProvider with ChangeNotifier {
   AuthData authData;
   bool isAuth = false;
   var setup = GraphQLSetup();
+
 
   Future<void> exitApp() async {
     authData = null;
@@ -62,4 +65,48 @@ class AuthProvider with ChangeNotifier {
     else isAuth = false;
     return isAuth;
   }
+
+
+  void updateUrl(String imageUrl){
+    authData.login.imageUrl = imageUrl;
+    notifyListeners();
+  }
+
+  Future<void> uploadAvatar(File image) async {
+    MutationOptions options =
+    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.uploadAvatar), variables: {
+      ConstQueryKeys.image: await http.MultipartFile.fromPath(
+        'campusImage',
+        image.path,
+      ),
+      ConstQueryKeys.userID: authData.login.userID,
+      ConstQueryKeys.typeOfUser: authData.login.typeOfUser,
+    });
+    QueryResult result = await setup.client.value.mutate(options);
+    if (result.hasException) {
+      throw "Something went wrong";
+    } else {
+      print(result.data);
+        updateUrl(result.data[ConstQueryKeys.action]);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteAvatar() async {
+    MutationOptions options =
+    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteAvatar), variables: {
+      ConstQueryKeys.userID: authData.login.userID,
+      ConstQueryKeys.typeOfUser: authData.login.typeOfUser,
+    });
+    QueryResult result = await setup.client.value.mutate(options);
+    if (result.hasException) {
+      print(result.exception);
+      throw "Something went wrong";
+    } else {
+      print(result.data);
+      updateUrl(result.data[ConstQueryKeys.action]);
+    }
+    notifyListeners();
+  }
+
 }

@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddPostScreen extends StatelessWidget {
-
   AddPostScreen(this.socialClub);
 
   final SocialClub socialClub;
@@ -19,15 +18,16 @@ class AddPostScreen extends StatelessWidget {
     var socialClubProvider = Provider.of<SocialClubProvider>(context);
     var screenController = Provider.of<SocialClubManageScreenController>(context);
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(
-            AppBar().preferredSize.height + 20,
-          ),
-          child: CampusAppBar(
-            title: "Add a Photo",
-          ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          AppBar().preferredSize.height + 20,
         ),
-        body: Column(
+        child: CampusAppBar(
+          title: "Add a Photo",
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -61,9 +61,9 @@ class AddPostScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(26),
                           child: GestureDetector(
                               onTap: () => screenController.showImagePicker(context),
-                              child: screenController.image == null
+                              child: screenController.galleryImage == null
                                   ? Image.asset(ConstAssetsPath.img_placeHolder)
-                                  : Image.file(screenController.image)),
+                                  : Image.file(screenController.galleryImage)),
                         ),
                       ),
                     ],
@@ -84,28 +84,30 @@ class AddPostScreen extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
                       ),
                       onPressed: () async {
-                          screenController.setIsLoading(true);
-                          if (screenController.image == null) {
-                            screenController.showUploadImage(context);
-                          } else {
-                            await CommonController.mutationFuture(
-                                    socialClubProvider
-                                        .uploadPost(socialClub.scID, socialClub.scoID, screenController.image,
-                                            screenController.descriptionController.text)
-                                        .then((_) {
-                                      Navigator.pop(context);
-                                    }),
-                                   "Photo has been successfully added",
-                                    context)
-                                .catchError((e) => print(e));
-                          }
+                        screenController.setIsLoading(true);
+                        if (screenController.galleryImage == null) {
+                          screenController.showUploadImage(context);
+                        } else {
+                          await CommonController.mutationFuture(
+                                  socialClubProvider
+                                      .uploadPost(socialClub.scID, socialClub.scoID, screenController.galleryImage,
+                                          screenController.descriptionController.text)
+                                      .then((_) {
+                                    Navigator.pop(context);
+                                  }),
+                                  "Photo has been successfully added",
+                                  context)
+                              .catchError((e) => print(e));
+                        }
 
-                          screenController.setIsLoading(false);
+                        screenController.setIsLoading(false);
                       },
-                      child: Text("Dwd"),
+                      child: Text("Share"),
                     ),
             ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

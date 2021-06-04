@@ -45,7 +45,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   @override
   bool isSupported(Locale locale) {
 // Include all of your supported language codes here
-    return ['en', 'ru', 'tr'].contains(locale.languageCode);
+    return ['en'].contains(locale.languageCode);//todo: add  'ru', 'tr'  after finish localization and fix turkish letters and fontsize in russian
   }
 
   @override

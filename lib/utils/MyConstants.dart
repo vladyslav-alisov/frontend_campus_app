@@ -9,6 +9,71 @@ import 'package:campus_app/screens/transportation_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConstMutation {
+
+
+  static const String deletePost = '''
+  mutation deletePost(\$postID: ID!, \$scoID: ID!){
+  action: deletePost(postID: \$postID, scoID:\$scoID)
+  }
+  ''';
+  static const String deleteAvatar = '''
+  mutation deleteAvatar(\$userID: ID!,\$typeOfUser: String!){
+  action: deleteAvatar(userID: \$userID, typeOfUser: \$typeOfUser)
+  }
+  ''';
+
+  static const String chooseMeals = '''
+  mutation chooseMeals(\$menuInput: MenuInputData!, \$userID: ID!){
+  action: chooseMeals(menuInput: \$menuInput, userID: \$userID )
+  }
+  ''';
+  static const String uploadAvatar = '''
+  mutation uploadAvatar(\$image: Upload!,\$typeOfUser: String!, \$userID: ID!){
+  action: uploadAvatar(image: \$image, typeOfUser:\$typeOfUser, userID:\$userID)
+  }
+  ''';
+
+  static const String cancelRequestJoinSocialClub ='''
+  mutation cancelRequestJoinSocialClub (\$userID: ID!, \$scID: ID!){
+  action: cancelRequestJoinSocialClub (userID: \$userID,scID: \$scID )
+  }
+  ''';
+
+  static const String acceptJoinSocialClub = '''
+  mutation acceptJoinSocialClub(\$scID: ID!, \$scoID: ID!,\$userID: ID!){
+  action: acceptJoinSocialClub(scID: \$scID, scoID: \$scoID, userID: \$userID){
+        scID
+        scoID
+        title
+        description
+        imageUrl
+        members
+    }
+  }
+  ''';
+  static const String denyJoinSocialClub = '''
+  mutation denyJoinSocialClub(\$scID: ID!, \$scoID: ID!,\$userID: ID!){
+  action: denyJoinSocialClub(scID: \$scID, scoID: \$scoID, userID: \$userID)
+  }
+  ''';
+
+  static const String deleteSCMember = '''
+  mutation deleteSCMember(\$scID: ID!, \$scoID: ID!,\$userID: ID!){
+  action: deleteSCMember(scID: \$scID, scoID: \$scoID, userID: \$userID){
+        scID
+        scoID
+        title
+        description
+        imageUrl
+        members
+    }
+  }
+  ''';
+  static const String editDescriptionSocialClub = '''
+  mutation editDescriptionSocialClub(\$scID: ID!, \$scoID: ID!,\$inputDescription: String!){
+  action: editDescriptionSocialClub(scID: \$scID, scoID: \$scoID, inputDescription: \$inputDescription)
+  }
+  ''';
   static const String quitSocialClub = '''
   mutation quitSocialClub(\$scID: ID!, \$userID: ID!){
   action: quitSocialClub(scID: \$scID, userID: \$userID )
@@ -22,7 +87,24 @@ class ConstMutation {
 
   static const String uploadPost = '''
   mutation uploadPost(\$postInput: PostInputData,\$scID: ID!, \$scoID: ID!){
-  action: uploadPost(postInput: \$postInput, scID:\$scID, scoID:\$scoID)
+  action: uploadPost(postInput: \$postInput, scID:\$scID, scoID:\$scoID){
+       postID
+       imageUrl
+       description
+       createdAt
+    }
+  }
+  ''';
+
+  static const String uploadAvatarSocialClub = '''
+  mutation uploadAvatarSocialClub(\$image: Upload!,\$scID: ID!, \$userID: ID!){
+  action: uploadAvatarSocialClub(image: \$image, scID:\$scID, userID:\$userID)
+  }
+  ''';
+
+  static const String deleteAvatarSocialClub = '''
+  mutation deleteAvatarSocialClub(\$scID: ID!, \$userID: ID!){
+  action: deleteAvatarSocialClub(scID:\$scID, userID:\$userID)
   }
   ''';
   static const String createMenu = '''
@@ -105,6 +187,40 @@ class ConstMutation {
 }
 
 class ConstQuery {
+
+  static const String socialClub = '''
+      query socialClub(\$scID: ID!,\$userID: ID!){
+       socialClub(scID: \$scID,userID: \$userID){
+        scID
+        scoID
+        title
+        description
+        imageUrl
+        members
+        status
+    }
+  }
+  ''';
+
+  static const String socialClubRequests = '''
+   query socialClubRequests(\$userID: ID!){
+      socialClubRequests(userID: \$userID){
+       userID
+       name
+       surname
+       gender
+       title
+       department
+       email
+       address
+       phone
+       imageUrl
+       balance
+       semester
+    }
+}
+  ''';
+
   static const String gallery = '''
   query gallery(\$scID: ID!){
       gallery(scID: \$scID){
@@ -126,24 +242,7 @@ class ConstQuery {
     }
 }
   ''';
-  static const String socialClubRequests = '''
-  query socialClubRequests(\$userID: ID!){
-      socialClubRequests(userID: \$userID){
-        userID
-        name
-        surname
-        gender
-        title
-        department
-        email
-        address
-        phone
-        imageUrl
-        balance
-        semester
-    }
-}
-  ''';
+
   static const String mySocialClubs = '''
   query mySocialClubs(\$userID: ID!){
       mySocialClubs(userID: \$userID){
@@ -153,6 +252,7 @@ class ConstQuery {
         description
         imageUrl
         members
+        status
     }
 }
   ''';
@@ -166,37 +266,31 @@ class ConstQuery {
         description
         imageUrl
         members
+        status
     }
   }
   ''';
   static const String meals = '''
-  query meals(){
-          meals(){
-             mealID
-             mealType
-             mealName
-             mealImageUrl
+  query mealsList(){
+          mealsList(){
+            meals{
+                  mealID
+                  mealType
+                  mealName
+                  mealImageUrl
+            }
         }
   }
   ''';
   static const String menu = '''
   query menu(){
           menu(){
-              menuID
-              dayID
-              day
-              redMeal
-              redMealImageUrl
-              whiteMeal
-              whiteMealImageUrl
-              vegMeal
-              vegMealImageUrl
-              soup
-              soupImageUrl
-              salad
-              saladImageUrl
-              dessert
-              dessertImageUrl
+               meals{
+                  mealID
+                  mealType
+                  mealName
+                  mealImageUrl
+            }
         }
   }
   ''';
@@ -314,6 +408,10 @@ class ConstQuery {
 
 //for calling data we need key strings
 class ConstQueryKeys {
+  static const String postID = "postID";
+  static const String action = "action";
+  static const String socialClub = "socialClub";
+  static const String inputDescription = "inputDescription";
   static const String scoID = "scoID";
   static const String scID = "scID";
   static const String eventInput = "eventInput";
@@ -360,28 +458,61 @@ class ConstAssetsPath {
 }
 
 class MyConstants {
-  static const List<String> assetStuffPaths = [
+  static const List<String> assetProfPaths = [
     'assets/images/Announcements.jpg',
     'assets/images/DinnerHall.jpg',
     'assets/images/Transportation.jpg',
     'assets/images/Events.jpg',
+    'assets/images/TimeTable.jpg',
   ];
 
-  static const List<String> routesStuff = [
+  static const List<String> routesProf = [
+    AnnouncementsScreen.routeName,
+    DinnerHallScreen.routeName,
+    TransportationScreen.routeName,
+    EventScreen.routeName,
+    TimeTableScreen.routeName
+  ];
+
+  static const List<String> funcProfTitles = [
+    "Announcements",
+    "Dinner Hall",
+    "Transportation",
+    "Events",
+    "Time Table"
+  ];
+
+  static const List<Color> funcColorsProf = [
+    Color(0xFFFC7068),
+    Color(0xFFFDD530),
+    Color(0xFF04D6A7),
+    Color(0xFF4DAB57),
+    Color(0xFF8562A5),
+
+  ];
+  static const List<String> assetStaffPaths = [
+    'assets/images/Announcements.jpg',
+    'assets/images/DinnerHall.jpg',
+    'assets/images/Transportation.jpg',
+    'assets/images/Events.jpg',
+
+  ];
+
+  static const List<String> routesStaff = [
     AnnouncementsScreen.routeName,
     DinnerHallScreen.routeName,
     TransportationScreen.routeName,
     EventScreen.routeName,
   ];
 
-  static const List<String> funcStuffTitles = [
+  static const List<String> funcStaffTitles = [
     "Announcements",
     "Dinner Hall",
     "Transportation",
     "Events",
   ];
 
-  static const List<Color> funcColorsStuff = [
+  static const List<Color> funcColorsStaff = [
     Color(0xFFFC7068),
     Color(0xFFFDD530),
     Color(0xFF04D6A7),
@@ -409,12 +540,6 @@ class MyConstants {
     DinnerHallScreen.routeName,
   ];
 
-  static const List<Color> appBarColors = [
-    Color(0xFF102255),
-    Color(0xFF2B799E),
-    Color(0xFF40BDD6),
-  ];
-
   static const List<Color> funcColors = [
     Color(0xFFFC7068),
     Color(0xFFFDC22E),
@@ -425,6 +550,13 @@ class MyConstants {
     Color(0xFF164F5F),
     Color(0xFFFDD530),
   ];
+  static const List<Color> appBarColors = [
+    Color(0xFF102255),
+    Color(0xFF2B799E),
+    Color(0xFF40BDD6),
+  ];
+
+
 }
 
 //login
@@ -478,7 +610,8 @@ const String str_enterDescription = "Enter description";
 //default values for GraphQL
 const str_noImage = "No Image";
 const str_false = "false";
-
+const str_defaultImageUrl = "https://res.cloudinary.com/abu-campus-app/image/upload/v1622738747/cikhthfn2p3ireaot99v.png";
+const str_defaultImageUrlSC = "https://res.cloudinary.com/abu-campus-app/image/upload/v1622739266/c68zvrhgwzlvgow95x4t.jpg";
 //for document request
 const String str_studentAffairEmail = "vladyslav.alisov@gmail.com"; //'studentaffairs@antalya.edu.tr';
 const String str_requests = "Requests";
@@ -512,7 +645,7 @@ const String str_thursday = "Thursday";
 const String str_friday = "Friday";
 const String str_documentRequest = "Document Request";
 const String str_studentCard = "Student Card";
-const String str_timeTable = "Time Table";
+const String str_timeTable = "Timetable";
 const String str_transportation = "Transportation";
 const String str_dinnerHall = "Dinner Hall";
 const String str_menu = "Menu";

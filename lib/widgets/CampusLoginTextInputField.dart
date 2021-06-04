@@ -12,7 +12,7 @@ class CampusLoginTextInputField extends StatelessWidget {
     this.obscure = false,
     this.rightIcon,
     this.textInputType,
-    this.onFieldSubmitted,
+    this.onFieldSubmitted, this.rightText,
   });
 
   final bool autofocus;
@@ -25,9 +25,11 @@ class CampusLoginTextInputField extends StatelessWidget {
   final IconButton rightIcon;
   final TextInputType textInputType;
   final Function onFieldSubmitted;
+  final String rightText;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autocorrect: false,
       autofocus: autofocus,
     textInputAction: TextInputAction.done,
       onFieldSubmitted: onFieldSubmitted,
@@ -36,10 +38,17 @@ class CampusLoginTextInputField extends StatelessWidget {
       obscureText: obscure,
       controller: controller,
       focusNode: focus,
+      style: TextStyle(
+        fontSize: 13
+      ),
       decoration: InputDecoration(
         suffixIcon: rightIcon,
+        suffixText: rightText,
         prefixIcon: leftIcon,
         hintText: hintText,
+        suffixStyle: TextStyle(
+          fontSize: 13
+        ),
         hintStyle: TextStyle(color: Colors.grey),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0)),

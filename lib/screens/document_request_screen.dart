@@ -31,7 +31,7 @@ class _DocumentRequestScaffoldState extends State<DocumentRequestScaffold> {
   @override
   void initState() {
     _isLoading = true;
-    CommonController.queryFuture(Provider.of<UserProvider>(context,listen: false).profile(), context).then((_) {
+    CommonController.queryFuture(Provider.of<ProfileProvider>(context,listen: false).profile(), context).then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -71,6 +71,9 @@ class _DocumentRequestScaffoldState extends State<DocumentRequestScaffold> {
                       "TRANSCRIPT REQUEST",
                       "Send request to Students Affairs for transcript document",
                       ElevatedButton(
+                        style: ButtonStyle(
+                            visualDensity: VisualDensity.compact,
+                            backgroundColor: MaterialStateProperty.all(Color(0XFFA9AEAF))),
                         child: Text(AppLocalizations.of(context).translate(str_sendRequest)),
                         onPressed: () {
                           screenController.showPurposeDialog(context, documentRequestProvider.sendTranscriptRequest);

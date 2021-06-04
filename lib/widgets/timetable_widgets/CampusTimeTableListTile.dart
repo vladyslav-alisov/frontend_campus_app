@@ -50,6 +50,7 @@ class CampusTimeTableListTile extends StatelessWidget {
                     child: Container(
                       color: Colors.white,
                       child: ListTile(
+                        dense: true,
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -57,16 +58,22 @@ class CampusTimeTableListTile extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    FontAwesomeIcons.book,
-                                    size: 15,
-                                    color: Colors.grey,
+                                  Flexible(
+                                    child: Icon(
+                                      FontAwesomeIcons.book,
+                                      size: 15,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                   SizedBox(
                                     width: 14,
                                   ),
-                                  Text(
-                                    _courseData[index].courseName ?? "",
+                                  Flexible(
+                                    child: Text(
+                                      _courseData[index].courseName ?? "",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                    ),
                                   ),
                                 ],
                               ),

@@ -3,8 +3,11 @@ import 'package:campus_app/screens/home_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusLoginTextInputField.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+enum UserType { Student, Staff }
 
 class LoginScreen extends StatefulWidget {
   static const routeName = "/login_screen";
@@ -18,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     emailController.text = "";
     passwordController.text = "";
+    rightTextController.text = "@std.antalya.edu.tr";
     super.initState();
   }
 
@@ -25,12 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController rightTextController = new TextEditingController();
   FocusNode emailFocus = new FocusNode();
   FocusNode passwordFocus = new FocusNode();
   FocusNode loginButtonFocus = new FocusNode();
 
   bool _obscure = true;
   bool _isLoading = false;
+  int _selected = 0;
 
   void seePassword() {
     setState(() {
@@ -52,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               height: devSize.height * 0.4,
@@ -59,6 +66,50 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Image.asset(
                 ConstAssetsPath.img_loginImage,
                 fit: BoxFit.fill,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ChoiceChip(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    disabledColor: Colors.grey,
+                    selectedColor: Theme.of(context).primaryColor,
+                    label: Text(
+                      describeEnum(UserType.Student),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    selected: _selected == UserType.Student.index,
+                    onSelected: (value) {
+                      setState(
+                        () {
+                          _selected = UserType.Student.index;
+                          rightTextController.text = "@std.antalya.edu.tr";
+                        },
+                      );
+                    },
+                  ),
+                  ChoiceChip(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    disabledColor: Colors.grey,
+                    selectedColor: Theme.of(context).primaryColor,
+                    label: Text(
+                      describeEnum(UserType.Staff),
+                      style: TextStyle(color:Colors.white),
+                    ),
+                    selected: _selected == UserType.Staff.index,
+                    onSelected: (value) {
+                      setState(
+                        () {
+                          _selected = UserType.Staff.index;
+                          rightTextController.text = "@antalya.edu.tr";
+                        },
+                      );
+                    },
+                  )
+                ],
               ),
             ),
             Center(
@@ -72,16 +123,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: emailController,
                         autofocus: true,
                         focus: emailFocus,
-                        onFieldSubmitted: (String value){
+                        rightText: rightTextController.text,
+                        onFieldSubmitted: (String value) {
                           FocusScope.of(context).requestFocus(passwordFocus);
-                        } ,
+                        },
                         textInputType: TextInputType.emailAddress,
                         validator: (String value) {
                           if (value == null || value.isEmpty) {
                             return AppLocalizations.of(context).translate(str_pleaseEnterYourEmail);
-                          }
-                          if (!value.toLowerCase().contains('@') || !value.toLowerCase().contains('antalya.edu.tr')) {
-                            return AppLocalizations.of(context).translate(str_pleaseEnterValidEmail);
                           }
                           return null;
                         },
@@ -107,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         controller: passwordController,
                         focus: passwordFocus,
-                        onFieldSubmitted: (String value)=> FocusScope.of(context).requestFocus(loginButtonFocus),
+                        onFieldSubmitted: (String value) => FocusScope.of(context).requestFocus(loginButtonFocus),
                         hintText: AppLocalizations.of(context).translate(str_password),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -141,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       if (_formKey.currentState.validate()) {
                                         setIsLoading(true);
                                         await userSilent
-                                            .auth(emailController.text, passwordController.text)
+                                            .auth(emailController.text+rightTextController.text, passwordController.text)
                                             .then((value) {
                                           setIsLoading(false);
                                           Navigator.pushNamedAndRemoveUntil(

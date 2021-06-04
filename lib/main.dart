@@ -8,6 +8,8 @@ import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/providers/timetable_provider.dart';
 import 'package:campus_app/providers/transportation_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
+import 'package:campus_app/screen_controllers/dinner_hall_screen_controllers/menu_edit_screen_controller.dart';
+import 'package:campus_app/screen_controllers/social_club_screen_controllers/social_club_manage_screen_controller.dart';
 import 'package:campus_app/screens/announcements_screens/announcements_screen.dart';
 import 'package:campus_app/screens/document_request_screen.dart';
 import 'package:campus_app/screens/event_screens/event_attendees_screen.dart';
@@ -18,10 +20,9 @@ import 'package:campus_app/screens/event_screens/my_events_screen.dart';
 import 'package:campus_app/screens/home_screen.dart';
 import 'package:campus_app/screens/login_screen.dart';
 import 'package:campus_app/screens/profile_screen.dart';
-import 'package:campus_app/screens/social_club_screens/my_social_clubs_screen.dart';
-import 'package:campus_app/screens/social_club_screens/social_club_add_post_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_manage_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_members.dart';
+import 'package:campus_app/screens/social_club_screens/social_club_requests.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_screen.dart';
 import 'package:campus_app/screens/student_card_screen.dart';
 import 'package:campus_app/screens/time_table_screen.dart';
@@ -78,11 +79,13 @@ class MyApp extends StatelessWidget {
             previousSocialClubsData == null ? [] : previousSocialClubsData.mySocialClubList,
             previousSocialClubsData == null ? [] : previousSocialClubsData.socialClubMembersList,
             previousSocialClubsData == null ? [] : previousSocialClubsData.galleryImagesList,
+            previousSocialClubsData == null ? [] : previousSocialClubsData.socialClubRequestsList,
+            previousSocialClubsData == null ? null : previousSocialClubsData.socialClubDetail,
           ),
         ),
-        ChangeNotifierProxyProvider<AuthProvider, UserProvider>(
-          update: (context, authData, previousProfData) => UserProvider(
-            authData.authData,
+        ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
+          update: (context, authData, previousProfData) => ProfileProvider(
+            authData,
             previousProfData == null ? null : previousProfData.user,
           ),
         ),
@@ -98,12 +101,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, MenuProvider>(
           update: (context, authData, previousMenu) => MenuProvider(
             authData.authData,
-            previousMenu == null ? null : previousMenu.menus,
             previousMenu == null ? [] : previousMenu.menuList,
             previousMenu == null ? [] : previousMenu.mealOptions,
           ),
         ),
-        ChangeNotifierProxyProvider<UserProvider, DocumentRequestProvider>(
+        ChangeNotifierProxyProvider<ProfileProvider, DocumentRequestProvider>(
           update: (context, userData, previousData) => DocumentRequestProvider(userData.user),
         ),
         ChangeNotifierProvider(
@@ -111,6 +113,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => AnnouncementsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MenuEditScreenController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SocialClubManageScreenController(),
         ),
       ],
       child: GraphQLProvider(
@@ -122,9 +130,9 @@ class MyApp extends StatelessWidget {
                 return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: child);
               },
               supportedLocales: [
-                Locale('en', ''),
-                Locale('ru', ''),
-                Locale('tr', ''),
+                Locale('en', ''),//todo: add when configure is ready
+               /* Locale('ru', ''),
+                Locale('tr', ''),*/
               ],
               localizationsDelegates: [
                 AppLocalizations.delegate,
@@ -156,9 +164,9 @@ class MyApp extends StatelessWidget {
                 AnnouncementsScreen.routeName: (context) => AnnouncementsScreen(),
                 TransportationScreen.routeName: (context) => TransportationScreen(),
                 StudentCardScreen.routeName: (context) => StudentCardScreen(),
-                MySocialClubsScreen.routeName: (context) => MySocialClubsScreen(),
                 SocialClubManageScreen.routeName: (context) => SocialClubManageScreen(),
                 SocialClubMembersScreen.routeName: (context) => SocialClubMembersScreen(),
+                SocialClubRequestsScreen.routeName: (context) => SocialClubRequestsScreen(),
               },
             );
           },
