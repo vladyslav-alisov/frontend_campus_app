@@ -5,7 +5,7 @@ import 'package:campus_app/screens/event_screens/events_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_screen.dart';
 import 'package:campus_app/screens/student_card_screen.dart';
 import 'package:campus_app/screens/time_table_screen.dart';
-import 'package:campus_app/screens/transportation_screen.dart';
+import 'package:campus_app/screens/transportation_screens/transportation_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConstMutation {
@@ -48,9 +48,11 @@ class ConstMutation {
         description
         imageUrl
         members
+        status
     }
   }
   ''';
+
   static const String denyJoinSocialClub = '''
   mutation denyJoinSocialClub(\$scID: ID!, \$scoID: ID!,\$userID: ID!){
   action: denyJoinSocialClub(scID: \$scID, scoID: \$scoID, userID: \$userID)

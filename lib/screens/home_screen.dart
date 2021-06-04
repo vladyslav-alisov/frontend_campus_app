@@ -34,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
       AppLocalizations.of(context).translate(str_socialClubs),
       AppLocalizations.of(context).translate(str_dinnerHall),
     ];
-    print("build");
 
     var authData = Provider.of<AuthProvider>(context).authData;
     final devSize = MediaQuery.of(context).size;

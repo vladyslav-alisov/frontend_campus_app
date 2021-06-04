@@ -5,6 +5,7 @@ import 'package:campus_app/screen_controllers/dinner_hall_screen_controllers/men
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,7 @@ class _DinnerHallScreenState extends State<DinnerHallScreen> {
                 itemBuilder: (context, dayIndex) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -87,11 +88,45 @@ class _DinnerHallScreenState extends State<DinnerHallScreen> {
                         height: devSize.height * 0.2,
                         child: ListView.builder(
                           itemCount: Meals.values.length,
-                          itemBuilder: (context, index) => ContainerFood(
+                          itemBuilder: (context, index) => ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: AspectRatio(
+                                aspectRatio: 1.3,
+                                child: GridTile(
+                                  footer: GridTileBar(
+                                    backgroundColor: Colors.black54,
+                                    title: Text(
+                                      menuProvider.menuList[dayIndex].meals[index].mealName,
+                                      maxLines: 2,
+                                      style: Theme.of(context).textTheme.headline2.copyWith(color: Colors.white,fontSize: 13),
+                                    ),
+                                  ),
+                                  child: FadeInImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(menuProvider.menuList[dayIndex].meals[index].mealImageUrl),
+                                    placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                                    imageErrorBuilder: (context, error, stackTrace) {
+                                      print(error);
+                                      print(stackTrace);
+                                      return Container(
+                                        child: Center(
+                                          child: FittedBox(
+                                            child: Text("Something went wrong"),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),/*ContainerFood(
                             devSize: devSize,
                             mealName: menuProvider.menuList[dayIndex].meals[index].mealName,
                             mealImage: menuProvider.menuList[dayIndex].meals[index].mealImageUrl,
-                          ),
+                          ),*/
                           scrollDirection: Axis.horizontal,
                         ),
                       ),

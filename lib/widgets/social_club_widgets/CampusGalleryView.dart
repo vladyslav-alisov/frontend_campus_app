@@ -41,6 +41,7 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
 
   @override
   void initState() {
+    currentIndex = widget.initialIndex;
     photoController = PhotoViewController();
     super.initState();
   }
@@ -146,7 +147,6 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
                                       ),
                                     ),
                                     onTap: () async {
-                                      print(currentIndex);
                                       if (!(widget.galleryItems.length == 0)) {
                                         showDialog(
                                           context: context,

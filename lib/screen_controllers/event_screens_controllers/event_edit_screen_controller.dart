@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 enum Options { Update, Create }
-enum Attendees { Students, Staff, All }
+enum AttendeeTypes { All, Students, Staff, Club_members}
 
 class EventEditScreenController with ChangeNotifier {
   final dateFormat = DateFormat("yyyy-MM-dd");
@@ -44,10 +44,10 @@ class EventEditScreenController with ChangeNotifier {
       condition = describeEnum(Options.Update);
       eventTitleController.text = event.title;
       locationController.text = event.location;
-      event.attendee != describeEnum(Attendees.All) &&
-              event.attendee != describeEnum(Attendees.Staff) &&
-              event.attendee != describeEnum(Attendees.Students)
-          ? attendeeController.text = describeEnum(Attendees.All)
+      event.attendee != describeEnum(AttendeeTypes.All) &&
+              event.attendee != describeEnum(AttendeeTypes.Staff) &&
+              event.attendee != describeEnum(AttendeeTypes.Students)
+          ? attendeeController.text = describeEnum(AttendeeTypes.All)
           : attendeeController.text = event.attendee;
 
       priceController.text = event.price.toLowerCase() != "free" ?  event.price : "Free";
@@ -58,7 +58,7 @@ class EventEditScreenController with ChangeNotifier {
       selectedTime = TimeOfDay(hour: int.parse(event.time.split(":")[0]), minute: int.parse(event.time.split(":")[1]));
     } else {
       condition = describeEnum(Options.Create);
-      attendeeController.text = describeEnum(Attendees.All);
+      attendeeController.text = describeEnum(AttendeeTypes.All);
     }
   }
 
@@ -86,11 +86,18 @@ class EventEditScreenController with ChangeNotifier {
         price: priceController.text,
         description: descriptionController.text,
         imageUrl: image,
-        attendee: attendeeController.text);
+        attendee: returnAttendeeTypeID(attendeeController.text));
 
     return event;
   }
 
+  int returnAttendeeTypeID(String attendee){
+    int temp=0;
+    AttendeeTypes.values.forEach((element) {if(element.toString().replaceAll("AttendeeTypes.","")==attendee){
+      temp = element.index;
+    }});
+    return temp+1;
+  }
   void setAttendee(String attendee) {
     attendeeController.text = attendee;
     notifyListeners();

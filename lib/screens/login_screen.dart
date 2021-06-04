@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ChoiceChip(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                     disabledColor: Colors.grey,
-                    selectedColor: Theme.of(context).primaryColor,
+                    selectedColor: Color(0xff264D82),
                     label: Text(
                       describeEnum(UserType.Student),
                       style: TextStyle(color: Colors.white),
@@ -91,10 +91,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
+                  SizedBox(width: 20,),
                   ChoiceChip(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                     disabledColor: Colors.grey,
-                    selectedColor: Theme.of(context).primaryColor,
+                    selectedColor: Color(0xff264D82),
                     label: Text(
                       describeEnum(UserType.Staff),
                       style: TextStyle(color:Colors.white),

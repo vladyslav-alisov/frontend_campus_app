@@ -26,7 +26,7 @@ import 'package:campus_app/screens/social_club_screens/social_club_requests.dart
 import 'package:campus_app/screens/social_club_screens/social_club_screen.dart';
 import 'package:campus_app/screens/student_card_screen.dart';
 import 'package:campus_app/screens/time_table_screen.dart';
-import 'package:campus_app/screens/transportation_screen.dart';
+import 'package:campus_app/screens/transportation_screens/transportation_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/Theme.dart';
 import 'package:campus_app/utils/GraphQLSetup.dart';

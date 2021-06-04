@@ -12,7 +12,12 @@ class CampusTextInputField extends StatefulWidget {
     this.leftIcon,
     this.rightIcon,
     this.textInputType,
-    this.maxLines, this.onChangeString, this.isDisable=true,
+    this.maxLines,
+    this.onChangeString,
+    this.isDisable = true,
+    this.prefixText,
+    this.labelText,
+    this.suffixText,
   });
 
   final String validatorErrorMsg;
@@ -25,6 +30,9 @@ class CampusTextInputField extends StatefulWidget {
   final Icon leftIcon;
   final IconButton rightIcon;
   final TextInputType textInputType;
+  final String prefixText;
+  final String labelText;
+  final String suffixText;
 
   @override
   _CampusTextInputFieldState createState() => _CampusTextInputFieldState();
@@ -50,14 +58,24 @@ class _CampusTextInputFieldState extends State<CampusTextInputField> {
       controller: widget.controller,
       focusNode: widget.focus,
       maxLines: widget.maxLines ?? 1,
+      style: TextStyle(
+        fontSize: 16
+      ),
       decoration: InputDecoration(
-         enabled: widget.isDisable,
-        labelText: widget.hintText,
+        prefixStyle: TextStyle(color: Colors.black),
+        enabled: widget.isDisable,
+        labelText: widget.labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        prefixText: widget.prefixText,
         suffixIcon: widget.rightIcon,
         prefixIcon: widget.leftIcon,
         hintText: widget.hintText,
+        suffixText: widget.suffixText,
         hintStyle: TextStyle(color: Theme.of(context).hintColor),
         labelStyle: TextStyle(color: Theme.of(context).hintColor),
+        fillColor: Colors.black,
+        focusColor: Colors.black,
+        hoverColor: Colors.black,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
           borderSide: BorderSide(
@@ -71,6 +89,12 @@ class _CampusTextInputFieldState extends State<CampusTextInputField> {
           ),
         ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          borderSide: BorderSide(
+            color: Color(0xffE1E1E1),
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
           borderSide: BorderSide(
             color: Color(0xffE1E1E1),

@@ -91,8 +91,6 @@ class EventsProvider with ChangeNotifier {
   }
 
   Future<void> deleteEvent(String eventID) async {
-    print(eventID);
-    print(authData.login.userID);
     MutationOptions options =
         MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteEvent), variables: {
       ConstQueryKeys.eventID: eventID,
@@ -142,7 +140,6 @@ class EventsProvider with ChangeNotifier {
       print(result.data);
       eventList.add(Event.fromJson(result.data["action"]));
       if (hostEventList.isNotEmpty) {
-        print("comes here");
         hostEventList.add(Event.fromJson(result.data["action"]));
       }
     }

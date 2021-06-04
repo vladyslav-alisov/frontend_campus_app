@@ -79,7 +79,6 @@ class MenuEditScreenController with ChangeNotifier {
   bool listsEqualDay(List<Menu> menuList, int dayIndex) {
     for (int i = 0; i < menuList[dayIndex].meals.length; i++) {
       if (menuList[dayIndex].meals[i].mealID != tempMenuList[dayIndex].meals[i].mealID) {
-        print("lists not equal");
         return false;
       }
     }

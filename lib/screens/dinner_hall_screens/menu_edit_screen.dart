@@ -221,20 +221,23 @@ class ListTileMeal extends StatelessWidget {
       leading: Container(
         child: AspectRatio(
           aspectRatio: 1.4,
-          child: FadeInImage(
-            image: NetworkImage(meal.mealImageUrl),
-            placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
-            imageErrorBuilder: (context, error, stackTrace) {
-              print(error);
-              print(stackTrace);
-              return Container(
-                child: Center(
-                  child: FittedBox(
-                    child: Text("Something went wrong"),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: FadeInImage(
+              image: NetworkImage(meal.mealImageUrl),
+              placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+              imageErrorBuilder: (context, error, stackTrace) {
+                print(error);
+                print(stackTrace);
+                return Container(
+                  child: Center(
+                    child: FittedBox(
+                      child: Text("Something went wrong"),
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),

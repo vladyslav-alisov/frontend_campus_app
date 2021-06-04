@@ -1,5 +1,6 @@
 import 'package:campus_app/providers/transportation_provider.dart';
 import 'package:campus_app/screen_controllers/event_screens_controllers/event_edit_screen_controller.dart';
+import 'package:campus_app/screens/transportation_screens/transportation_detail_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
@@ -44,9 +45,10 @@ class _TransportationScreenScaffoldState extends State<TransportationScreenScaff
 
   Widget build(BuildContext context) {
     var transportationProvider = Provider.of<TransportationProvider>(context, listen: false);
-    return Scaffold(  appBar: PreferredSize(
+    return Scaffold(
+      appBar: PreferredSize(
       preferredSize: Size.fromHeight(
-        AppBar().preferredSize.height + 20,
+        AppBar().preferredSize.height + 10,
       ),
       child: CampusAppBar(
         title: AppLocalizations.of(context).translate(str_transportation),

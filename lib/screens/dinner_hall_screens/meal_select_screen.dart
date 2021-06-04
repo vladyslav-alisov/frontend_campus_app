@@ -27,43 +27,43 @@ class MealSelectScreen extends StatelessWidget {
       ),
       body: GridView.builder(
         itemCount: meals.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1.3, crossAxisCount: 2),
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Flexible(
-                child: InkWell(
-                  onTap: () {
-                    screenController.updateTempMenuList(meals[index],mealIndex,dayIndex);
-                    Navigator.pop(context);
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: FadeInImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(meals[index].mealImageUrl),
-                      placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
-                      imageErrorBuilder: (context, error, stackTrace) {
-                        print(error);
-                        print(stackTrace);
-                        return Container(
-                          child: Center(
-                            child: FittedBox(
-                              child: Text("Something went wrong"),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: 1.3, crossAxisCount: 2,crossAxisSpacing: 10,mainAxisSpacing: 10),
+        itemBuilder: (context, index) => InkWell(
+          onTap: () {
+            screenController.updateTempMenuList(meals[index],mealIndex,dayIndex);
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: GridTile(
+                footer: GridTileBar(
+                  backgroundColor: Colors.black54,
+                  title: Text(
+                    meals[index].mealName,
+                    maxLines: 2,
+                    style: Theme.of(context).textTheme.headline2.copyWith(color: Colors.white),
                   ),
                 ),
+                child: FadeInImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(meals[index].mealImageUrl),
+                  placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    print(error);
+                    print(stackTrace);
+                    return Container(
+                      child: Center(
+                        child: FittedBox(
+                          child: Text("Something went wrong"),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-              Text(
-                meals[index].mealName,
-                style: Theme.of(context).textTheme.headline2,
-              )
-            ],
+            )
           ),
         ),
       ),

@@ -26,6 +26,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = false;
+  bool _isImageLoading = false;
+  var picker = ImagePicker();
+  File avatarImage;
+
+  void setIsLoading() {
+    setState(() {
+      _isImageLoading = !_isImageLoading;
+    });
+  }
 
   @override
   void initState() {
@@ -125,84 +134,154 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           Hero(
                             tag: "profileAvatar",
-                            child: Container(
-                              margin: EdgeInsets.only(top: 10),
-                              width: 88,
-                              height: 88,
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CampusGallerySinglePhoto(),
-                                  ),
-                                ),
-                                child: authData.authData.login.imageUrl != str_noImage &&
-                                        authData.authData.login.imageUrl != null
-                                    ? CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Container(
-                                          child: ClipOval(
-                                            child: Image.network(
-                                              authData.authData.login.imageUrl,
-                                              height: 88,
-                                              width: 88,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) =>
-                                                  Image.asset(ConstAssetsPath.img_defaultAvatar),
+                            child: _isImageLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.only(top: 10),
+                                    width: 88,
+                                    height: 88,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (authData.authData.login.imageUrl == str_defaultImageUrl) {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return Wrap(
+                                                children: [
+                                                  ListTile(
+                                                    leading: new Icon(Icons.photo_library),
+                                                    title: new Text(
+                                                        AppLocalizations.of(context).translate(str_photoLibrary)),
+                                                    onTap: () async {
+                                                      await getAndUpdateImage(false);
+                                                      Navigator.pop(context);
+                                                      if (avatarImage != null) {
+                                                        setIsLoading();
+                                                        await authData.uploadAvatar(avatarImage);
+                                                        setIsLoading();
+                                                      }
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: new Icon(Icons.photo_camera),
+                                                    title: new Text(AppLocalizations.of(context).translate(str_camera)),
+                                                    onTap: () async {
+                                                      await getAndUpdateImage(true);
+                                                      Navigator.pop(context);
+                                                      if (avatarImage != null) {
+                                                        setIsLoading();
+                                                        await authData.uploadAvatar(avatarImage);
+                                                        setIsLoading();
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => CampusGallerySinglePhoto(),
                                             ),
-                                          ),
-                                        ),
-                                        radius: 25,
-                                      )
-                                    : Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: AssetImage(
-                                                  ConstAssetsPath.img_defaultAvatar,
-                                                ))),
-                                      ),
-                              ),
-                            ),
+                                          );
+                                      },
+                                      child: authData.authData.login.imageUrl != str_noImage &&
+                                              authData.authData.login.imageUrl != null
+                                          ? CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              child: Container(
+                                                child: ClipOval(
+                                                  child: Image.network(
+                                                    authData.authData.login.imageUrl,
+                                                    height: 88,
+                                                    width: 88,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) =>
+                                                        Image.asset(ConstAssetsPath.img_defaultAvatar),
+                                                  ),
+                                                ),
+                                              ),
+                                              radius: 25,
+                                            )
+                                          : Container(
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: AssetImage(
+                                                        ConstAssetsPath.img_defaultAvatar,
+                                                      ))),
+                                            ),
+                                    ),
+                                  ),
                           ),
                           SizedBox(
                             height: 20,
                           ),
+
+                          Text(
+                            "Name",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 0,right: 8,left: 8,bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.name} ${userData.profile.surname}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 24),
                             ),
                           ),
+                          Text(
+                            "Department",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.department}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
+                          Text(
+                            "e-mail",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.email}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
+                          Text(
+                            "Student ID",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.userID}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
+                          Text(
+                            "Address",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.address}" : "",
                               overflow: TextOverflow.ellipsis,
@@ -211,8 +290,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
+                          Text(
+                            "Mobile number",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.phone}" : "",
                               overflow: TextOverflow.ellipsis,
@@ -287,6 +371,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
     );
   }
+
+  Future getAndUpdateImage(bool choice) async {
+    var pickedFile;
+    if (choice) {
+      pickedFile =
+          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
+      if (pickedFile == null) {
+        return;
+      }
+    } else if (!choice) {
+      pickedFile =
+          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
+      if (pickedFile == null) {
+        return;
+      }
+    }
+    if (pickedFile != null) {
+      avatarImage = File(pickedFile.path);
+    }
+  }
 }
 
 class CampusGallerySinglePhoto extends StatefulWidget {
@@ -296,8 +400,8 @@ class CampusGallerySinglePhoto extends StatefulWidget {
 
 class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
   var picker = ImagePicker();
-  bool isLoading = false;
   File avatarImage;
+  bool isLoading = false;
 
   void setIsLoading() {
     setState(() {
@@ -366,8 +470,7 @@ class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
                                               return AlertDialog(
                                                 title:
                                                     new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
-                                                content: new Text(AppLocalizations.of(context)
-                                                    .translate(str_warningBeforeEventDelete)),
+                                                content: new Text("Are you sure you want to delete avatar?"),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     child: Text(AppLocalizations.of(context).translate(str_cancel)),

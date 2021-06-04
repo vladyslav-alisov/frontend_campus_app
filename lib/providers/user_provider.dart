@@ -84,6 +84,7 @@ class AuthProvider with ChangeNotifier {
     });
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
+      print(result.exception);
       throw "Something went wrong";
     } else {
       print(result.data);

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 enum Options { Update, Create }
-enum Attendees { Students, Staff, All }
+enum Attendees {All, Students, Staff, Club_members}
 
 class EventEditScreen extends StatelessWidget {
   static const String routeName = "/event_edit_screen";
@@ -70,84 +70,9 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     child: CampusTextInputField(
                       controller: screenController.eventTitleController,
                       hintText: AppLocalizations.of(context).translate(str_eventName),
+                      labelText: AppLocalizations.of(context).translate(str_eventName),
                       rightIcon: IconButton(icon: Icon(Icons.drive_file_rename_outline)),
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () => screenController.openTimePicker(context),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15.0),
-                              ),
-                              border: Border.all(
-                                color: Color(0xffE1E1E1),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  FittedBox(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.access_time,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                  FittedBox(
-                                      child: Text(
-                                    screenController.selectedTime.format(context),
-                                    style: TextStyle(color: Colors.black),
-                                  )),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => screenController.openDatePicker(context),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15.0),
-                              ),
-                              border: Border.all(
-                                color: Color(0xffE1E1E1),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  FittedBox(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.calendar_today_rounded,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                  FittedBox(
-                                      child: Text(
-                                    screenController.dateFormat.format(screenController.selectedDate),
-                                    style: TextStyle(color: Colors.black),
-                                  )),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                   Padding(
@@ -155,6 +80,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     child: CampusTextInputField(
                       controller: screenController.locationController,
                       hintText: AppLocalizations.of(context).translate(str_location),
+                      labelText: AppLocalizations.of(context).translate(str_location),
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                       rightIcon: IconButton(icon: Icon(Icons.location_on_sharp)),
                       textInputType: TextInputType.streetAddress,
@@ -162,91 +88,140 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15.0),
-                        ),
-                        border: Border.all(
-                          color: Color(0xffE1E1E1),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                items: <String>[
-                                  describeEnum(Attendees.All),
-                                  describeEnum(Attendees.Students),
-                                  describeEnum(Attendees.Staff)
-                                ]
-                                    .map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    })
-                                    .toSet()
-                                    .toList(),
-                                value: screenController.attendeeController?.text,
-                                onChanged: (value) {
-                                  screenController.setAttendee(value);
-                                },
+                    child: GestureDetector(
+                      onTap: () => screenController.openTimePicker(context),
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Builder(
+                            builder: (context) {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: Text(
+                                  screenController.selectedTime.format(context).toString(),
+                                  style: TextStyle(fontSize: 16, color: Colors.black),
+                                ),
+                              );
+                            },
+                          ),
+                          CampusTextInputField(
+                            rightIcon: IconButton(
+                              icon: Icon(
+                                Icons.access_time,
+                                color: Colors.grey,
                               ),
                             ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
-                                  Icons.people,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                            labelText: "Time",
+                            isDisable: false,
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 2,
-                          child: CampusTextInputField(
-                            isDisable: !screenController.isFree,
-                            controller: screenController.priceController,
-                            hintText: AppLocalizations.of(context).translate(str_price),
+                    child: GestureDetector(
+                      onTap: () => screenController.openDatePicker(context),
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Builder(
+                            builder: (context) {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: Text(
+                                  screenController.dateFormat.format(screenController.selectedDate),
+                                  style: TextStyle(fontSize: 16, color: Colors.black),
+                                ),
+                              );
+                            },
+                          ),
+                          CampusTextInputField(
                             rightIcon: IconButton(
-                              icon: Icon(Icons.monetization_on),
+                              icon: Icon(
+                                Icons.calendar_today_rounded,
+                                color: Colors.grey,
+                              ),
                             ),
-                            textInputType: TextInputType.numberWithOptions(decimal: true),
+                            labelText: "Date",
+                            isDisable: false,
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        CampusTextInputField(
+                          isDisable: !screenController.isFree,
+                          suffixText: "TL",
+                          controller: screenController.priceController,
+                          hintText: AppLocalizations.of(context).translate(str_price),
+                          labelText: AppLocalizations.of(context).translate(str_price),
+                          rightIcon: IconButton(
+                            icon: Icon(Icons.monetization_on),
+                          ),
+                          textInputType: TextInputType.numberWithOptions(decimal: true),
                         ),
-                        Spacer(flex: 1),
-                        Flexible(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                          Flexible(fit: FlexFit.loose,child: Text(AppLocalizations.of(context).translate(str_isFree),maxLines: 1,overflow: TextOverflow.ellipsis,),),
-                          Flexible(
-                            child: Checkbox(
-                              value: screenController.isFree,
-                              onChanged: (value) {
-                                screenController.changeIsFree();
-                              },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: Text(
+                                AppLocalizations.of(context).translate(str_isFree),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                            ],
-                          ),
+                            Flexible(
+                              child: Checkbox(
+                                value: screenController.isFree,
+                                onChanged: (value) {
+                                  screenController.changeIsFree();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(
+                              color: Color(0xffE1E1E1),
+                            ),
+                          ),
+                          labelText: "Attendee",
+                        ),
+                        isExpanded: true,
+                        items: <String>[
+                          describeEnum(Attendees.All),
+                          describeEnum(Attendees.Students),
+                          describeEnum(Attendees.Staff),
+                          describeEnum(Attendees.Club_members),
+                        ]
+                            .map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value.replaceAll("_", " ")),
+                          );
+                        })
+                            .toSet()
+                            .toList(),
+                        value: screenController.attendeeController?.text,
+                        onChanged: (value) {
+                          screenController.setAttendee(value);
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -254,9 +229,7 @@ class _EventEditScaffoldState extends State<EventEditScaffold> {
                     child: CampusTextInputField(
                       controller: screenController.descriptionController,
                       hintText: AppLocalizations.of(context).translate(str_enterDescription),
-                      rightIcon: IconButton(
-                        icon: Icon(Icons.description),
-                      ),
+                      labelText: AppLocalizations.of(context).translate(str_enterDescription),
                       maxLines: 8,
                       validatorErrorMsg: AppLocalizations.of(context).translate(str_enterSomeText),
                     ),

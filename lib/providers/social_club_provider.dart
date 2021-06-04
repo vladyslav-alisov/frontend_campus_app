@@ -40,9 +40,8 @@ class SocialClubProvider with ChangeNotifier {
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
-      print(jsonEncode(result.data));
+      print(result.data);
       socialClubDetail = SocialClub.fromJson(result.data[ConstQueryKeys.socialClub]);
-      print(socialClubDetail);
     }
     notifyListeners();
   }
@@ -59,8 +58,8 @@ class SocialClubProvider with ChangeNotifier {
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
+      print(result.data);
       socialClubList = SocialClubList.fromJson(result.data).socialClubs;
-      print(socialClubList);
     }
     notifyListeners();
   }
@@ -154,7 +153,7 @@ class SocialClubProvider with ChangeNotifier {
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
-      print(jsonEncode(result.data));
+      print(result.data);
       socialClubRequestsList = SocialClubRequestsList.fromJson(result.data).socialClubRequests;
     }
     notifyListeners();
@@ -219,10 +218,7 @@ class SocialClubProvider with ChangeNotifier {
   }
 
   Future<void> acceptJoinSocialClubMember(String scoID, String scID, String userID) async {
-    int tempIndex = socialClubRequestsList.indexWhere((element) => element.userID == userID);
-    var tempMember = socialClubRequestsList[tempIndex];
-    socialClubRequestsList.removeWhere((element) => element.userID == userID);
-    notifyListeners();
+    //todo check why type 'bool' is not a subtype of type 'Map<dynamic, dynamic>?' in type cast), graphqlErrors: [] on IOS
     MutationOptions options = MutationOptions(
         fetchPolicy: FetchPolicy.networkOnly,
         document: gql(ConstMutation.acceptJoinSocialClub),
@@ -234,15 +230,14 @@ class SocialClubProvider with ChangeNotifier {
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
       print(result.exception);
-      socialClubRequestsList.insert(tempIndex, tempMember);
-      notifyListeners();
+      print(result.data);
       throw "Something went wrong";
     } else {
-      socialClubDetail = SocialClub.fromJson(result.data['action']);
-      tempMember = null;
       print(result.data);
-      notifyListeners();
+      socialClubRequestsList.removeWhere((element) => element.userID == userID);
+      socialClubDetail = SocialClub.fromJson(result.data['action']);
     }
+    notifyListeners();
   }
 
 

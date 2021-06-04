@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 class EventToSend {
   String title;
   String description;
-  String attendee;
+  int attendee;
   String price;
   String date;
   String time;
@@ -14,7 +14,7 @@ class EventToSend {
       {
         this.title="",
         this.description="",
-        this.attendee="",
+        this.attendee=0,
         this.price="",
         this.date="",
         this.time="",

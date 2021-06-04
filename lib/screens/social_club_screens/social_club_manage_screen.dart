@@ -49,7 +49,6 @@ class _SocialClubManageScreenState extends State<SocialClubManageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("build");
     var screenController = Provider.of<SocialClubManageScreenController>(context);
     var socialClubProvider = Provider.of<SocialClubProvider>(context);
     return Scaffold(
@@ -225,9 +224,7 @@ class _SocialClubManageScreenState extends State<SocialClubManageScreen> {
                                       } else {
                                         screenController.setEdit();
                                         if(screenController.isEdit==true){
-                                          print(screenController.isEdit);
                                           temp = screenController.descriptionController.text;
-                                          print(temp);
                                         }
                                         else{
                                           if((temp.compareTo(screenController.descriptionController.text) == 0) == false ){
@@ -395,8 +392,7 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                               return AlertDialog(
                                                 title: new Text(
                                                     AppLocalizations.of(context).translate(str_simpleWarning)),
-                                                content: new Text(AppLocalizations.of(context)
-                                                    .translate(str_warningBeforeEventDelete)),
+                                                content: new Text("Are you sure you want to delete post?"),
                                                 actions: <Widget>[
                                                   TextButton(
                                                     child: Text(AppLocalizations.of(context).translate(str_cancel)),
@@ -407,13 +403,12 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                                   TextButton(
                                                     child: Text(AppLocalizations.of(context).translate(str_confirm)),
                                                     onPressed: () async {
-                                                      if(socialClubProvider.galleryImagesList.length==1){
-                                                        Navigator.of(context).popUntil(ModalRoute.withName(SocialClubManageScreen.routeName));
-                                                      }
                                                       Navigator.pop(context);
-                                                      setIsLoading();
-                                                      await socialClubProvider.deleteAvatarSocialClub();
-                                                      setIsLoading();
+                                                      if(socialClubProvider.socialClubDetail.imageUrl != str_defaultImageUrlSC){
+                                                        setIsLoading();
+                                                        await socialClubProvider.deleteAvatarSocialClub();
+                                                        setIsLoading();
+                                                      }
                                                     },
                                                   ),
                                                 ],
@@ -465,6 +460,7 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                       ),
                     ),
                   ),
+                  isLoading? Container(color: Colors.black,child: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),)),): Container(),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -478,6 +474,7 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                       ),
                     ),
                   ),
+
                 ],
               ),
       ),
