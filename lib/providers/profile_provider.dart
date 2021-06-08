@@ -18,7 +18,7 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> profile() async {
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       document: gql(ConstQuery.profile),
       variables: {
         ConstQueryKeys.userID: authData.authData.login.userID,

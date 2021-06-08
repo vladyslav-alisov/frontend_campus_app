@@ -31,11 +31,11 @@ class CampusEventListTile extends StatelessWidget {
                             ),
                           );
                         },
-                        placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                        placeholder: AssetImage(ConstAssetsPath.img_placeholderImage),
                         image: NetworkImage(_event.imageUrl),
                       )
                     : Image.asset(
-                        ConstAssetsPath.img_placeHolder,
+                        ConstAssetsPath.img_placeholderImage,
                         fit: BoxFit.cover,
                       ),
               ),

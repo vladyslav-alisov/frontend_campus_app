@@ -2,14 +2,51 @@ import 'package:campus_app/screens/announcements_screens/announcements_screen.da
 import 'package:campus_app/screens/dinner_hall_screens/dinner_hall.dart';
 import 'package:campus_app/screens/document_request_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
+import 'package:campus_app/screens/notice_board_screens/notice_board_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_screen.dart';
-import 'package:campus_app/screens/student_card_screen.dart';
 import 'package:campus_app/screens/time_table_screen.dart';
 import 'package:campus_app/screens/transportation_screens/transportation_screen.dart';
 import 'package:flutter/material.dart';
 
 class ConstMutation {
+  static const String createNotice = '''
+  mutation createNotice(\$noticeInput: NoticeInputData!, \$userID: ID!){
+  action: createNotice(noticeInput: \$noticeInput, userID: \$userID){
+        noticeID
+        title
+        description
+        imageUrl
+        creatorUserID
+        creatorName
+        creatorSurname
+        phone
+        email
+        createdAt
+    }
+  }
+  ''';
+  static const String editNotice = '''
+  mutation editNotice(\$noticeInput: NoticeInputData!, \$userID: ID!, \$noticeID: ID!){
+  action: editNotice(noticeInput: \$noticeInput, userID: \$userID, noticeID: \$noticeID){
+        noticeID
+        title
+        description
+        imageUrl
+        creatorUserID
+        creatorName
+        creatorSurname
+        phone
+        email
+        createdAt
+    }
+  }
+  ''';
 
+  static const String deleteNotice = '''
+  mutation deleteNotice(\$noticeID: ID!, \$userID: ID!){
+  action: deleteNotice(noticeID: \$noticeID, userID: \$userID )
+  }
+  ''';
 
   static const String deletePost = '''
   mutation deletePost(\$postID: ID!, \$scoID: ID!){
@@ -189,6 +226,22 @@ class ConstMutation {
 }
 
 class ConstQuery {
+  static const String noticeList = '''
+  query noticeList(\$userID: ID!){
+      noticeList(userID: \$userID){
+        noticeID
+        title
+        description
+        imageUrl
+        creatorUserID
+        creatorName
+        creatorSurname
+        phone
+        email
+        createdAt
+    }
+}
+  ''';
 
   static const String socialClub = '''
       query socialClub(\$scID: ID!,\$userID: ID!){
@@ -350,6 +403,7 @@ class ConstQuery {
   query login(\$email: String!, \$password: String!){
    login(email: \$email, password: \$password){
       email
+      phone
       userID
       name 
       surname
@@ -410,6 +464,8 @@ class ConstQuery {
 
 //for calling data we need key strings
 class ConstQueryKeys {
+  static const String noticeID = "noticeID";
+  static const String noticeInput = "noticeInput";
   static const String postID = "postID";
   static const String action = "action";
   static const String socialClub = "socialClub";
@@ -452,11 +508,13 @@ class ConstQueryKeys {
 }
 
 class ConstAssetsPath {
-  static const img_placeHolder = 'assets/images/placeholderImage.png';
+  static const img_placeholderImage = 'assets/images/placeholderImage.png';
   static const img_loginImage = 'assets/images/LoginImage.png';
   static const img_studentCard = 'assets/images/Student Card.jpg';
   static const img_defaultAvatar = 'assets/images/defaultAvatar.jpeg';
   static const img_defaultEvent = 'assets/images/eventPlaceHolder.jpeg';
+  static const img_defaultProfileAvatar = 'assets/images/defaultProfileAvatar.png';
+  static const img_defaultSocialClubAvatar = 'assets/images/defaultSocialClubAvatar.jpeg';
 }
 
 class MyConstants {
@@ -534,7 +592,7 @@ class MyConstants {
   static const List<String> routes = [
     AnnouncementsScreen.routeName,
     DocumentRequestScreen.routeName,
-    StudentCardScreen.routeName,
+    NoticeBoardScreen.routeName,
     TimeTableScreen.routeName,
     TransportationScreen.routeName,
     EventScreen.routeName,

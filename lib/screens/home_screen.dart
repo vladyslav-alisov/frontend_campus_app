@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var lst = [
       AppLocalizations.of(context).translate(str_announcements),
       AppLocalizations.of(context).translate(str_documentRequest),
-      AppLocalizations.of(context).translate(str_studentCard),
+      "Notice board",
       AppLocalizations.of(context).translate(str_timeTable),
       AppLocalizations.of(context).translate(str_transportation),
       AppLocalizations.of(context).translate(str_events),

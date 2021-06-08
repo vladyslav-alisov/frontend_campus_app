@@ -29,6 +29,7 @@ class AuthData {
 class Login {
   String sTypename;
   String email;
+  String phone;
   String userID;
   String name;
   String surname;
@@ -39,6 +40,7 @@ class Login {
   Login({
     this.sTypename,
     this.email,
+    this.phone,
     this.userID,
     this.name,
     this.surname,
@@ -50,6 +52,7 @@ class Login {
   Login.fromJson(Map<String, dynamic> json) {
     sTypename = json['__typename'];
     email = json['email'];
+    phone = json['phone'];
     userID = json['userID'];
     name = json['name'];
     surname = json['surname'];
@@ -62,6 +65,7 @@ class Login {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['__typename'] = this.sTypename;
     data['email'] = this.email;
+    data['phone'] = this.phone;
     data['userID'] = this.userID;
     data['name'] = this.name;
     data['surname'] = this.surname;
@@ -73,6 +77,6 @@ class Login {
 
   @override
   String toString() {
-    return '{"sTypename": ${this.sTypename},"email": ${this.email},"userID": ${this.userID},"name": ${this.name},"surname": ${this.surname},"imageUrl": ${this.imageUrl},"typeOfUser": ${this.typeOfUser}, "socialClub": ${this.socialClub}';
+    return '{"sTypename": ${this.sTypename},"email": ${this.email},"phone:" ${this.phone},userID": ${this.userID},"name": ${this.name},"surname": ${this.surname},"imageUrl": ${this.imageUrl},"typeOfUser": ${this.typeOfUser}, "socialClub": ${this.socialClub}';
   }
 }

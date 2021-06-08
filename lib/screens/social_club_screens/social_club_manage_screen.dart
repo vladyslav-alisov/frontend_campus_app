@@ -90,7 +90,7 @@ class _SocialClubManageScreenState extends State<SocialClubManageScreen> {
                                         image: DecorationImage(
                                           image: socialClubProvider.socialClubDetail.imageUrl == null
                                               ? AssetImage(
-                                                  ConstAssetsPath.img_placeHolder,
+                                                  ConstAssetsPath.img_placeholderImage,
                                                 )
                                               : NetworkImage(socialClubProvider.socialClubDetail.imageUrl),
                                           fit: BoxFit.cover,
@@ -182,7 +182,7 @@ class _SocialClubManageScreenState extends State<SocialClubManageScreen> {
                                                   image: DecorationImage(
                                                     image: socialClubProvider.galleryImagesList[index].imageUrl == null
                                                         ? AssetImage(
-                                                            ConstAssetsPath.img_placeHolder,
+                                                            ConstAssetsPath.img_placeholderImage,
                                                           )
                                                         : NetworkImage(
                                                             socialClubProvider.galleryImagesList[index].imageUrl),
@@ -386,6 +386,7 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                           ),
                                         ),
                                         onTap: () async {
+                                          Navigator.pop(context);
                                           showDialog(
                                             context: context,
                                             builder: (context) {

@@ -5,8 +5,10 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE1F3FF),
-      body: Center(
-        child: Image.asset("assets/icons/campusAppIcon.png"),
+      body: Container(
+        child: Center(
+          child: Image.asset("assets/icons/IconCampusApp.png",fit: BoxFit.fill,),
+        ),
       ),
     );
   }

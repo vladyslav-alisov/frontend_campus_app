@@ -49,7 +49,7 @@ class MealSelectScreen extends StatelessWidget {
                 child: FadeInImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(meals[index].mealImageUrl),
-                  placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                  placeholder: AssetImage(ConstAssetsPath.img_placeholderImage),
                   imageErrorBuilder: (context, error, stackTrace) {
                     print(error);
                     print(stackTrace);

@@ -14,7 +14,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
-//todo: fix avatar
 enum UserType { Cook, Lecturer, Student }
 
 class ProfileScreen extends StatefulWidget {
@@ -250,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           Text(
-                            "e-mail",
+                            "Email",
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
                           ),

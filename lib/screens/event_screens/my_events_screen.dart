@@ -147,7 +147,7 @@ class _MyEventsSCOwnerScaffoldState extends State<MyEventsSCOwnerScaffold> {
                     padding: const EdgeInsets.all( 8.0),
                     child: CampusMyEventsListView(eventProvider: eventProvider),
                   ),
-                  ListView.builder(
+                  eventProvider.hostEventList.length == 0 ? Center(child: Text("No events were found"),) : ListView.builder(
                     itemCount: eventProvider.hostEventList.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
@@ -179,7 +179,7 @@ class _MyEventsSCOwnerScaffoldState extends State<MyEventsSCOwnerScaffold> {
                                             image: DecorationImage(
                                               image: eventProvider.hostEventList[index].imageUrl == null
                                                   ? Image.asset(
-                                                ConstAssetsPath.img_placeHolder,
+                                                ConstAssetsPath.img_placeholderImage,
                                                 fit: BoxFit.fill,
                                               )
                                                   : NetworkImage(eventProvider.hostEventList[index].imageUrl),
@@ -379,7 +379,7 @@ class CampusMyEventsListView extends StatelessWidget {
                               image: DecorationImage(
                                 image: eventProvider.myEventList[index].imageUrl == null
                                     ? Image.asset(
-                                  ConstAssetsPath.img_placeHolder,
+                                  ConstAssetsPath.img_placeholderImage,
                                   fit: BoxFit.fill,
                                 )
                                     : NetworkImage(eventProvider.myEventList[index].imageUrl),

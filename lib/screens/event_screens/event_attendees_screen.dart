@@ -49,19 +49,22 @@ class _EventAttendeesScreenState extends State<EventAttendeesScreen> {
                 title: AppLocalizations.of(context).translate(str_listOfAttendees),
               ),
             ),
-            body: ListView.builder(
-              itemCount: eventsProvider.attendeeList.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: CampusPersonListTile(
-                      surname: eventsProvider.attendeeList[index].surname,
-                      name: eventsProvider.attendeeList[index].name,imageUrl: eventsProvider.attendeeList[index].imageUrl),
-                );
-              },
-            ),
+            body: eventsProvider.attendeeList.length == 0
+                ? Center(
+                    child: Text("No attendees were found"),
+                  )
+                : ListView.builder(
+                    itemCount: eventsProvider.attendeeList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: CampusPersonListTile(
+                            surname: eventsProvider.attendeeList[index].surname,
+                            name: eventsProvider.attendeeList[index].name,
+                            imageUrl: eventsProvider.attendeeList[index].imageUrl),
+                      );
+                    },
+                  ),
           );
   }
 }
-
-

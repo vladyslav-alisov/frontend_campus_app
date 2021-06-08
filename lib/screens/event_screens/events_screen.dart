@@ -24,7 +24,6 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   bool _isLoading = false;
-  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -105,7 +104,7 @@ class _EventScreenState extends State<EventScreen> {
                                                     image: DecorationImage(
                                                       image: _eventsList[index].imageUrl == null
                                                           ? Image.asset(
-                                                              ConstAssetsPath.img_placeHolder,
+                                                              ConstAssetsPath.img_placeholderImage,
                                                               fit: BoxFit.fill,
                                                             )
                                                           : NetworkImage(_eventsList[index].imageUrl),
@@ -228,9 +227,12 @@ class _EventScreenState extends State<EventScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: Text(
-            AppLocalizations.of(context).translate(str_upcomingEvents),
-            style: Theme.of(context).textTheme.headline3.copyWith(fontWeight: FontWeight.bold),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              AppLocalizations.of(context).translate(str_upcomingEvents),
+              style: Theme.of(context).textTheme.headline3.copyWith(fontWeight: FontWeight.bold,fontSize: 19),
+            ),
           ),
         ),
         Flexible(
@@ -254,11 +256,5 @@ class _EventScreenState extends State<EventScreen> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _searchController.clear();
-    super.dispose();
   }
 }

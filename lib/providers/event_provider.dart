@@ -22,7 +22,7 @@ class EventsProvider with ChangeNotifier {
   //Event LISTS funcitons
   Future<void> events() async {
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       document: gql(ConstQuery.events),
       variables: {ConstQueryKeys.userID: authData.login.userID, ConstQueryKeys.typeOfUser: authData.login.typeOfUser},
     );
@@ -40,7 +40,7 @@ class EventsProvider with ChangeNotifier {
 
   Future<void> myEvents() async {
     QueryOptions options =
-        QueryOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstQuery.myEvents), variables: {
+        QueryOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstQuery.myEvents), variables: {
       ConstQueryKeys.userID: authData.login.userID,
     });
     QueryResult result = await setup.client.value.query(options);
@@ -58,7 +58,7 @@ class EventsProvider with ChangeNotifier {
 
   Future<void> hostEvents() async {
     QueryOptions options =
-        QueryOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstQuery.hostEvents), variables: {
+        QueryOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstQuery.hostEvents), variables: {
       ConstQueryKeys.userID: authData.login.userID,
     });
     QueryResult result = await setup.client.value.query(options);
@@ -68,6 +68,7 @@ class EventsProvider with ChangeNotifier {
       throw ExceptionHandle.errorTranslate(exception: result.exception);
     }
     if (result.data != null) {
+      print(result.data);
       hostEventList = HostEvents.fromJson(result.data).hostEvents;
     }
     notifyListeners();
@@ -75,7 +76,7 @@ class EventsProvider with ChangeNotifier {
 
   Future<void> cancelEvent(String eventID) async {
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.cancelEvent), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.cancelEvent), variables: {
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.userID: authData.login.userID,
     });
@@ -91,8 +92,9 @@ class EventsProvider with ChangeNotifier {
   }
 
   Future<void> deleteEvent(String eventID) async {
+    //todo implement optimistic result
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteEvent), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.deleteEvent), variables: {
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.userID: authData.login.userID,
     });
@@ -110,7 +112,7 @@ class EventsProvider with ChangeNotifier {
 
   Future<void> joinEvent(String eventID) async {
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.joinEvent), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.joinEvent), variables: {
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.userID: authData.login.userID,
       ConstQueryKeys.typeOfUser: authData.login.typeOfUser,
@@ -138,9 +140,9 @@ class EventsProvider with ChangeNotifier {
       throw "Could not create an event! Please try again later.";
     } else {
       print(result.data);
-      eventList.add(Event.fromJson(result.data["action"]));
+      eventList.insert(0, Event.fromJson(result.data[ConstQueryKeys.action]));
       if (hostEventList.isNotEmpty) {
-        hostEventList.add(Event.fromJson(result.data["action"]));
+        hostEventList.insert(0,Event.fromJson(result.data[ConstQueryKeys.action]));
       }
     }
     notifyListeners();
@@ -148,7 +150,7 @@ class EventsProvider with ChangeNotifier {
 
   Future<void> editEvent({String eventID, EventToSend event}) async {
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.editEvent), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.editEvent), variables: {
       ConstQueryKeys.userID: authData.login.userID,
       ConstQueryKeys.eventID: eventID,
       ConstQueryKeys.eventInput: await event.toJson(),
@@ -159,11 +161,11 @@ class EventsProvider with ChangeNotifier {
       throw "Could not update an event! Please try again later.";
     } else {
       print(result.data);
-      eventList[eventList.indexWhere((element) => element.eventID == eventID)] = Event.fromJson(result.data["action"]);
+      eventList[eventList.indexWhere((element) => element.eventID == eventID)] = Event.fromJson(result.data[ConstQueryKeys.action]);
       if (hostEventList.length!=0) {
         //print(hostEventList[0]);
         hostEventList[hostEventList.indexWhere((element) => element.eventID == eventID)] =
-            Event.fromJson(result.data["action"]);
+            Event.fromJson(result.data[ConstQueryKeys.action]);
       }
     }
     notifyListeners();

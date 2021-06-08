@@ -42,7 +42,7 @@ class MenuProvider with ChangeNotifier {
 
   Future<void> meals() async {
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       document: gql(ConstQuery.meals),
     );
     QueryResult result = await setup.client.value.query(options);
@@ -58,7 +58,7 @@ class MenuProvider with ChangeNotifier {
 
   Future<void> chooseMeals(List<Menu> tempMenuList, int dayIndex) async {
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.chooseMeals), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.chooseMeals), variables: {
       ConstQueryKeys.userID: authData.login.userID,
       ConstQueryKeys.menuInput: {
         ConstQueryKeys.dayID: dayIndex+1,
@@ -89,22 +89,5 @@ class MenuProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
-/*Future<void> createMenu(MenuToSend menu) async {
-    MutationOptions options = MutationOptions(
-        fetchPolicy: FetchPolicy.cacheAndNetwork,
-        document: gql(ConstMutation.createMenu),
-        variables: {ConstQueryKeys.userID: authData.login.userID, ConstQueryKeys.menuInput: menu.toJson()});
-    QueryResult result = await setup.client.value.mutate(options);
-    if (result.hasException) {
-      print(result.exception);
-      throw "Could not create a menu! Please try again later.";
-    } else {
-      Menu temp = Menu.fromJson(result.data["action"]);
-      print(temp);
-      menuList[menuList.indexWhere((element) => element.dayID == temp.dayID)] = temp;
-    }
-    notifyListeners();
-  }*/
 
 }

@@ -52,7 +52,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         image: DecorationImage(
                           image: eventList[args.index].imageUrl == null
                               ? Image.asset(
-                                  ConstAssetsPath.img_placeHolder,
+                                  ConstAssetsPath.img_placeholderImage,
                                   fit: BoxFit.fill,
                                 )
                               : NetworkImage(eventList[args.index].imageUrl),
@@ -111,7 +111,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                     child: CampusIconText(
                                       icon: FontAwesomeIcons.ticketAlt,
                                       title: AppLocalizations.of(context).translate(str_price),
-                                      textData: eventList[args.index].price,
+                                      textData: eventList[args.index].price!= "Free" ? eventList[args.index].price+" TL" : eventList[args.index].price,
                                     ),
                                   ),
                                 ),

@@ -3,6 +3,7 @@ import 'package:campus_app/providers/document_request_provider.dart';
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/providers/home_provider.dart';
 import 'package:campus_app/providers/menu_provider.dart';
+import 'package:campus_app/providers/notice_board_provider.dart';
 import 'package:campus_app/providers/profile_provider.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/providers/timetable_provider.dart';
@@ -19,12 +20,12 @@ import 'package:campus_app/screens/event_screens/events_screen.dart';
 import 'package:campus_app/screens/event_screens/my_events_screen.dart';
 import 'package:campus_app/screens/home_screen.dart';
 import 'package:campus_app/screens/login_screen.dart';
+import 'package:campus_app/screens/notice_board_screens/notice_board_screen.dart';
 import 'package:campus_app/screens/profile_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_manage_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_members.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_requests.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_screen.dart';
-import 'package:campus_app/screens/student_card_screen.dart';
 import 'package:campus_app/screens/time_table_screen.dart';
 import 'package:campus_app/screens/transportation_screens/transportation_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
@@ -105,6 +106,13 @@ class MyApp extends StatelessWidget {
             previousMenu == null ? [] : previousMenu.mealOptions,
           ),
         ),
+        ChangeNotifierProxyProvider<AuthProvider, NoticeBoardProvider>(
+          update: (context, authData, previousNoticeBoard) => NoticeBoardProvider(
+            authData.authData,
+            previousNoticeBoard == null ? [] : previousNoticeBoard.noticeBoardList,
+            previousNoticeBoard == null ? [] : previousNoticeBoard.myNoticeBoardList,
+          ),
+        ),
         ChangeNotifierProxyProvider<ProfileProvider, DocumentRequestProvider>(
           update: (context, userData, previousData) => DocumentRequestProvider(userData.user),
         ),
@@ -163,7 +171,7 @@ class MyApp extends StatelessWidget {
                 DocumentRequestScreen.routeName: (context) => DocumentRequestScreen(),
                 AnnouncementsScreen.routeName: (context) => AnnouncementsScreen(),
                 TransportationScreen.routeName: (context) => TransportationScreen(),
-                StudentCardScreen.routeName: (context) => StudentCardScreen(),
+                NoticeBoardScreen.routeName: (context) => NoticeBoardScreen(),
                 SocialClubManageScreen.routeName: (context) => SocialClubManageScreen(),
                 SocialClubMembersScreen.routeName: (context) => SocialClubMembersScreen(),
                 SocialClubRequestsScreen.routeName: (context) => SocialClubRequestsScreen(),

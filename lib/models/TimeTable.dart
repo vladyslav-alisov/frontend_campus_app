@@ -22,6 +22,10 @@ class TimeTable {
     }
     return data;
   }
+  @override
+  String toString() {
+    return '{"sTypename": ${this.sTypename},"timetable": ${this.timetable}}';
+  }
 }
 
 class CourseData {
@@ -62,5 +66,10 @@ class CourseData {
     data['location'] = this.location;
     data['lecturer'] = this.lecturer;
     return data;
+  }
+
+  @override
+  String toString() {
+    return '{"sTypename": ${this.sTypename},"day": ${this.day},"courseCode": ${this.courseCode},"courseName": ${this.courseName},"time": ${this.time},"location": ${this.location},"lecturer": ${this.lecturer}}';
   }
 }

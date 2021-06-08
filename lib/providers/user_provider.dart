@@ -30,7 +30,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> auth(String email, String password) async {
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       document: gql(ConstQuery.login),
       variables: {
         ConstQueryKeys.email: email,
@@ -74,7 +74,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> uploadAvatar(File image) async {
     MutationOptions options =
-    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.uploadAvatar), variables: {
+    MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.uploadAvatar), variables: {
       ConstQueryKeys.image: await http.MultipartFile.fromPath(
         'campusImage',
         image.path,
@@ -95,7 +95,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> deleteAvatar() async {
     MutationOptions options =
-    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteAvatar), variables: {
+    MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.deleteAvatar), variables: {
       ConstQueryKeys.userID: authData.login.userID,
       ConstQueryKeys.typeOfUser: authData.login.typeOfUser,
     });

@@ -62,7 +62,7 @@ class AddPostScreen extends StatelessWidget {
                           child: GestureDetector(
                               onTap: () => screenController.showImagePicker(context),
                               child: screenController.galleryImage == null
-                                  ? Image.asset(ConstAssetsPath.img_placeHolder)
+                                  ? Image.asset(ConstAssetsPath.img_placeholderImage)
                                   : Image.file(screenController.galleryImage)),
                         ),
                       ),

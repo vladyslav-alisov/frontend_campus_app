@@ -31,7 +31,7 @@ class SocialClubProvider with ChangeNotifier {
   Future<void> socialClub(String scID) async {
     socialClubDetail = null;
     QueryOptions options = QueryOptions(
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstQuery.socialClub),
         variables: {ConstQueryKeys.userID: authData.login.userID, ConstQueryKeys.scID: scID});
     QueryResult result = await setup.client.value.query(options);
@@ -49,7 +49,7 @@ class SocialClubProvider with ChangeNotifier {
   Future<void> socialClubs() async {
     socialClubList = [];
     QueryOptions options = QueryOptions(
-      fetchPolicy: FetchPolicy.networkOnly,
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
       document: gql(ConstQuery.socialClubs),
     );
     QueryResult result = await setup.client.value.query(options);
@@ -67,7 +67,7 @@ class SocialClubProvider with ChangeNotifier {
   Future<void> mySocialClubs() async {
     mySocialClubList = [];
     QueryOptions options =
-        QueryOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstQuery.mySocialClubs), variables: {
+        QueryOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstQuery.mySocialClubs), variables: {
       ConstQueryKeys.userID: authData.login.userID,
     });
     QueryResult result = await setup.client.value.query(options);
@@ -85,7 +85,7 @@ class SocialClubProvider with ChangeNotifier {
 
   Future<void> sendRequestJoinSocialClub(String scID) async {
     MutationOptions options = MutationOptions(
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstMutation.sendRequestJoinSocialClub),
         variables: {
           ConstQueryKeys.scID: scID,
@@ -104,7 +104,7 @@ class SocialClubProvider with ChangeNotifier {
 
   Future<void> cancelRequestJoinSocialClub(String scID) async {
     MutationOptions options = MutationOptions(
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstMutation.cancelRequestJoinSocialClub),
         variables: {
           ConstQueryKeys.scID: scID,
@@ -123,7 +123,7 @@ class SocialClubProvider with ChangeNotifier {
 
   Future<void> quitSocialClub(String scID) async {
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.quitSocialClub), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.quitSocialClub), variables: {
       ConstQueryKeys.scID: scID,
       ConstQueryKeys.userID: authData.login.userID,
     });
@@ -143,7 +143,7 @@ class SocialClubProvider with ChangeNotifier {
 
   Future<void> socialClubRequests() async {
     QueryOptions options =
-        QueryOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstQuery.socialClubRequests), variables: {
+        QueryOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstQuery.socialClubRequests), variables: {
       ConstQueryKeys.userID: authData.login.userID,
     });
     QueryResult result = await setup.client.value.query(options);
@@ -191,36 +191,42 @@ class SocialClubProvider with ChangeNotifier {
       throw "Something went wrong";
     } else {
       print(result.data);
-      if(socialClubDetail!=null){
-      socialClubDetail.description = description;
+      if (socialClubDetail != null) {
+        socialClubDetail.description = description;
       }
-      socialClubList.firstWhere((element) => element.scID==scID).description = description;
+      socialClubList.firstWhere((element) => element.scID == scID).description = description;
     }
     notifyListeners();
   }
 
   Future<void> deleteSCMember(String scoID, String scID, String userID) async {
+    final existingSocialClubMemberIndex = socialClubMembersList.indexWhere((element) => element.userID == userID);
+    var existingMember = socialClubMembersList[existingSocialClubMemberIndex];
+    socialClubMembersList.removeAt(existingSocialClubMemberIndex);
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteSCMember), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.deleteSCMember), variables: {
       ConstQueryKeys.scID: scID,
       ConstQueryKeys.scoID: scoID,
       ConstQueryKeys.userID: userID,
     });
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
+      socialClubMembersList.insert(existingSocialClubMemberIndex, existingMember);
       print(result.exception);
       throw "Something went wrong";
     } else {
-      socialClubMembersList.removeWhere((element) => element.userID == userID);
       socialClubDetail = SocialClub.fromJson(result.data['action']);
     }
     notifyListeners();
   }
 
   Future<void> acceptJoinSocialClubMember(String scoID, String scID, String userID) async {
-    //todo check why type 'bool' is not a subtype of type 'Map<dynamic, dynamic>?' in type cast), graphqlErrors: [] on IOS
+    final existingSocialClubRequestIndex = socialClubRequestsList.indexWhere((element) => element.userID == userID);
+    var existingRequest = socialClubRequestsList[existingSocialClubRequestIndex];
+    socialClubRequestsList.removeAt(existingSocialClubRequestIndex);
+
     MutationOptions options = MutationOptions(
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstMutation.acceptJoinSocialClub),
         variables: {
           ConstQueryKeys.scID: scID,
@@ -229,21 +235,20 @@ class SocialClubProvider with ChangeNotifier {
         });
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
-      print(result.exception);
-      print(result.data);
+      socialClubRequestsList.insert(existingSocialClubRequestIndex, existingRequest);
       throw "Something went wrong";
     } else {
-      print(result.data);
-      socialClubRequestsList.removeWhere((element) => element.userID == userID);
       socialClubDetail = SocialClub.fromJson(result.data['action']);
     }
     notifyListeners();
   }
 
-
   Future<void> denyJoinSocialClub(String scoID, String scID, String userID) async {
+    final existingSocialClubRequestIndex = socialClubRequestsList.indexWhere((element) => element.userID == userID);
+    var existingRequest = socialClubRequestsList[existingSocialClubRequestIndex];
+    socialClubRequestsList.removeAt(existingSocialClubRequestIndex);
     MutationOptions options = MutationOptions(
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
         document: gql(ConstMutation.denyJoinSocialClub),
         variables: {
           ConstQueryKeys.scID: scID,
@@ -252,10 +257,8 @@ class SocialClubProvider with ChangeNotifier {
         });
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
-      print(result.exception);
+      socialClubRequestsList.insert(existingSocialClubRequestIndex, existingRequest);
       throw "Something went wrong";
-    } else {
-      socialClubRequestsList.removeWhere((element) => element.userID == userID);
     }
     notifyListeners();
   }
@@ -280,7 +283,7 @@ class SocialClubProvider with ChangeNotifier {
 
   Future<void> uploadPost(String scID, String scoID, File image, String description) async {
     MutationOptions options =
-        MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.uploadPost), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.uploadPost), variables: {
       ConstQueryKeys.postInput: {
         ConstQueryKeys.image: await http.MultipartFile.fromPath(
           'campusImage',
@@ -296,46 +299,52 @@ class SocialClubProvider with ChangeNotifier {
       print(result.exception);
       throw "Something went wrong";
     } else {
-      galleryImagesList.insert(0,Gallery.fromJson(result.data['action']));
+      galleryImagesList.insert(0, Gallery.fromJson(result.data['action']));
     }
     notifyListeners();
   }
 
   Future<void> uploadAvatarSocialClub(File image) async {
-    MutationOptions options =
-    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.uploadAvatarSocialClub), variables: {
-        ConstQueryKeys.image: await http.MultipartFile.fromPath(
-          'campusImage',
-          image.path,
-        ),
-      ConstQueryKeys.scID: socialClubDetail.scID,
-      ConstQueryKeys.userID: authData.login.userID,
-    });
+    MutationOptions options = MutationOptions(
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
+        document: gql(ConstMutation.uploadAvatarSocialClub),
+        variables: {
+          ConstQueryKeys.image: await http.MultipartFile.fromPath(
+            'campusImage',
+            image.path,
+          ),
+          ConstQueryKeys.scID: socialClubDetail.scID,
+          ConstQueryKeys.userID: authData.login.userID,
+        });
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
       print(result.exception);
       throw "Something went wrong";
     } else {
       print(result.data);
-      socialClubList.firstWhere((element) => element.scID == socialClubDetail.scID).imageUrl = result.data[ConstQueryKeys.action];
+      socialClubList.firstWhere((element) => element.scID == socialClubDetail.scID).imageUrl =
+          result.data[ConstQueryKeys.action];
       socialClubDetail.imageUrl = result.data[ConstQueryKeys.action];
     }
     notifyListeners();
   }
 
   Future<void> deleteAvatarSocialClub() async {
-    MutationOptions options =
-    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deleteAvatarSocialClub), variables: {
-      ConstQueryKeys.scID: socialClubDetail.scID,
-      ConstQueryKeys.userID: authData.login.userID,
-    });
+    MutationOptions options = MutationOptions(
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
+        document: gql(ConstMutation.deleteAvatarSocialClub),
+        variables: {
+          ConstQueryKeys.scID: socialClubDetail.scID,
+          ConstQueryKeys.userID: authData.login.userID,
+        });
     QueryResult result = await setup.client.value.mutate(options);
     if (result.hasException) {
       print(result.exception);
       throw "Something went wrong";
     } else {
       print(result.data);
-      socialClubList.firstWhere((element) => element.scID == socialClubDetail.scID).imageUrl = result.data[ConstQueryKeys.action];
+      socialClubList.firstWhere((element) => element.scID == socialClubDetail.scID).imageUrl =
+          result.data[ConstQueryKeys.action];
       socialClubDetail.imageUrl = result.data[ConstQueryKeys.action];
     }
     notifyListeners();
@@ -343,7 +352,7 @@ class SocialClubProvider with ChangeNotifier {
 
   Future<void> deletePost(String postID) async {
     MutationOptions options =
-    MutationOptions(fetchPolicy: FetchPolicy.networkOnly, document: gql(ConstMutation.deletePost), variables: {
+        MutationOptions(fetchPolicy: FetchPolicy.cacheAndNetwork, document: gql(ConstMutation.deletePost), variables: {
       ConstQueryKeys.scoID: socialClubDetail.scoID,
       ConstQueryKeys.postID: postID,
     });

@@ -87,6 +87,7 @@ class _DinnerHallScreenState extends State<DinnerHallScreen> {
                       Container(
                         height: devSize.height * 0.2,
                         child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
                           itemCount: Meals.values.length,
                           itemBuilder: (context, index) => ClipRRect(
                             borderRadius: BorderRadius.circular(5),
@@ -106,7 +107,7 @@ class _DinnerHallScreenState extends State<DinnerHallScreen> {
                                   child: FadeInImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(menuProvider.menuList[dayIndex].meals[index].mealImageUrl),
-                                    placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+                                    placeholder: AssetImage(ConstAssetsPath.img_placeholderImage),
                                     imageErrorBuilder: (context, error, stackTrace) {
                                       print(error);
                                       print(stackTrace);
@@ -122,12 +123,7 @@ class _DinnerHallScreenState extends State<DinnerHallScreen> {
                                 ),
                               ),
                             ),
-                          ),/*ContainerFood(
-                            devSize: devSize,
-                            mealName: menuProvider.menuList[dayIndex].meals[index].mealName,
-                            mealImage: menuProvider.menuList[dayIndex].meals[index].mealImageUrl,
-                          ),*/
-                          scrollDirection: Axis.horizontal,
+                          ),
                         ),
                       ),
                     ],
@@ -165,7 +161,7 @@ class _ContainerFoodState extends State<ContainerFood> {
                   image: DecorationImage(
                     image: widget.mealImage == null
                         ? AssetImage(
-                            ConstAssetsPath.img_placeHolder,
+                            ConstAssetsPath.img_placeholderImage,
                             //fit: BoxFit.fill,
                           )
                         : NetworkImage(widget.mealImage),

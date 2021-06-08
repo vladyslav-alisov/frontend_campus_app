@@ -1,3 +1,4 @@
+import 'package:campus_app/providers/announcements_provider.dart';
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/screens/announcements_screens/announcements_detail_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
@@ -23,15 +24,9 @@ class AnnouncementsScaffold extends StatefulWidget {
 class _AnnouncementsScaffoldState extends State<AnnouncementsScaffold> {
   bool isLoading = false;
   @override
-  //todo get real news api
   void initState() {
-    isLoading = false;
-    /*Provider.of<AnnouncementsProvider>(context, listen:false).getAnnouncements().then((_) {
-      setState(() {
-        isLoading = false;
-      });
-    });*/
-    Provider.of<EventsProvider>(context, listen: false).events().then((_) {
+    isLoading = true;
+    Provider.of<AnnouncementsProvider>(context, listen:false).getAnnouncements().then((_) {
       setState(() {
         isLoading = false;
       });
@@ -41,7 +36,7 @@ class _AnnouncementsScaffoldState extends State<AnnouncementsScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    var eventList = Provider.of<EventsProvider>(context).eventList;
+    var announcements = Provider.of<AnnouncementsProvider>(context).announcements;
     return isLoading
         ? Scaffold(
             body: Center(
@@ -73,31 +68,30 @@ class _AnnouncementsScaffoldState extends State<AnnouncementsScaffold> {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: eventList.length == 0
+                  child: announcements.length == 0
                       ? Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Center(child: Text(AppLocalizations.of(context).translate(str_noDataFound))),
                         )
                       : CarouselSlider.builder(
-                          itemCount: eventList.length,
+                          itemCount: announcements.length,
                           itemBuilder: (context, index, realIndex) {
                             return GestureDetector(
                               onTap: () => Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => AnnouncementsDetailScreen(eventList[index]))),
+                                  MaterialPageRoute(builder: (context) => AnnouncementsDetailScreen(announcements[index]))),
                               child: Container(
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
-                                    //todo recieve null instead of image
                                     Container(
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
-                                          image: eventList[index].imageUrl == null
+                                          image: announcements[index].urlToImage== null
                                               ? AssetImage(
-                                                  ConstAssetsPath.img_placeHolder,
+                                                  ConstAssetsPath.img_placeholderImage,
                                                //   fit: BoxFit.fill,
                                                 )
-                                              : NetworkImage(eventList[index].imageUrl),
+                                              : NetworkImage(announcements[index].urlToImage),
                                           fit: BoxFit.cover,
                                           colorFilter:
                                               ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.darken),
@@ -110,9 +104,13 @@ class _AnnouncementsScaffoldState extends State<AnnouncementsScaffold> {
                                       ),
                                     ),
                                     Center(
-                                      child: Text(
-                                        eventList[index].title,
-                                        style: Theme.of(context).textTheme.headline1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          announcements[index].title,
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 22),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -134,12 +132,12 @@ class _AnnouncementsScaffoldState extends State<AnnouncementsScaffold> {
                       (context, index) => Padding(
                             padding: const EdgeInsets.only(top: 2.0),
                             child: GestureDetector(
-                              child: CampusAnnouncementsListTile(eventList[index]),
+                              child: CampusAnnouncementsListTile(announcements[index]),
                               onTap: () => Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => AnnouncementsDetailScreen(eventList[index]))),
+                                  MaterialPageRoute(builder: (context) => AnnouncementsDetailScreen(announcements[index]))),
                             ),
                           ),
-                      childCount: eventList.length),
+                      childCount: announcements.length),
                 ),
               ],
             ),

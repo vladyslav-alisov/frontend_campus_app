@@ -1,21 +1,24 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:campus_app/models/Announcements.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class AnnouncementsProvider with ChangeNotifier {
+  final endPointUrl = "newsapi.org";
+  final client = http.Client();
+  List<Articles> announcements;
+
   Future<void> getAnnouncements() async {
-    await http.get(Uri.https("mma-ufc-news.p.rapidapi.com", "/latest"), headers: {
-      "x-rapidapi-key": "87a1aa3a31msh94721fd974460dap1f81fajsn7393ad565d7c",
-      "x-rapidapi-host": "mma-ufc-news.p.rapidapi.com",
-      "useQueryString": "true"
-    }).then(
-      (value) async {
-        if (value.body != null) {
-          log("${value.body}");
-        }
-      },
-    ).catchError((e) => print(e));
+    final queryParameters = {
+      'sources': 'techcrunch',
+      'apiKey': '46ba552cddd34927bd716d33fcfcce0b'
+    };
+    final uri = Uri.https(endPointUrl, '/v2/top-headlines',queryParameters);
+    final response = await client.get(uri);
+    announcements = News.fromJson(jsonDecode(response.body)).articles;
   }
 }

@@ -225,7 +225,7 @@ class ListTileMeal extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
             child: FadeInImage(
               image: NetworkImage(meal.mealImageUrl),
-              placeholder: AssetImage(ConstAssetsPath.img_placeHolder),
+              placeholder: AssetImage(ConstAssetsPath.img_placeholderImage),
               imageErrorBuilder: (context, error, stackTrace) {
                 print(error);
                 print(stackTrace);

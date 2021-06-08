@@ -2,7 +2,6 @@ import 'package:campus_app/models/social_clubs/SocialClubList.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/screen_controllers/social_club_screen_controllers/social_club_detail_screen_controller.dart';
 import 'package:campus_app/screen_controllers/social_club_screen_controllers/social_club_manage_screen_controller.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_manage_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_members.dart';
@@ -19,31 +18,18 @@ import 'package:provider/provider.dart';
 
 enum Condition { member, non, wait }
 
-class SocialClubDetailScreen extends StatelessWidget {
+class SocialClubDetailScreen extends StatefulWidget {
   SocialClubDetailScreen(this.socialClub);
   final SocialClub socialClub;
   static const String routeName = '/social_club_detail_screen';
+
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SocialClubDetailScreenController(),
-      child: SocialClubDetailScaffold(
-        socialClub: socialClub,
-      ),
-    );
-  }
+  _SocialClubDetailScreenState createState() => _SocialClubDetailScreenState();
 }
 
-class SocialClubDetailScaffold extends StatefulWidget {
-  SocialClubDetailScaffold({this.socialClub});
-  final SocialClub socialClub;
-  static const String routeName = '/social_club_detail_screen';
-  @override
-  _SocialClubDetailScaffoldState createState() => _SocialClubDetailScaffoldState();
-}
-
-class _SocialClubDetailScaffoldState extends State<SocialClubDetailScaffold> {
+class _SocialClubDetailScreenState extends State<SocialClubDetailScreen> {
   bool _isLoading = false;
+
   bool _isRequestLoading = false;
 
   @override
@@ -95,7 +81,7 @@ class _SocialClubDetailScaffoldState extends State<SocialClubDetailScaffold> {
                               image: DecorationImage(
                                 image: socialClubProvider.socialClubDetail.imageUrl == null
                                     ? AssetImage(
-                                        ConstAssetsPath.img_placeHolder,
+                                        ConstAssetsPath.img_placeholderImage,
                                       )
                                     : NetworkImage(socialClubProvider.socialClubDetail.imageUrl),
                                 fit: BoxFit.cover,
@@ -176,7 +162,7 @@ class _SocialClubDetailScaffoldState extends State<SocialClubDetailScaffold> {
                                           image: DecorationImage(
                                             image: socialClubProvider.galleryImagesList[index].imageUrl == null
                                                 ? AssetImage(
-                                              ConstAssetsPath.img_placeHolder,
+                                              ConstAssetsPath.img_placeholderImage,
                                             )
                                                 : NetworkImage(
                                                 socialClubProvider.galleryImagesList[index].imageUrl),

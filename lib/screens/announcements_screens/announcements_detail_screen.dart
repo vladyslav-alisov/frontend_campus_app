@@ -1,3 +1,4 @@
+import 'package:campus_app/models/Announcements.dart';
 import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
@@ -6,17 +7,17 @@ import 'package:flutter/material.dart';
 
 class AnnouncementsDetailScreen extends StatelessWidget {
   static const String routeName = "/announcements_screen";
-  AnnouncementsDetailScreen(this.event);
-  final Event event;
+  AnnouncementsDetailScreen(this.articles);
+  final Articles articles;
   @override
   Widget build(BuildContext context) {
-    return AnnouncementsDetailScaffold(event);
+    return AnnouncementsDetailScaffold(articles);
   }
 }
 
 class AnnouncementsDetailScaffold extends StatefulWidget {
-  AnnouncementsDetailScaffold(this.event);
-  final Event event;
+  AnnouncementsDetailScaffold(this.articles);
+  final Articles articles;
   @override
   _AnnouncementsDetailScaffoldState createState() => _AnnouncementsDetailScaffoldState();
 }
@@ -30,7 +31,7 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
             AppBar().preferredSize.height + 20,
           ),
           child: CampusAppBar(
-            title: widget.event.title,
+            title: widget.articles.title,
           ),
         ),
         body: SingleChildScrollView(
@@ -45,12 +46,12 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
                     Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: widget.event.imageUrl == null
+                          image: widget.articles.urlToImage == null
                               ? Image.asset(
-                            ConstAssetsPath.img_placeHolder,
+                            ConstAssetsPath.img_placeholderImage,
                             fit: BoxFit.cover,
                           )
-                              : NetworkImage(widget.event.imageUrl),
+                              : NetworkImage(widget.articles.urlToImage),
                           fit: BoxFit.cover,
                           colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
                           onError: (exception, stackTrace) => Container(
@@ -66,7 +67,7 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
                       child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          widget.event.title,
+                          widget.articles.title,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 25,
@@ -79,12 +80,13 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(widget.event.date),
+                child: Text(widget.articles.publishedAt.substring(0, 10),),
               ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Text(
-                  widget.event.description,
+                  widget.articles.content,
+                  maxLines: 100,
                 ),
               ),
             ],

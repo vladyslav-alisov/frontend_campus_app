@@ -173,36 +173,27 @@ class CampusSocialClubGridView extends StatelessWidget {
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  image: DecorationImage(
-                    image: socialClubList[index].imageUrl == null
-                        ? AssetImage(
-                            ConstAssetsPath.img_placeHolder,
-                            //   fit: BoxFit.fill,
-                          )
-                        : NetworkImage(socialClubList[index].imageUrl),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.45), BlendMode.darken),
-                    onError: (exception, stackTrace) => Container(
-                      child: Center(
-                        child: Text(AppLocalizations.of(context).translate(str_errorLoadImage)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: GridTile(
+              footer: GridTileBar(
+                title: Text(
                   socialClubList[index].title,
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 15),
                 ),
+                backgroundColor: Colors.black54,
               ),
-            ],
+              child: FadeInImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(socialClubList[index].imageUrl),
+                placeholder: AssetImage(ConstAssetsPath.img_defaultSocialClubAvatar),
+                imageErrorBuilder: (context, error, stackTrace) =>
+                    Image.asset(ConstAssetsPath.img_defaultSocialClubAvatar),
+                placeholderErrorBuilder: (context, error, stackTrace) =>
+                    Image.asset(ConstAssetsPath.img_defaultSocialClubAvatar),
+              ),
+            ),
           ),
         ),
       ),
