@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screens/profile_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
@@ -65,74 +66,38 @@ class _HomeScreenState extends State<HomeScreen> {
                             colors: MyConstants.appBarColors,
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 38,
-                            right: 17,
-                          ),
-                          child: GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  fit: FlexFit.tight,
-                                  child: Text(
-                                    authData != null ? authData.login.name + " " + authData.login.surname : "",
-                                    style: Theme.of(context).textTheme.headline1,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  authData != null ? authData.login.name + " " + authData.login.surname : "",
+                                  style: Theme.of(context).textTheme.headline1,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Flexible(
+                                child: Center(
+                                  child: CachedNetworkImage(
+                                    imageUrl: authData.login.imageUrl ?? str_defaultImageUrl,
+                                    imageBuilder: (context, imageProvider) => Container(
+                                      width: 80.0,
+                                      height: 80.0,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
                                   ),
                                 ),
-                                Flexible(
-                                  fit: FlexFit.tight,
-                                  child: authData.login.imageUrl != str_noImage && authData?.login?.imageUrl != null
-                                      ? Container(
-                                          width: 80,
-                                          height: 80,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.transparent,
-                                            radius: 25,
-                                            child: ClipOval(
-                                              child: Image.network(
-                                                authData.login.imageUrl,
-                                                fit: BoxFit.cover,
-                                                width: 80,
-                                                height: 80,
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  print(error);
-                                                  return Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    child: Center(
-                                                      child: ClipOval(
-                                                        child: Image.asset(ConstAssetsPath.img_defaultAvatar,
-                                                            fit: BoxFit.fill),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(
-                                              width: 80,
-                                              height: 80,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: CircleAvatar(
-                                                child: ClipOval(
-                                                  child: Image.asset(ConstAssetsPath.img_defaultAvatar, fit: BoxFit.fill),
-                                                ),
-                                                radius: devSize == null ? 50 : devSize.width * 0.10,
-                                              ),
-                                            ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

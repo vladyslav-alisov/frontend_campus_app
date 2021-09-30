@@ -1,4 +1,3 @@
-import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
@@ -8,9 +7,7 @@ import 'package:campus_app/screens/event_screens/my_events_screen.dart';
 import 'package:campus_app/utils/Localization.dart';
 import 'package:campus_app/utils/MyConstants.dart';
 import 'package:campus_app/widgets/CampusAppBar.dart';
-import 'package:campus_app/widgets/event_widgets/CampusEventsListView.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class EventScreen extends StatefulWidget {
