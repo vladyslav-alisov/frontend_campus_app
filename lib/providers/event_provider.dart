@@ -2,9 +2,9 @@ import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/events/AttendeeData.dart';
 import 'package:campus_app/models/events/EventList.dart';
 import 'package:campus_app/models/events/EventToSend.dart';
-import 'package:campus_app/utils/ExceptionHandler.dart';
-import 'package:campus_app/utils/GraphQLSetup.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/exception_handler.dart';
+import 'package:campus_app/utils/graph_ql_setup.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -14,6 +14,7 @@ class EventsProvider with ChangeNotifier {
   final AuthData authData;
 
   List<Event> eventList = [];
+  List<Event> showEventList = [];
   List<Event> myEventList = [];
   List<Event> hostEventList = [];
   List<AttendeeData> attendeeList = [];
@@ -33,7 +34,6 @@ class EventsProvider with ChangeNotifier {
     }
     if (result.data != null) {
       eventList = Events.fromJson(result.data).events;
-    //  eventList.sort();
     }
     notifyListeners();
   }
@@ -163,7 +163,6 @@ class EventsProvider with ChangeNotifier {
       print(result.data);
       eventList[eventList.indexWhere((element) => element.eventID == eventID)] = Event.fromJson(result.data[ConstQueryKeys.action]);
       if (hostEventList.length!=0) {
-        //print(hostEventList[0]);
         hostEventList[hostEventList.indexWhere((element) => element.eventID == eventID)] =
             Event.fromJson(result.data[ConstQueryKeys.action]);
       }

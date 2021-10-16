@@ -1,4 +1,4 @@
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/my_constants.dart';
 
 class AuthData {
   String sTypename;
@@ -36,6 +36,7 @@ class Login {
   String imageUrl;
   String typeOfUser;
   String socialClub;
+  bool defaultAvatar;
 
   Login({
     this.sTypename,
@@ -47,6 +48,7 @@ class Login {
     this.imageUrl,
     this.typeOfUser,
     this.socialClub,
+    this.defaultAvatar
   });
 
   Login.fromJson(Map<String, dynamic> json) {
@@ -59,6 +61,7 @@ class Login {
     imageUrl = json['imageUrl'] != null ? json['imageUrl'] : str_noImage;
     typeOfUser = json['typeOfUser'];
     socialClub = json["socialClub"];
+    defaultAvatar =json['defaultAvatar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -77,6 +80,6 @@ class Login {
 
   @override
   String toString() {
-    return '{"sTypename": ${this.sTypename},"email": ${this.email},"phone:" ${this.phone},userID": ${this.userID},"name": ${this.name},"surname": ${this.surname},"imageUrl": ${this.imageUrl},"typeOfUser": ${this.typeOfUser}, "socialClub": ${this.socialClub}';
+    return '{"sTypename": ${this.sTypename},"email": ${this.email},"phone:" ${this.phone},userID": ${this.userID},"name": ${this.name},"surname": ${this.surname},"imageUrl": ${this.imageUrl},"typeOfUser": ${this.typeOfUser}, "socialClub": ${this.socialClub}, "defaultAvatar": ${this.defaultAvatar}';
   }
 }

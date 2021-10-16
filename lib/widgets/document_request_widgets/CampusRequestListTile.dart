@@ -1,5 +1,3 @@
-import 'package:campus_app/models/events/EventList.dart';
-import 'package:campus_app/utils/MyConstants.dart';
 import 'package:flutter/material.dart';
 
 class CampusRequestListTile extends StatelessWidget {

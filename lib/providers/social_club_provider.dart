@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:campus_app/models/social_clubs/SocialClubRequestsList.dart';
 import 'package:flutter/foundation.dart';
@@ -7,9 +6,9 @@ import 'package:campus_app/models/AuthData.dart';
 import 'package:campus_app/models/social_clubs/GalleryList.dart';
 import 'package:campus_app/models/social_clubs/SocialClubList.dart';
 import 'package:campus_app/models/social_clubs/SocialClubMembersList.dart';
-import 'package:campus_app/utils/ExceptionHandler.dart';
-import 'package:campus_app/utils/GraphQLSetup.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/exception_handler.dart';
+import 'package:campus_app/utils/graph_ql_setup.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 

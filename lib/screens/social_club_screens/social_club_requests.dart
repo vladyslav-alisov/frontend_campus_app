@@ -1,8 +1,8 @@
 import 'package:campus_app/models/social_clubs/SocialClubList.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,9 +22,9 @@ class _SocialClubRequestsScreenState extends State<SocialClubRequestsScreen> {
     _isLoading = true;
     CommonController.queryFuture(Provider.of<SocialClubProvider>(context, listen: false).socialClubRequests(), context)
         .then((value) {
-      setState(() {
+      if(this.mounted){setState(() {
         _isLoading = false; //false;
-      });
+      });}
     });
     super.initState();
   }
@@ -48,7 +48,7 @@ class _SocialClubRequestsScreenState extends State<SocialClubRequestsScreen> {
               ),
             ),
             body: socialClubProvider.socialClubRequestsList.length == 0
-                ? Center(child: Text("No requests found"))
+                ? Center(child: Text("No requests were found"))
                 : ListView.builder(
                     itemCount: socialClubProvider.socialClubRequestsList.length,
                     itemBuilder: (context, index) {
@@ -100,7 +100,7 @@ class _SocialClubRequestsScreenState extends State<SocialClubRequestsScreen> {
                                       ),
                                     ),
                               trailing: Container(
-                                width: MediaQuery.of(context).size.width * 0.37,
+                                width: MediaQuery.of(context).size.width * 0.48,
                                 child: Row(
                                   children: [
                                     ElevatedButton(

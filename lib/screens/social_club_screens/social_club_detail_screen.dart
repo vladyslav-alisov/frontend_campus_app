@@ -5,9 +5,9 @@ import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screen_controllers/social_club_screen_controllers/social_club_manage_screen_controller.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_manage_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_members.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/social_club_widgets/CampusGalleryView.dart';
 import 'package:campus_app/widgets/social_club_widgets/CampusTitleIconRow.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -131,55 +131,55 @@ class _SocialClubDetailScreenState extends State<SocialClubDetailScreen> {
                                       child: Text("Gallery is empty"),
                                     )
                                   : CarouselSlider.builder(
-                                itemCount: socialClubProvider.galleryImagesList.length,
-                                carouselController: screenController.galleryController,
-                                options: CarouselOptions(
-                                  viewportFraction: 0.6,
-                                  aspectRatio: 3,
-                                  enableInfiniteScroll: false,
-                                ),
-                                itemBuilder: (context, index, realIndex) => GestureDetector(
-                                  onTap: () => {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => GalleryPhotoViewWrapper(
-                                          galleryItems: socialClubProvider.galleryImagesList,
-                                          initialIndex: index,
-                                        ),
+                                      itemCount: socialClubProvider.galleryImagesList.length,
+                                      carouselController: screenController.galleryController,
+                                      options: CarouselOptions(
+                                        viewportFraction: 0.6,
+                                        aspectRatio: 3,
+                                        enableInfiniteScroll: false,
                                       ),
-                                    ),
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 20.0),
-                                    child: Hero(
-                                      tag: socialClubProvider.galleryImagesList[realIndex].postID,
-                                      child: Container(
-                                        height: 200,
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(5),
-                                          image: DecorationImage(
-                                            image: socialClubProvider.galleryImagesList[index].imageUrl == null
-                                                ? AssetImage(
-                                              ConstAssetsPath.img_placeholderImage,
-                                            )
-                                                : NetworkImage(
-                                                socialClubProvider.galleryImagesList[index].imageUrl),
-                                            fit: BoxFit.cover,
-                                            onError: (exception, stackTrace) => Container(
-                                              child: Center(
-                                                child: Text(
-                                                    AppLocalizations.of(context).translate(str_errorLoadImage)),
+                                      itemBuilder: (context, index, realIndex) => GestureDetector(
+                                        onTap: () => {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => GalleryPhotoViewWrapper(
+                                                galleryItems: socialClubProvider.galleryImagesList,
+                                                initialIndex: index,
+                                              ),
+                                            ),
+                                          ),
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right: 20.0),
+                                          child: Hero(
+                                            tag: socialClubProvider.galleryImagesList[realIndex].postID,
+                                            child: Container(
+                                              height: 200,
+                                              width: 200,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                image: DecorationImage(
+                                                  image: socialClubProvider.galleryImagesList[index].imageUrl == null
+                                                      ? AssetImage(
+                                                          ConstAssetsPath.img_placeholderImage,
+                                                        )
+                                                      : NetworkImage(
+                                                          socialClubProvider.galleryImagesList[index].imageUrl),
+                                                  fit: BoxFit.cover,
+                                                  onError: (exception, stackTrace) => Container(
+                                                    child: Center(
+                                                      child: Text(
+                                                          AppLocalizations.of(context).translate(str_errorLoadImage)),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
                                 child: CampusTitleIconRow(
@@ -198,19 +198,21 @@ class _SocialClubDetailScreenState extends State<SocialClubDetailScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 8,),
+                                padding: const EdgeInsets.only(
+                                  left: 8,
+                                ),
                                 child: CampusTitleIconRow(
                                   title: "Members",
                                   titleIcon: Icons.people,
                                   trailingIcon: Icons.people,
                                   callback: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SocialClubMembersScreen(
-                                    socialClub: socialClubProvider.socialClubDetail,
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SocialClubMembersScreen(
+                                        socialClub: socialClubProvider.socialClubDetail,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
                                 ),
                               ),
                               Row(
@@ -233,7 +235,8 @@ class _SocialClubDetailScreenState extends State<SocialClubDetailScreen> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: ElevatedButton(
                                             style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(Theme.of(context).primaryColor),
                                             ),
                                             onPressed: () => Navigator.push(
                                               context,
@@ -342,14 +345,18 @@ class _SocialClubDetailScreenState extends State<SocialClubDetailScreen> {
   }
 
   void setIsLoading(bool state) {
-    setState(() {
-      _isLoading = state;
-    });
+    if (this.mounted) {
+      setState(() {
+        _isLoading = state;
+      });
+    }
   }
 
   void setIsRequestLoading(bool state) {
-    setState(() {
-      _isRequestLoading = state;
-    });
+    if (this.mounted) {
+      setState(() {
+        _isRequestLoading = state;
+      });
+    }
   }
 }

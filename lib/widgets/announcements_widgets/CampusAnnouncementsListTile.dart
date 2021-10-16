@@ -1,6 +1,6 @@
 import 'package:campus_app/models/Announcements.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/material.dart';
 
 class CampusAnnouncementsListTile extends StatelessWidget {
@@ -49,36 +49,6 @@ class CampusAnnouncementsListTile extends StatelessWidget {
                 ConstAssetsPath.img_placeholderImage,
                 fit: BoxFit.cover,
               ),
-        /*subtitle: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Flexible(
-                      child: Text(article.description,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 10,
-                          style: Theme.of(context).textTheme.bodyText1)),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(article.publishedAt.substring(0, 10),
-                          overflow: TextOverflow.ellipsis, maxLines: 1, style: Theme.of(context).textTheme.bodyText1),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),*/
-        //isThreeLine: true,
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/my_constants.dart';
 
 class SocialClubMembersList {
   String sTypename;

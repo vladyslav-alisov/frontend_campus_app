@@ -1,5 +1,5 @@
 import 'package:campus_app/models/User.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 

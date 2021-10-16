@@ -2,9 +2,9 @@ import 'package:campus_app/models/notice_board/NoticeBoard.dart';
 import 'package:campus_app/providers/notice_board_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screens/notice_board_screens/edit_notice_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -307,7 +307,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(notice.description,textAlign: TextAlign.center,),
+                  child: SelectableText(notice.description,textAlign: TextAlign.center),
                 ),
               ],
             ),

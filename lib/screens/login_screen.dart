@@ -1,11 +1,12 @@
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screens/home_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:campus_app/widgets/CampusLoginTextInputField.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 enum UserType { Student, Staff }
 
@@ -19,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
-    emailController.text = "";
+      emailController.text = "";
     passwordController.text = "";
     rightTextController.text = "@std.antalya.edu.tr";
     super.initState();

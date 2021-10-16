@@ -1,8 +1,8 @@
 import 'package:campus_app/models/menu/Food.dart';
 import 'package:campus_app/screen_controllers/dinner_hall_screen_controllers/menu_edit_screen_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +14,6 @@ class MealSelectScreen extends StatelessWidget {
   final int dayIndex;
   @override
   Widget build(BuildContext context) {
-    var devSize = MediaQuery.of(context).size;
     var screenController = Provider.of<MenuEditScreenController>(context, listen: false);
     return Scaffold(
       appBar: PreferredSize(

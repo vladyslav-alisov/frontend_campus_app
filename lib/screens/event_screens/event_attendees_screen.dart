@@ -1,8 +1,8 @@
 import 'package:campus_app/providers/event_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/general_widgets/CampusPersonListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -6,9 +6,9 @@ import 'package:campus_app/screen_controllers/social_club_screen_controllers/soc
 import 'package:campus_app/screens/social_club_screens/social_club_add_post_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_members.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_requests.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/social_club_widgets/CampusGalleryView.dart';
 import 'package:campus_app/widgets/social_club_widgets/CampusTitleIconRow.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -29,20 +29,26 @@ class SocialClubManageScreen extends StatefulWidget {
 
 class _SocialClubManageScreenState extends State<SocialClubManageScreen> {
   bool _isLoading = false;
-  String temp="";
+  String temp = "";
 
   @override
   void initState() {
     _isLoading = true;
     Provider.of<SocialClubManageScreenController>(context, listen: false).init(widget.socialClub?.description);
     CommonController.queryFuture(
-        Provider.of<SocialClubProvider>(context, listen: false).socialClub(widget.socialClub.scID).then((_) {
-          Provider.of<SocialClubProvider>(context, listen: false)
-              .gallery(widget.socialClub.scID)
-              .then((_) => setState(() {
+        Provider.of<SocialClubProvider>(context, listen: false).socialClub(widget.socialClub.scID).then(
+          (_) {
+            Provider.of<SocialClubProvider>(context, listen: false).gallery(widget.socialClub.scID).then((_) {
+              if (this.mounted) {
+                setState(
+                  () {
                     _isLoading = false;
-                  }));
-        }),
+                  },
+                );
+              }
+            });
+          },
+        ),
         context);
     super.initState();
   }
@@ -223,15 +229,14 @@ class _SocialClubManageScreenState extends State<SocialClubManageScreen> {
                                       if (screenController.isDescriptionLoading) {
                                       } else {
                                         screenController.setEdit();
-                                        if(screenController.isEdit==true){
+                                        if (screenController.isEdit == true) {
                                           temp = screenController.descriptionController.text;
-                                        }
-                                        else{
-                                          if((temp.compareTo(screenController.descriptionController.text) == 0) == false ){
-                                            screenController.descriptionController.text=temp;
+                                        } else {
+                                          if ((temp.compareTo(screenController.descriptionController.text) == 0) ==
+                                              false) {
+                                            screenController.descriptionController.text = temp;
                                           }
                                         }
-
                                       }
                                     },
                                   ),
@@ -391,8 +396,8 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                title: new Text(
-                                                    AppLocalizations.of(context).translate(str_simpleWarning)),
+                                                title:
+                                                    new Text(AppLocalizations.of(context).translate(str_simpleWarning)),
                                                 content: new Text("Are you sure you want to delete post?"),
                                                 actions: <Widget>[
                                                   TextButton(
@@ -405,7 +410,8 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                                     child: Text(AppLocalizations.of(context).translate(str_confirm)),
                                                     onPressed: () async {
                                                       Navigator.pop(context);
-                                                      if(socialClubProvider.socialClubDetail.imageUrl != str_defaultImageUrlSC){
+                                                      if (socialClubProvider.socialClubDetail.imageUrl !=
+                                                          str_defaultImageUrlSC) {
                                                         setIsLoading();
                                                         await socialClubProvider.deleteAvatarSocialClub();
                                                         setIsLoading();
@@ -422,7 +428,8 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                   leading: new Icon(Icons.photo_library),
                                   title: new Text(AppLocalizations.of(context).translate(str_photoLibrary)),
                                   onTap: () async {
-                                    await getAndUpdateImage(false, socialClubProvider);
+                                    await CommonController.getAndUpdateImage(false)
+                                        .then((value) => avatarImage = value);
                                     Navigator.pop(context);
                                     if (avatarImage != null) {
                                       setIsLoading();
@@ -435,7 +442,7 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                                   leading: new Icon(Icons.photo_camera),
                                   title: new Text(AppLocalizations.of(context).translate(str_camera)),
                                   onTap: () async {
-                                    await getAndUpdateImage(true, socialClubProvider);
+                                    await CommonController.getAndUpdateImage(true).then((value) => avatarImage = value);
                                     Navigator.pop(context);
                                     if (avatarImage != null) {
                                       setIsLoading();
@@ -461,7 +468,15 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                       ),
                     ),
                   ),
-                  isLoading? Container(color: Colors.black,child: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),)),): Container(),
+                  isLoading
+                      ? Container(
+                          color: Colors.black,
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          )),
+                        )
+                      : Container(),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -475,30 +490,9 @@ class _CampusAvatarSocialClubState extends State<CampusAvatarSocialClub> {
                       ),
                     ),
                   ),
-
                 ],
               ),
       ),
     );
-  }
-
-  Future getAndUpdateImage(bool choice, SocialClubProvider socialClubProvider) async {
-    var pickedFile;
-    if (choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    } else if (!choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    }
-    if (pickedFile != null) {
-      avatarImage = File(pickedFile.path);
-    }
   }
 }

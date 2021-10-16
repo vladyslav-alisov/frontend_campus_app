@@ -1,7 +1,7 @@
 import 'package:campus_app/providers/timetable_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:campus_app/widgets/timetable_widgets/CampusTimeTableListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,9 +33,9 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       _isLoading = true;
     });
     await Provider.of<TimeTableProvider>(context, listen: false).timetable().then((_) {
-      setState(() {
+      if(this.mounted){setState(() {
         _isLoading = false;
-      });
+      });}
     });
   }
 

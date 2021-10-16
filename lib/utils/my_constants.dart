@@ -410,6 +410,7 @@ class ConstQuery {
       imageUrl
       typeOfUser
       socialClub
+      defaultAvatar
   }
 }
   ''';
@@ -670,7 +671,6 @@ const String str_enterDescription = "Enter description";
 //default values for GraphQL
 const str_noImage = "No Image";
 const str_false = "false";
-const str_defaultImageUrl = "https://res.cloudinary.com/abu-campus-app/image/upload/v1622738747/cikhthfn2p3ireaot99v.png";
 const str_defaultImageUrlSC = "https://res.cloudinary.com/abu-campus-app/image/upload/v1622739266/c68zvrhgwzlvgow95x4t.jpg";
 //for document request
 const String str_studentAffairEmail = "vladyslav.alisov@gmail.com"; //'studentaffairs@antalya.edu.tr';
@@ -682,7 +682,7 @@ const String str_routesOfTheServices = "Routes of the services";
 
 //for announcements
 const String str_announcements = "Announcements";
-const String str_noDataFound = "No data found:(";
+const String str_noDataFound = "No data was found:(";
 const String str_myClubs = "My Clubs";
 const String str_allSocialClubs = "All Social Clubs";
 const String str_socialClubs = "Social Clubs";

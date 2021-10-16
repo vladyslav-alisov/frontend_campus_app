@@ -5,9 +5,9 @@ import 'package:campus_app/models/notice_board/NoticeToSend.dart';
 import 'package:campus_app/providers/notice_board_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/CampusTextInputField.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -96,15 +96,36 @@ class _EditNoticeScreenState extends State<EditNoticeScreen> {
                 new ListTile(
                     leading: new Icon(Icons.photo_library),
                     title: new Text(AppLocalizations.of(context).translate(str_photoLibrary)),
-                    onTap: () {
-                      getAndUpdateImage(false);
+                    onTap: () async {
+                      setState(() {
+                        isImageLoading = true;
+                      });
+                      await CommonController.getAndUpdateImage(false).then((value) =>
+                      setState(() {
+                        if(value!=null){
+                          image = value;
+                        }
+                        isImageLoading = false;
+                      })
+                      );
+
                       Navigator.of(context).pop();
                     }),
                 new ListTile(
                   leading: new Icon(Icons.photo_camera),
                   title: new Text(AppLocalizations.of(context).translate(str_camera)),
-                  onTap: () {
-                    getAndUpdateImage(true);
+                  onTap: () async  {
+                    setState(() {
+                      isImageLoading = true;
+                    });
+                    await CommonController.getAndUpdateImage(true).then((value) =>
+                        setState(() {
+                          if(value!=null){
+                            image = value;
+                          }
+                          isImageLoading = false;
+                        })
+                    );
                     Navigator.of(context).pop();
                   },
                 ),
@@ -114,37 +135,6 @@ class _EditNoticeScreenState extends State<EditNoticeScreen> {
         );
       },
     );
-  }
-
-  Future getAndUpdateImage(bool choice) async {
-    setState(() {
-      isImageLoading = true;
-    });
-    var pickedFile;
-    if (choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-          setState(() {
-            isImageLoading = false;
-          });
-      if (pickedFile == null) {
-        return;
-      }
-    } else if (!choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      setState(() {
-        isImageLoading = false;
-      });
-      if (pickedFile == null) {
-        return;
-      }
-    }
-    if (pickedFile != null) {
-      setState(() {
-        image = File(pickedFile.path);
-      });
-    }
   }
 
   @override

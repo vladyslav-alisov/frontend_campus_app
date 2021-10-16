@@ -1,28 +1,18 @@
 import 'package:campus_app/models/Announcements.dart';
-import 'package:campus_app/models/events/EventList.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:flutter/material.dart';
 
-class AnnouncementsDetailScreen extends StatelessWidget {
+class AnnouncementsDetailScreen extends StatefulWidget {
   static const String routeName = "/announcements_screen";
   AnnouncementsDetailScreen(this.articles);
   final Articles articles;
   @override
-  Widget build(BuildContext context) {
-    return AnnouncementsDetailScaffold(articles);
-  }
+  State<AnnouncementsDetailScreen> createState() => _AnnouncementsDetailScreenState();
 }
 
-class AnnouncementsDetailScaffold extends StatefulWidget {
-  AnnouncementsDetailScaffold(this.articles);
-  final Articles articles;
-  @override
-  _AnnouncementsDetailScaffoldState createState() => _AnnouncementsDetailScaffoldState();
-}
-
-class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffold> {
+class _AnnouncementsDetailScreenState extends State<AnnouncementsDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,9 +38,9 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
                         image: DecorationImage(
                           image: widget.articles.urlToImage == null
                               ? Image.asset(
-                            ConstAssetsPath.img_placeholderImage,
-                            fit: BoxFit.cover,
-                          )
+                                  ConstAssetsPath.img_placeholderImage,
+                                  fit: BoxFit.cover,
+                                )
                               : NetworkImage(widget.articles.urlToImage),
                           fit: BoxFit.cover,
                           colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
@@ -80,7 +70,9 @@ class _AnnouncementsDetailScaffoldState extends State<AnnouncementsDetailScaffol
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(widget.articles.publishedAt.substring(0, 10),),
+                child: Text(
+                  widget.articles.publishedAt.substring(0, 10),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(15.0),

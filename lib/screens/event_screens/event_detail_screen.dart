@@ -3,9 +3,10 @@ import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screens/event_screens/event_edit_screen.dart';
 import 'package:campus_app/screens/event_screens/events_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
+import 'package:campus_app/widgets/event_widgets/CampusIconText.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -134,7 +135,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                     padding: const EdgeInsets.all(5.0),
                                     child: CampusIconText(
                                       icon: Icons.access_time_sharp,
-                                      title: AppLocalizations.of(context).translate(str_location),
+                                      title: AppLocalizations.of(context).translate(str_time),
                                       textData: eventList[args.index].time,
                                     ),
                                   ),
@@ -278,66 +279,4 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   }
 }
 
-class CampusIconText extends StatelessWidget {
-  const CampusIconText({
-    this.icon,
-    this.textData,
-    this.title,
-  });
 
-  final IconData icon;
-  final String title;
-  final String textData;
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 3,
-      child: Row(
-        children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Icon(
-                  icon,
-                  size: 15,
-                ),
-              ),
-              Text(""),
-            ],
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyText1,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    softWrap: false,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Text(
-                      textData,
-                      style: Theme.of(context).textTheme.bodyText2,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      softWrap: false,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

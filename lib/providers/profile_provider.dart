@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:campus_app/providers/user_provider.dart';
 
 import 'package:campus_app/models/User.dart';
-import 'package:campus_app/utils/ExceptionHandler.dart';
-import 'package:campus_app/utils/GraphQLSetup.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/exception_handler.dart';
+import 'package:campus_app/utils/graph_ql_setup.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 

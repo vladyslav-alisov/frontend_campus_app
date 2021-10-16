@@ -1,11 +1,10 @@
 import 'package:campus_app/models/social_clubs/SocialClubList.dart';
-import 'package:campus_app/providers/profile_provider.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/general_widgets/CampusPersonListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,9 +26,11 @@ class _SocialClubMembersScreenState extends State<SocialClubMembersScreen> {
     CommonController.queryFuture(
             Provider.of<SocialClubProvider>(context, listen: false).socialClubMembers(widget.socialClub.scID), context)
         .then((value) {
-      setState(() {
-        _isLoading = false; //false;
-      });
+      if (this.mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     });
     super.initState();
   }

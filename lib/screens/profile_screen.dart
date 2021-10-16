@@ -1,13 +1,14 @@
 import 'dart:io';
 
-import 'package:campus_app/models/User.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_app/providers/profile_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screens/login_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
+import 'package:campus_app/widgets/profile_widgets/NotificationsText.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,7 +27,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = false;
   bool _isImageLoading = false;
-  var picker = ImagePicker();
   File avatarImage;
 
   void setIsLoading() {
@@ -39,9 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     _isLoading = true;
     CommonController.queryFuture(Provider.of<ProfileProvider>(context, listen: false).profile(), context).then((_) {
-      setState(() {
+      if(this.mounted){setState(() {
         _isLoading = false;
-      });
+      });}
     });
     super.initState();
   }
@@ -143,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     height: 88,
                                     child: GestureDetector(
                                       onTap: () {
-                                        if (authData.authData.login.imageUrl == str_defaultImageUrl) {
+                                        if (authData.authData.login.defaultAvatar) {
                                           showModalBottomSheet(
                                             context: context,
                                             builder: (context) {
@@ -154,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     title: new Text(
                                                         AppLocalizations.of(context).translate(str_photoLibrary)),
                                                     onTap: () async {
-                                                      await getAndUpdateImage(false);
+                                                      await CommonController.getAndUpdateImage(false).then((value) => avatarImage = value);
                                                       Navigator.pop(context);
                                                       if (avatarImage != null) {
                                                         setIsLoading();
@@ -167,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     leading: new Icon(Icons.photo_camera),
                                                     title: new Text(AppLocalizations.of(context).translate(str_camera)),
                                                     onTap: () async {
-                                                      await getAndUpdateImage(true);
+                                                      await CommonController.getAndUpdateImage(true).then((value) => avatarImage = value);
                                                       Navigator.pop(context);
                                                       if (avatarImage != null) {
                                                         setIsLoading();
@@ -188,99 +188,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           );
                                       },
-                                      child: authData.authData.login.imageUrl != str_noImage &&
-                                              authData.authData.login.imageUrl != null
-                                          ? CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              child: Container(
-                                                child: ClipOval(
-                                                  child: Image.network(
-                                                    authData.authData.login.imageUrl,
-                                                    height: 88,
-                                                    width: 88,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) =>
-                                                        Image.asset(ConstAssetsPath.img_defaultAvatar),
-                                                  ),
-                                                ),
-                                              ),
-                                              radius: 25,
-                                            )
-                                          : Container(
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: AssetImage(
-                                                        ConstAssetsPath.img_defaultAvatar,
-                                                      ))),
-                                            ),
+                                      child: CachedNetworkImage(
+                                        imageUrl: authData.authData.login.imageUrl,
+                                        imageBuilder: (context, imageProvider) => Container(
+                                          width: 80.0,
+                                          height: 80.0,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) => Center(
+                                            child: Icon(
+                                          Icons.error,
+                                          color: Colors.white,
+                                        )),
+                                      ),
                                     ),
                                   ),
                           ),
                           SizedBox(
                             height: 20,
                           ),
-
-                          Text(
-                            "Name",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
-                          ),
+                          NotationsText(title: "Name",),
                           Padding(
-                            padding: const EdgeInsets.only(top: 0,right: 8,left: 8,bottom: 15),
+                            padding: const EdgeInsets.only(top: 0, right: 8, left: 8, bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.name} ${userData.profile.surname}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 24),
                             ),
                           ),
-                          Text(
-                            "Department",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
-                          ),
+                          NotationsText(title: "Department",),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
+                            padding: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.department}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
-                          Text(
-                            "Email",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
-                          ),
+                          NotationsText(title: "Email",),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
+                            padding: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.email}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
-                          Text(
-                            "Student ID",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
-                          ),
+                          NotationsText(title: "Student ID",),
+
                           Padding(
-                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
+                            padding: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.userID}" : "",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
-                          Text(
-                            "Address",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
-                          ),
+                          NotationsText(title: "Address",),
+
                           Padding(
-                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
+                            padding: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.address}" : "",
                               overflow: TextOverflow.ellipsis,
@@ -289,13 +260,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 15),
                             ),
                           ),
-                          Text(
-                            "Mobile number",
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 13,color: Colors.grey.shade300),
-                          ),
+                          NotationsText(title: "Mobile number",),
                           Padding(
-                            padding: const EdgeInsets.only(top: 8,right: 8,left: 8,bottom: 15),
+                            padding: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 15),
                             child: Text(
                               userData != null ? "${userData.profile.phone}" : "",
                               overflow: TextOverflow.ellipsis,
@@ -370,27 +337,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
     );
   }
-
-  Future getAndUpdateImage(bool choice) async {
-    var pickedFile;
-    if (choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    } else if (!choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    }
-    if (pickedFile != null) {
-      avatarImage = File(pickedFile.path);
-    }
-  }
 }
+
+
 
 class CampusGallerySinglePhoto extends StatefulWidget {
   @override
@@ -449,7 +398,7 @@ class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
                           builder: (context) {
                             return Wrap(
                               children: [
-                                userProvider.authData.login.imageUrl == str_defaultImageUrl
+                                userProvider.authData.login.defaultAvatar
                                     ? Container()
                                     : ListTile(
                                         leading: new Icon(
@@ -496,7 +445,7 @@ class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
                                   leading: new Icon(Icons.photo_library),
                                   title: new Text(AppLocalizations.of(context).translate(str_photoLibrary)),
                                   onTap: () async {
-                                    await getAndUpdateImage(false);
+                                    await CommonController.getAndUpdateImage(false).then((value) => avatarImage = value);
                                     Navigator.pop(context);
                                     if (avatarImage != null) {
                                       setIsLoading();
@@ -509,7 +458,7 @@ class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
                                   leading: new Icon(Icons.photo_camera),
                                   title: new Text(AppLocalizations.of(context).translate(str_camera)),
                                   onTap: () async {
-                                    await getAndUpdateImage(true);
+                                    await CommonController.getAndUpdateImage(true).then((value) => avatarImage = value);
                                     Navigator.pop(context);
                                     if (avatarImage != null) {
                                       setIsLoading();
@@ -552,25 +501,5 @@ class _CampusGallerySinglePhotoState extends State<CampusGallerySinglePhoto> {
               ),
       ),
     );
-  }
-
-  Future getAndUpdateImage(bool choice) async {
-    var pickedFile;
-    if (choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    } else if (!choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    }
-    if (pickedFile != null) {
-      avatarImage = File(pickedFile.path);
-    }
   }
 }

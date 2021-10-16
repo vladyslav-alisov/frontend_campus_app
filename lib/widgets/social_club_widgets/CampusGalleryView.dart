@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:campus_app/models/social_clubs/GalleryList.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/screen_controllers/social_club_screen_controllers/social_club_manage_screen_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
@@ -170,7 +170,7 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
                                                     setIsLoading();
                                                     await socialClubProvider.deletePost(
                                                         socialClubProvider.galleryImagesList[currentIndex].postID);
-                                                    if(currentIndex!=0){
+                                                    if (currentIndex != 0) {
                                                       currentIndex--;
                                                     }
                                                     setIsLoading();
@@ -220,25 +220,5 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
         ),
       ),
     );
-  }
-
-  Future getAndUpdateImage(bool choice) async {
-    var pickedFile;
-    if (choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.camera, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    } else if (!choice) {
-      pickedFile =
-          await picker.getImage(source: ImageSource.gallery, maxWidth: 600, maxHeight: 800).catchError((e) => print(e));
-      if (pickedFile == null) {
-        return;
-      }
-    }
-    if (pickedFile != null) {
-      avatarImage = File(pickedFile.path);
-    }
   }
 }

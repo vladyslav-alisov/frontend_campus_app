@@ -1,9 +1,9 @@
 import 'package:campus_app/providers/transportation_provider.dart';
 import 'package:campus_app/screen_controllers/event_screens_controllers/event_edit_screen_controller.dart';
 import 'package:campus_app/screens/transportation_screens/transportation_detail_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:campus_app/widgets/transportation_widgets/CampusTransportationListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

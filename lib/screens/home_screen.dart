@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screens/profile_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:campus_app/widgets/CampusCardFunction.dart';
 import 'package:campus_app/widgets/CampusClipper.dart';
 import 'package:flutter/foundation.dart';
@@ -83,17 +83,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               Flexible(
                                 child: Center(
                                   child: CachedNetworkImage(
-                                    imageUrl: authData.login.imageUrl ?? str_defaultImageUrl,
+                                    imageUrl: authData.login.imageUrl,
                                     imageBuilder: (context, imageProvider) => Container(
                                       width: 80.0,
                                       height: 80.0,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
+                                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                       ),
                                     ),
-                                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
+                                    progressIndicatorBuilder: (context, url, progress) => Center(child: CircularProgressIndicator(),),
+                                    errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.white,)),
                                   ),
                                 ),
                               ),

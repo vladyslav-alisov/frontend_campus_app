@@ -3,8 +3,8 @@ import 'package:campus_app/providers/menu_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screen_controllers/dinner_hall_screen_controllers/menu_edit_screen_controller.dart';
 import 'package:campus_app/screens/dinner_hall_screens/meal_select_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,6 @@ class _MenuEditScreenState extends State<MenuEditScreen> with TickerProviderStat
   void initState() {
     _isLoading = true;
     var screenController = Provider.of<MenuEditScreenController>(context, listen: false);
-    var menu = Provider.of<MenuProvider>(context, listen: false).menuList;
     CommonController.queryFuture(Provider.of<MenuProvider>(context, listen: false).meals(), context).then((_) {
       setState(() {
         _isLoading = false;

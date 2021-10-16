@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:campus_app/models/menu/Food.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

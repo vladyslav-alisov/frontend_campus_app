@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_app/models/social_clubs/SocialClubList.dart';
 import 'package:campus_app/providers/social_club_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
@@ -5,8 +6,8 @@ import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screen_controllers/social_club_screen_controllers/social_club_screen_controller.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_detail_screen.dart';
 import 'package:campus_app/screens/social_club_screens/social_club_manage_screen.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -184,14 +185,30 @@ class CampusSocialClubGridView extends StatelessWidget {
                 ),
                 backgroundColor: Colors.black54,
               ),
-              child: FadeInImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(socialClubList[index].imageUrl),
-                placeholder: AssetImage(ConstAssetsPath.img_defaultSocialClubAvatar),
-                imageErrorBuilder: (context, error, stackTrace) =>
-                    Image.asset(ConstAssetsPath.img_defaultSocialClubAvatar),
-                placeholderErrorBuilder: (context, error, stackTrace) =>
-                    Image.asset(ConstAssetsPath.img_defaultSocialClubAvatar),
+              child:
+              CachedNetworkImage(
+                imageUrl: socialClubList[index].imageUrl,
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+                progressIndicatorBuilder: (context, url, progress) => Center(child: CircularProgressIndicator(),),
+                errorWidget: (context, url, error) {
+                  return Container(
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate(str_errorLoadImage),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

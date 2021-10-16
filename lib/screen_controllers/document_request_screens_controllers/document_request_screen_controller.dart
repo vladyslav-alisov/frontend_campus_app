@@ -1,5 +1,5 @@
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -51,4 +51,3 @@ class DocumentRequestScreenController with ChangeNotifier {
     );
   }
 }
-//documentRequestProvider.sendTranscriptRequest();

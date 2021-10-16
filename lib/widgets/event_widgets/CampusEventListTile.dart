@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_app/models/events/EventList.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
 import 'package:flutter/material.dart';
 
 class CampusEventListTile extends StatelessWidget {
@@ -18,26 +19,18 @@ class CampusEventListTile extends StatelessWidget {
             flex: 2,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: Container(
-                child: _event.imageUrl.contains("cloudinary")
-                    ? FadeInImage(
-                        fit: BoxFit.cover,
-                        imageErrorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            child: Center(
-                              child: Text(
-                                AppLocalizations.of(context).translate(str_errorLoadImage),
-                              ),
-                            ),
-                          );
-                        },
-                        placeholder: AssetImage(ConstAssetsPath.img_placeholderImage),
-                        image: NetworkImage(_event.imageUrl),
-                      )
-                    : Image.asset(
-                        ConstAssetsPath.img_placeholderImage,
-                        fit: BoxFit.cover,
-                      ),
+              child: CachedNetworkImage(
+                imageUrl: _event.imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                  width: 80.0,
+                  height: 80.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                  ),
+                ),
+                placeholder: (context, url) => Image.asset(ConstAssetsPath.img_placeholderImage),
+                errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.white,)),
               ),
             ),
           ),

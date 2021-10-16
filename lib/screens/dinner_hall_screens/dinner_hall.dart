@@ -2,10 +2,9 @@ import 'package:campus_app/providers/menu_provider.dart';
 import 'package:campus_app/providers/user_provider.dart';
 import 'package:campus_app/screen_controllers/common_controller.dart';
 import 'package:campus_app/screen_controllers/dinner_hall_screen_controllers/menu_edit_screen_controller.dart';
-import 'package:campus_app/utils/Localization.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/widgets/CampusAppBar.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:campus_app/utils/localization.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/widgets/general_widgets/CampusAppBar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +29,9 @@ class _DinnerHallScreenState extends State<DinnerHallScreen> {
   void initState() {
     _isLoading = true;
     CommonController.queryFuture(Provider.of<MenuProvider>(context, listen: false).menu(), context).then((_) {
-      setState(() {
+     if(this.mounted){ setState(() {
         _isLoading = false;
-      });
+      });}
     });
     super.initState();
   }

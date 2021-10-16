@@ -1,17 +1,15 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:campus_app/models/Announcements.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+
 
 class AnnouncementsProvider with ChangeNotifier {
   final endPointUrl = "newsapi.org";
   final client = http.Client();
-  List<Articles> announcements;
-
+  List<Articles> announcements=[];
   Future<void> getAnnouncements() async {
     final queryParameters = {
       'sources': 'techcrunch',

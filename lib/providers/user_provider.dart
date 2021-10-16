@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:campus_app/models/AuthData.dart';
-import 'package:campus_app/utils/ExceptionHandler.dart';
-import 'package:campus_app/utils/MyConstants.dart';
-import 'package:campus_app/utils/GraphQLSetup.dart';
+import 'package:campus_app/utils/exception_handler.dart';
+import 'package:campus_app/utils/my_constants.dart';
+import 'package:campus_app/utils/graph_ql_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,6 +46,7 @@ class AuthProvider with ChangeNotifier {
       if (result.data != null) {
         await pushStorageData(email, password);
         authData = AuthData.fromJson(result.data);
+        print("is avatar? : ${authData.login.defaultAvatar}");
       }
     }
     notifyListeners();
