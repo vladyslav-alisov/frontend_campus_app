@@ -42,7 +42,7 @@ class NoticeBoardProvider with ChangeNotifier{
 
  void setNoticeBoardList() async {
    isLoading = true;
-   noticeBoardList = await getNoticeList(authData);
+   //noticeBoardList = await getNoticeList(authData);
  }
   Future<void> noticeList() async {
     QueryOptions options = QueryOptions(
